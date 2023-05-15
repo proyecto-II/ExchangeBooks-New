@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "706236295614",
+    "project_id": "ufro-exchangebooks",
+    "storage_bucket": "ufro-exchangebooks.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706236295614:android:c05802cf273289412a31ef",
+        "android_client_info": {
+          "package_name": "com.example.exchangebooks_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "706236295614-pn5cc9nuvt95d1ltrj5r1egp0p30kiue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-6L3QeLHjDQQNeg67A8XvRO_b0xGi7tQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "706236295614-patr1o7amhoo0kkkj8akdsk7j8fmgpvu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
