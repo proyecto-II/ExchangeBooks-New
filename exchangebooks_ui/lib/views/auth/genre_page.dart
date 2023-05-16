@@ -70,7 +70,7 @@ class _Genres extends State<GenrePage> {
               backgroundColor: Colors.white),
           onApplyButtonClick: (list) {
             // Se hace algo con la lista
-            Navigator.pushNamed(context, '/Loginpage');
+            Navigator.pushNamed(context, '/landing_page');
           },
           choiceChipLabel: (item) {
             return item!.name;

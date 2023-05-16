@@ -1,5 +1,9 @@
+import 'package:exchangebooks_ui/main.dart';
+import 'package:exchangebooks_ui/provider/google_sign_in.dart';
+import 'package:exchangebooks_ui/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -15,6 +19,7 @@ class _Register extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController passConfirmController = TextEditingController();
+  final authService = AuthService();
 
   bool _passwordVisible = false;
 
@@ -170,8 +175,37 @@ class _Register extends State<RegisterPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
         child: const Text('Siguiente'),
-        onPressed: () {
-          Navigator.pushNamed(context, '/genre_page');
+        onPressed: () async {
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ));
+          bool isRegistered =
+              await authService.verifyUser(emailController.text.trim());
+
+          if (isRegistered) {
+            print("esta registrado");
+          } else {
+            await authService.createUser(
+                nameController.text.trim(),
+                lastnameController.text.trim(),
+                emailController.text.trim(),
+                passController.text.trim());
+            final provider =
+                Provider.of<GoogleSignInProvider>(context, listen: false);
+            final user = await provider.emailPasswordRegister(
+              nameController.text.trim(),
+              lastnameController.text.trim(),
+              emailController.text.trim(),
+              passController.text.trim(),
+            );
+            if (user != null) {
+              // ignore: use_build_context_synchronously
+              Navigator.pushNamed(context, '/genre_page');
+            }
+          }
         },
       ),
     );
