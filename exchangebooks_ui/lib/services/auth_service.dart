@@ -19,7 +19,7 @@ class AuthService {
         print('error');
       }
     } catch (err) {
-      print(err);
+      print('Paso por aqui $err');
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:exchangebooks_ui/views/home/home_page.dart';
 import 'package:exchangebooks_ui/views/profile/profile_page.dart';
+import 'package:exchangebooks_ui/views/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -17,7 +18,7 @@ class _MainLayout extends State<MainLayout> {
   Widget build(BuildContext context) {
     final screens = [
       const HomePage(),
-      const HomePage(),
+      SearchPage(),
       const HomePage(),
       const ProfilePage()
     ];

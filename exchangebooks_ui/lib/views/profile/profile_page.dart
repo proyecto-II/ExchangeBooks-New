@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import 'widgets/recordpost.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
@@ -81,7 +83,7 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
               //Aqui deberian ir las preferencias del usuario
-              //const RecordPosts(),
+              const RecordPosts(),
             ],
           ),
         ),
