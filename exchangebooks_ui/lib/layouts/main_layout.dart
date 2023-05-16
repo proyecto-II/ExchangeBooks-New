@@ -1,4 +1,5 @@
 import 'package:exchangebooks_ui/views/home/home_page.dart';
+import 'package:exchangebooks_ui/views/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -18,7 +19,7 @@ class _MainLayout extends State<MainLayout> {
       const HomePage(),
       const HomePage(),
       const HomePage(),
-      const HomePage()
+      const ProfilePage()
     ];
 
     return Scaffold(

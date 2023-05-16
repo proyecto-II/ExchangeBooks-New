@@ -53,7 +53,7 @@ class _Login extends State<LoginPage> {
                   const Text('¿No tienes una cuenta?'),
                   TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/Registerpage');
+                        Navigator.pushNamed(context, '/register_page');
                       },
                       child: const Text("Registrate"))
                 ],
@@ -133,13 +133,12 @@ class _Login extends State<LoginPage> {
 
   Widget _buttonGoogle(BuildContext context) {
     return Container(
-      height: 100,
       padding: const EdgeInsets.all(20),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromRGBO(252, 163, 17, 1),
-          minimumSize: const Size(270, 100),
-        ),
+            minimumSize: const Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10))),
         child: const Text('Iniciar Sesión con Google'),
         onPressed: () async {
           final provider =
@@ -147,6 +146,7 @@ class _Login extends State<LoginPage> {
           final user = await provider.googleLogin();
 
           if (user != null) {
+            // ignore: use_build_context_synchronously
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const LandingPage()));
           }

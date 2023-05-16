@@ -19,11 +19,11 @@ class Drawers extends StatelessWidget {
             decoration:
                 const BoxDecoration(color: Color.fromARGB(143, 255, 255, 255)),
             accountEmail: Text(
-              name,
+              email,
               style: const TextStyle(color: Colors.black),
             ),
             accountName: Text(
-              email,
+              name,
               style: const TextStyle(color: Colors.black),
             ),
             currentAccountPicture: const CircleAvatar(
