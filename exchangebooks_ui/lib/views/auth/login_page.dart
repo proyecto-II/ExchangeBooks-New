@@ -1,5 +1,6 @@
 import 'package:exchangebooks_ui/main.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
+import 'package:exchangebooks_ui/services/auth_service.dart';
 import 'package:exchangebooks_ui/views/landing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -17,6 +18,7 @@ class _Login extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   bool _passwordVisible = false;
+  final authService = AuthService();
 
   @override
   void initState() {
@@ -127,24 +129,32 @@ class _Login extends State<LoginPage> {
         child: const Text('Iniciar Sesión'),
         onPressed: () async {
           //Navigator.pushNamed(context, '/Homepage');
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => const Center(
-                    child: CircularProgressIndicator(),
-                  ));
+          bool isRegistered =
+              await authService.verifyUser(emailController.text.trim());
 
-          final provider =
-              Provider.of<GoogleSignInProvider>(context, listen: false);
-          final user = await provider.emailPasswordSignIn(
-              emailController.text.trim(), passController.text.trim());
+          if (isRegistered == false) {
+            print("el usuario no esta regitrado");
+            // mostrar error al usuario
+          } else {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                      child: CircularProgressIndicator(),
+                    ));
 
-          if (user != null) {
-            navigatorKey.currentState!.popUntil((route) => route.isFirst);
+            final provider =
+                Provider.of<GoogleSignInProvider>(context, listen: false);
+            final user = await provider.emailPasswordSignIn(
+                emailController.text.trim(), passController.text.trim());
 
-            // ignore: use_build_context_synchronously
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const LandingPage()));
+            if (user != null) {
+              navigatorKey.currentState!.popUntil((route) => route.isFirst);
+
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const LandingPage()));
+            }
           }
         },
       ),
