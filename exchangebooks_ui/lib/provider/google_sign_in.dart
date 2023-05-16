@@ -52,6 +52,16 @@ class GoogleSignInProvider extends ChangeNotifier {
     }
   }
 
+  Future emailPasswordRegister(
+      String name, String lastname, String email, String password) async {
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (err) {
+      print(err);
+    }
+  }
+
   Future logoout() async {
     await googleSignIn.disconnect();
     FirebaseAuth.instance.signOut();

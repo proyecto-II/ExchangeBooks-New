@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { createUser } from "../controllers/user.controller.js";
 
 const router = Router();
 
@@ -7,5 +8,7 @@ router.get("/", (req, res) => {
     message: "Auth Service",
   });
 });
+
+router.post("/create", createUser);
 
 export default router;
