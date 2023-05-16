@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/main.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/views/landing_page.dart';
 import 'package:flutter/material.dart';
@@ -124,8 +125,27 @@ class _Login extends State<LoginPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
         child: const Text('Iniciar Sesión'),
-        onPressed: () {
+        onPressed: () async {
           //Navigator.pushNamed(context, '/Homepage');
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ));
+
+          final provider =
+              Provider.of<GoogleSignInProvider>(context, listen: false);
+          final user = await provider.emailPasswordSignIn(
+              emailController.text.trim(), passController.text.trim());
+
+          if (user != null) {
+            navigatorKey.currentState!.popUntil((route) => route.isFirst);
+
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const LandingPage()));
+          }
         },
       ),
     );
@@ -141,11 +161,20 @@ class _Login extends State<LoginPage> {
                 borderRadius: BorderRadius.circular(10))),
         child: const Text('Iniciar Sesión con Google'),
         onPressed: () async {
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ));
+
           final provider =
               Provider.of<GoogleSignInProvider>(context, listen: false);
           final user = await provider.googleLogin();
 
           if (user != null) {
+            navigatorKey.currentState!.popUntil((route) => route.isFirst);
+
             // ignore: use_build_context_synchronously
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const LandingPage()));

@@ -14,3 +14,31 @@ The project is developing of the following technologies:
 - [OpenaAI](https://openai.com/blog/openai-api)
 - [MongoDB](https://www.mongodb.com)
 - [Firebase](https://firebase.google.com)
+
+## Install API
+
+#### Install dependencies in all services
+
+    npm install
+
+## Run services
+
+    npm run dev
+
+# REST API
+
+The REST API work in http://localhost:3000
+
+## Verify runing API
+
+`GET /`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000
+
+## Get All Services
+
+`GET /services`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/services
+
+<br />

@@ -35,6 +35,37 @@ class GoogleSignInProvider extends ChangeNotifier {
     }
   }
 
+  Future<User?> emailPasswordSignIn(String email, String password) async {
+    try {
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      final user = userCredential.user;
+      setUser(user);
+      return user;
+    } on FirebaseAuthException catch (err) {
+      if (err.code == 'user-not-found') {
+        print("Usuario incorrecto");
+      } else if (err.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+      return null;
+    }
+  }
+
+  Future<User?> emailPasswordRegister(
+      String name, String lastname, String email, String password) async {
+    try {
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      final user = userCredential.user;
+      setUser(user);
+      return user;
+    } on FirebaseAuthException catch (err) {
+      print(err);
+      return null;
+    }
+  }
+
   Future logoout() async {
     await googleSignIn.disconnect();
     FirebaseAuth.instance.signOut();

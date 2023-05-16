@@ -39,9 +39,13 @@ class Drawers extends StatelessWidget {
             leading: const Icon(Icons.logout),
             title: const Text('Cerrar Sesión'),
             onTap: () {
-              final provider =
-                  Provider.of<GoogleSignInProvider>(context, listen: false);
-              provider.logoout();
+              if (user.providerData[0].providerId == 'password') {
+                FirebaseAuth.instance.signOut();
+              } else {
+                final provider =
+                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                provider.logoout();
+              }
             },
           ),
         ],

@@ -8,6 +8,12 @@ class UserService {
 
     return await newUser.save();
   }
+
+  async verify(email) {
+    const user = await User.findOne({ email });
+
+    return user;
+  }
 }
 
 export default UserService;
