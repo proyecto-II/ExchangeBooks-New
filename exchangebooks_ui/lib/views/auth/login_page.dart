@@ -1,5 +1,6 @@
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/views/landing_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
@@ -124,8 +125,18 @@ class _Login extends State<LoginPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
         child: const Text('Iniciar Sesión'),
-        onPressed: () {
+        onPressed: () async {
           //Navigator.pushNamed(context, '/Homepage');
+          final provider =
+              Provider.of<GoogleSignInProvider>(context, listen: false);
+          final user = await provider.emailPasswordSignIn(
+              emailController.text.trim(), passController.text.trim());
+
+          if (user != null) {
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const LandingPage()));
+          }
         },
       ),
     );
@@ -153,5 +164,11 @@ class _Login extends State<LoginPage> {
         },
       ),
     );
+  }
+
+  Future emailPasswordSignIn(String email, String password) async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passController.text.trim());
   }
 }
