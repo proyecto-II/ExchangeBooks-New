@@ -1,20 +1,23 @@
+import 'package:exchangebooks_ui/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:exchangebooks_ui/model/user.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
+  final authService = AuthService();
 
-  User? _user;
+  IUser? _user;
 
-  User? get user => _user;
+  IUser? get user => _user;
 
-  void setUser(User? user) {
+  void setUser(IUser? user) {
     _user = user;
     notifyListeners();
   }
 
-  Future<User?> googleLogin() async {
+  Future<IUser?> googleLogin() async {
     try {
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) return null;
@@ -27,21 +30,23 @@ class GoogleSignInProvider extends ChangeNotifier {
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
       final user = userCredential.user;
-      setUser(user);
-      return user;
+      final IUser dbUser = await authService.getUser(user!.email!);
+      setUser(dbUser);
+      return dbUser;
     } catch (err) {
       print(err.toString());
       return null;
     }
   }
 
-  Future<User?> emailPasswordSignIn(String email, String password) async {
+  Future<IUser?> emailPasswordSignIn(String email, String password) async {
     try {
       final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       final user = userCredential.user;
-      setUser(user);
-      return user;
+      final IUser dbUser = await authService.getUser(email);
+      setUser(dbUser);
+      return dbUser;
     } on FirebaseAuthException catch (err) {
       if (err.code == 'user-not-found') {
         print("Usuario incorrecto");
@@ -52,14 +57,15 @@ class GoogleSignInProvider extends ChangeNotifier {
     }
   }
 
-  Future<User?> emailPasswordRegister(
+  Future<IUser?> emailPasswordRegister(
       String name, String lastname, String email, String password) async {
     try {
       final UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       final user = userCredential.user;
-      setUser(user);
-      return user;
+      final IUser dbUser = await authService.getUser(email);
+      setUser(dbUser);
+      return dbUser;
     } on FirebaseAuthException catch (err) {
       print(err);
       return null;

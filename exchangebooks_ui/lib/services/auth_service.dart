@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:exchangebooks_ui/model/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
@@ -54,5 +55,16 @@ class AuthService {
     } catch (err) {
       print(err);
     }
+  }
+
+  Future<IUser> getUser(String email) async {
+    final response = await http.get(
+      Uri.parse('$apiUrl/api/auth/get-user/$email'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final jsonData = json.decode(response.body);
+    return IUser.fromJson(jsonData);
   }
 }

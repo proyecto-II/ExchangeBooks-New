@@ -31,3 +31,14 @@ export async function verifyUser(req, res) {
     return res.status(500).json({ message: "Server error", err });
   }
 }
+
+export async function getUser(req, res) {
+  try {
+    const user = await userService.get(req.params.email);
+    if (user) return res.status(200).send(user);
+
+    return res.status(404).json({ message: "User not found" });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error", err });
+  }
+}

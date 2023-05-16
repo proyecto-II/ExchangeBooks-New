@@ -1,7 +1,9 @@
+import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -9,6 +11,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User user = FirebaseAuth.instance.currentUser!;
+    final iuser = Provider.of<GoogleSignInProvider>(context);
     final name = user.displayName ?? "Desconocido";
     final image = user.photoURL ??
         "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
@@ -55,7 +58,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               Text(
-                name,
+                '${iuser.user!.name!} ${iuser.user!.lastname!}',
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
