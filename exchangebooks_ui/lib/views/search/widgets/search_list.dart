@@ -13,7 +13,7 @@ class _SearchList extends State<SearchList> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width - 10,
-      height: MediaQuery.of(context).size.height - 250,
+      height: MediaQuery.of(context).size.height - 270,
       child: ListView.builder(
         scrollDirection: Axis.vertical,
         itemCount: 4,
@@ -29,6 +29,7 @@ class _SearchList extends State<SearchList> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           ClipRRect(

@@ -44,25 +44,26 @@ class _SearchPage extends State<SearchPage> {
               fontSize: 27, fontWeight: FontWeight.bold, color: Colors.black),
         ),
       ),
-      drawer: Drawers(),
+      drawer: const Drawers(),
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Gap(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width - 200,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 100,
                   height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 124, 1, 87),
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                  ),
                   child: TextField(
                     controller: searchcontroller,
-                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      labelText: "Busqueda",
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
                     onChanged: (value) {
                       if (value.isNotEmpty) {
                         book = value;
@@ -77,16 +78,15 @@ class _SearchPage extends State<SearchPage> {
                     icon: const Icon(Icons.filter_alt))
               ],
             ),
-            Row(
-              children: [
-                Gap(10),
-                Text(
-                  'Resultados de: ',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+              child: Text(
+                'Resultados de: $book',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+              ),
             ),
-            SearchList(),
+            const SearchList(),
           ],
         ),
       ),
@@ -116,15 +116,6 @@ class _SearchPage extends State<SearchPage> {
       emptySearchChild: const Center(child: Text('No se encontraron generos')),
       enableOnlySingleSelection: false,
       searchFieldHint: 'Buscar genero',
-      /*suggestionBuilder: (context, user, isSelected) {
-        return ListTile(
-          title: Text(user.name!),
-          leading: const CircleAvatar(
-            backgroundColor: Colors.blue,
-          ),
-          selected: isSelected,
-        );
-      },*/
       onApplyButtonClick: (list) {
         setState(() {
           selectedGenreList = list;
