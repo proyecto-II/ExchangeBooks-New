@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'views/profile/editprofile.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -34,7 +36,8 @@ class MyApp extends StatelessWidget {
           '/landing_page': (context) => const LandingPage(),
           '/login_page': (context) => const LoginPage(),
           '/register_page': (context) => const RegisterPage(),
-          '/genre_page': (context) => const GenrePage()
+          '/genre_page': (context) => const GenrePage(),
+          '/edit_profile': (context) => const EditProfile(),
         },
         initialRoute: '/landing_page',
       ),

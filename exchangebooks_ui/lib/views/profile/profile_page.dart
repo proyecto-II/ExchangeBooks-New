@@ -41,7 +41,7 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, "/EditProfile");
+                      Navigator.pushNamed(context, "/edit_profile");
                     },
                     icon: const Icon(Icons.edit),
                   ),
