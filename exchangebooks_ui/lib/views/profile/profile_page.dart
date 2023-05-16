@@ -71,6 +71,9 @@ class ProfilePage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const Gap(15),
+              _preferences(context),
+              const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -91,7 +94,33 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _preferences() {
-    return ListView();
+  Widget _preferences(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 35,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return Container(
+              width: 80,
+              margin: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                  color: Colors.amber[800],
+                  borderRadius: BorderRadius.circular(10)),
+              child: const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Fantasia",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
