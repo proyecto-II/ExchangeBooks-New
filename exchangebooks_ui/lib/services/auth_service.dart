@@ -31,8 +31,8 @@ class AuthService {
     }
   }
 
-  Future<void> createUser(
-      String name, String lastname, String email, String password) async {
+  Future<void> createUser(String name, String lastname, String email,
+      String password, String googleId) async {
     try {
       final response = await http.post(
         Uri.parse('$apiUrl/api/auth/create'),
@@ -43,7 +43,8 @@ class AuthService {
           'name': name,
           'lastname': lastname,
           'email': email,
-          'password': password
+          'password': password,
+          'googleId': googleId
         }),
       );
       final jsonData = json.decode(response.body);

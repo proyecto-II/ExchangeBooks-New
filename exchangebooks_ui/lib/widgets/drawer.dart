@@ -13,7 +13,7 @@ class Drawers extends StatelessWidget {
     final iuser = Provider.of<GoogleSignInProvider>(context);
     final email = user.email ?? "Desconocido";
     final name = user.displayName ?? "Desconocido";
-
+    print(iuser.user);
     return Drawer(
       child: ListView(
         children: <Widget>[
@@ -25,7 +25,7 @@ class Drawers extends StatelessWidget {
               style: const TextStyle(color: Colors.black),
             ),
             accountName: Text(
-              '${iuser.user!.name!} ${iuser.user!.lastname!}',
+              '${iuser.user!.name!} ${iuser.user!.lastname!.isNotEmpty ? iuser.user!.lastname! : ''}',
               style: const TextStyle(color: Colors.black),
             ),
             currentAccountPicture: const CircleAvatar(

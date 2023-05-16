@@ -10,7 +10,7 @@ export async function createUser(req, res) {
     });
     return res.status(201).json({
       message: "User created successfully",
-      isRegistered: false,
+      isRegistered: true,
       user,
     });
   } catch (err) {
