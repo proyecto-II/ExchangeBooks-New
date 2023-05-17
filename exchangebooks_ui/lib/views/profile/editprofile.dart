@@ -152,7 +152,7 @@ class _EditState extends State<EditProfile> {
   Widget _button() {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/Profile');
+        Navigator.pushNamed(context, '/profile_page');
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blueAccent[1000],

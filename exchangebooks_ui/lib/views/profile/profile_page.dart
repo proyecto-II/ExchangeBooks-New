@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
+import 'widgets/recordpost.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
@@ -72,6 +74,9 @@ class ProfilePage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const Gap(15),
+              _preferences(context),
+              const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -84,7 +89,7 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
               //Aqui deberian ir las preferencias del usuario
-              //const RecordPosts(),
+              const RecordPosts(),
             ],
           ),
         ),
@@ -92,7 +97,33 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _preferences() {
-    return ListView();
+  Widget _preferences(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 35,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return Container(
+              width: 80,
+              margin: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                  color: Colors.amber[800],
+                  borderRadius: BorderRadius.circular(10)),
+              child: const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Fantasia",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
