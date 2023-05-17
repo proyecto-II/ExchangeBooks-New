@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:exchangebooks_ui/model/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
@@ -30,8 +31,8 @@ class AuthService {
     }
   }
 
-  Future<void> createUser(
-      String name, String lastname, String email, String password) async {
+  Future<void> createUser(String name, String lastname, String email,
+      String password, String googleId) async {
     try {
       final response = await http.post(
         Uri.parse('$apiUrl/api/auth/create'),
@@ -42,7 +43,8 @@ class AuthService {
           'name': name,
           'lastname': lastname,
           'email': email,
-          'password': password
+          'password': password,
+          'googleId': googleId
         }),
       );
       final jsonData = json.decode(response.body);
@@ -54,5 +56,16 @@ class AuthService {
     } catch (err) {
       print(err);
     }
+  }
+
+  Future<IUser> getUser(String email) async {
+    final response = await http.get(
+      Uri.parse('$apiUrl/api/auth/get-user/$email'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final jsonData = json.decode(response.body);
+    return IUser.fromJson(jsonData);
   }
 }

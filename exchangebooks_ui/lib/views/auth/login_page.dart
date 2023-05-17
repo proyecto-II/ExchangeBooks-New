@@ -1,6 +1,7 @@
 import 'package:exchangebooks_ui/main.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/auth_service.dart';
+import 'package:exchangebooks_ui/views/auth/register_page.dart';
 import 'package:exchangebooks_ui/views/landing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -180,14 +181,26 @@ class _Login extends State<LoginPage> {
 
           final provider =
               Provider.of<GoogleSignInProvider>(context, listen: false);
-          final user = await provider.googleLogin();
+          final googleAccount = await provider.googleUser();
 
-          if (user != null) {
-            navigatorKey.currentState!.popUntil((route) => route.isFirst);
+          if (googleAccount != null) {
+            bool isRegistered =
+                await authService.verifyUser(googleAccount.email);
 
-            // ignore: use_build_context_synchronously
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const LandingPage()));
+            if (isRegistered) {
+              final user = await provider.googleLogin(googleAccount);
+
+              if (user != null) {
+                navigatorKey.currentState!.popUntil((route) => route.isCurrent);
+
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const LandingPage()));
+              }
+            } else {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const RegisterPage()));
+            }
           }
         },
       ),

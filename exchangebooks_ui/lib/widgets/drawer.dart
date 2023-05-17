@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/model/user.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +10,10 @@ class Drawers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User user = FirebaseAuth.instance.currentUser!;
+    final iuser = Provider.of<GoogleSignInProvider>(context);
     final email = user.email ?? "Desconocido";
     final name = user.displayName ?? "Desconocido";
-
+    print(iuser.user);
     return Drawer(
       child: ListView(
         children: <Widget>[
@@ -23,7 +25,7 @@ class Drawers extends StatelessWidget {
               style: const TextStyle(color: Colors.black),
             ),
             accountName: Text(
-              name,
+              '${iuser.user!.name!} ${iuser.user!.lastname!.isNotEmpty ? iuser.user!.lastname! : ''}',
               style: const TextStyle(color: Colors.black),
             ),
             currentAccountPicture: const CircleAvatar(

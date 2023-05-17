@@ -7,7 +7,6 @@ const UserSchema = new Schema({
   },
   lastname: {
     type: String,
-    required: true,
   },
   username: {
     type: String,
@@ -21,6 +20,10 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
+  },
+  googleId: {
+    type: String,
+    default: "",
   },
   createdAt: {
     type: Date,
