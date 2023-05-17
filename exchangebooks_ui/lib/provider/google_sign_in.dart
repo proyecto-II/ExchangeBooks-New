@@ -3,10 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:exchangebooks_ui/model/user.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
   final authService = AuthService();
+  final apiUrl = 'http://192.168.4.21:3000';
 
   IUser? _user;
 
@@ -101,5 +104,19 @@ class GoogleSignInProvider extends ChangeNotifier {
   Future logoout() async {
     await googleSignIn.disconnect();
     FirebaseAuth.instance.signOut();
+  }
+
+  Future<void> getUser(String email) async {
+    final response = await http.get(
+      Uri.parse('$apiUrl/api/auth/get-user/$email'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    final jsonData = json.decode(response.body);
+    final IUser dbUser = IUser.fromJson(jsonData);
+
+    setUser(dbUser);
+    notifyListeners();
   }
 }

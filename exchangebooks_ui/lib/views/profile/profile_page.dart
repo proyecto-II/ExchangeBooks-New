@@ -60,7 +60,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               Text(
-                '${iuser.user!.name!} ${iuser.user!.lastname ?? ''}',
+                '${iuser.user != null ? iuser.user!.name : ""} ${iuser.user != null ? iuser.user!.lastname : ""}',
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
