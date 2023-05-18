@@ -1,19 +1,19 @@
-class User {
+class IUser {
   String? id;
   String? name;
   String? lastname;
-  String? nickname;
+  String? username;
   String? email;
   String? password;
 
-  User(this.id, this.name, this.lastname, this.nickname, this.email,
+  IUser(this.id, this.name, this.lastname, this.username, this.email,
       this.password);
 
-  User.fromJson(Map<String, dynamic> json) {
+  IUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     lastname = json['lastname'];
-    nickname = json['nickname'];
+    username = json['username'];
     email = json['email'];
     password = json['password'];
   }
@@ -23,7 +23,7 @@ class User {
     data['id'] = id;
     data['name'] = name;
     data['lastname'] = lastname;
-    data['nickname'] = nickname;
+    data['username'] = username;
     data['email'] = password;
     data['password'] = password;
     return data;

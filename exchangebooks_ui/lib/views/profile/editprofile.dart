@@ -1,7 +1,8 @@
+import 'package:exchangebooks_ui/model/user.dart';
 import 'package:filter_list/filter_list.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
 import '../../provider/genre_list.dart';
 import '../../services/user_service.dart';
 
@@ -14,6 +15,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditState extends State<EditProfile> {
+  User user = FirebaseAuth.instance.currentUser!;
   TextEditingController? nameController;
   TextEditingController? usernameController;
   TextEditingController? passController;
@@ -25,9 +27,12 @@ class _EditState extends State<EditProfile> {
 
   @override
   void initState() {
-    nameController = TextEditingController();
-    usernameController = TextEditingController();
+    nameController =
+        TextEditingController(text: user.displayName ?? 'Desconocido');
+    usernameController =
+        TextEditingController(text: user.displayName ?? 'Desconocido');
     passController = TextEditingController();
+    passConfirmController = TextEditingController();
     super.initState();
   }
 
@@ -40,8 +45,9 @@ class _EditState extends State<EditProfile> {
   }
 
   Future<void> updateUser() async {
-    await UserService().updateUser(
-        nameController!.text, usernameController!.text, passController!.text);
+    IUser iuser = IUser(user.uid, nameController!.text, '',
+        usernameController!.text, user.email, passConfirmController!.text);
+    await UserService().updateUser(iuser);
   }
 
   @override
