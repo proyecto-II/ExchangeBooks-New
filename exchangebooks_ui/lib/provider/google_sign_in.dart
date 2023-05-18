@@ -5,11 +5,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:exchangebooks_ui/model/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
   final authService = AuthService();
-  final apiUrl = 'http://192.168.4.39:3000';
+  final apiUrl = dotenv.env['API_URL'];
 
   IUser? _user;
 
