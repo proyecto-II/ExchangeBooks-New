@@ -3,7 +3,9 @@ import 'package:filter_list/filter_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 import '../../provider/genre_list.dart';
+import '../../provider/google_sign_in.dart';
 import '../../services/user_service.dart';
 
 class EditProfile extends StatefulWidget {
@@ -16,10 +18,10 @@ class EditProfile extends StatefulWidget {
 
 class _EditState extends State<EditProfile> {
   User user = FirebaseAuth.instance.currentUser!;
+
   TextEditingController? nameController;
   TextEditingController? usernameController;
-  TextEditingController? passController;
-  TextEditingController? passConfirmController;
+  TextEditingController? lastnameController;
   late List<Genre>? selectedGenreList = [];
   final userService = UserService();
 
@@ -31,8 +33,8 @@ class _EditState extends State<EditProfile> {
         TextEditingController(text: user.displayName ?? 'Desconocido');
     usernameController =
         TextEditingController(text: user.displayName ?? 'Desconocido');
-    passController = TextEditingController();
-    passConfirmController = TextEditingController();
+    lastnameController = TextEditingController();
+
     super.initState();
   }
 
@@ -40,14 +42,14 @@ class _EditState extends State<EditProfile> {
   void dispose() {
     nameController?.dispose();
     usernameController?.dispose();
-    passController?.dispose();
+    lastnameController?.dispose();
     super.dispose();
   }
 
   Future<void> updateUser() async {
-    IUser iuser = IUser(user.uid, nameController!.text, '',
-        usernameController!.text, user.email, passConfirmController!.text);
-    await UserService().updateUser(iuser);
+    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
+    await UserService().updateUser(iuser.user!.id!, nameController!.text,
+        usernameController!.text, lastnameController!.text);
   }
 
   @override
@@ -83,8 +85,6 @@ class _EditState extends State<EditProfile> {
               const Gap(10),
               _formpass(),
               const Gap(10),
-              _formpassconfirm(),
-              const Gap(25),
 
               const Text(
                 "Tus Preferencias",
@@ -137,26 +137,11 @@ class _EditState extends State<EditProfile> {
 
   Widget _formpass() {
     return TextFormField(
-      controller: passController,
-      obscureText: true,
+      controller: lastnameController,
       decoration: InputDecoration(
         filled: true,
         fillColor: const Color.fromRGBO(243, 248, 255, 1),
-        labelText: "Contraseña",
-        enabledBorder:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
-
-  Widget _formpassconfirm() {
-    return TextFormField(
-      controller: passConfirmController,
-      obscureText: true,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: const Color.fromRGBO(243, 248, 255, 1),
-        labelText: "Confirmar contraseña",
+        labelText: "Apellido",
         enabledBorder:
             OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -167,7 +152,7 @@ class _EditState extends State<EditProfile> {
     return ElevatedButton(
       onPressed: () {
         updateUser();
-        Navigator.pushNamed(context, '/profile_page');
+        Navigator.pop(context);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blueAccent[1000],

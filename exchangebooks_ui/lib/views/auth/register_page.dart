@@ -1,5 +1,11 @@
+import 'package:exchangebooks_ui/main.dart';
+import 'package:exchangebooks_ui/provider/google_sign_in.dart';
+import 'package:exchangebooks_ui/services/auth_service.dart';
+import 'package:exchangebooks_ui/views/auth/genre_page.dart';
+import 'package:exchangebooks_ui/views/auth/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -15,6 +21,7 @@ class _Register extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController passConfirmController = TextEditingController();
+  final authService = AuthService();
 
   bool _passwordVisible = false;
 
@@ -49,19 +56,7 @@ class _Register extends State<RegisterPage> {
             ),
             const Gap(20),
             //Boton que permite registrarse con cuentas de Google
-            GestureDetector(
-              child: Container(
-                width: 200,
-                height: 60,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 0.5),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Image.asset(scale: 10, 'assets/img/google_logo.png'),
-              ),
-              onTap: () {
-                Navigator.pushNamed(context, '/login_page');
-              },
-            ),
+            _buttonGoogle(context),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -170,8 +165,86 @@ class _Register extends State<RegisterPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
         child: const Text('Siguiente'),
-        onPressed: () {
-          Navigator.pushNamed(context, '/genre_page');
+        onPressed: () async {
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ));
+          bool isRegistered =
+              await authService.verifyUser(emailController.text.trim());
+
+          if (isRegistered) {
+            print("esta registrado");
+          } else {
+            await authService.createUser(
+                nameController.text.trim(),
+                lastnameController.text.trim(),
+                emailController.text.trim(),
+                passController.text.trim(),
+                '');
+            final provider =
+                Provider.of<GoogleSignInProvider>(context, listen: false);
+            final user = await provider.emailPasswordRegister(
+              nameController.text.trim(),
+              lastnameController.text.trim(),
+              emailController.text.trim(),
+              passController.text.trim(),
+            );
+            if (user != null) {
+              // ignore: use_build_context_synchronously
+              Navigator.pushNamed(context, '/genre_page');
+            }
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buttonGoogle(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10))),
+        child: const Text('Registrarse con Google'),
+        onPressed: () async {
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ));
+
+          final provider =
+              Provider.of<GoogleSignInProvider>(context, listen: false);
+          final googleAccount = await provider.googleUser();
+
+          if (googleAccount != null) {
+            bool isRegistered =
+                await authService.verifyUser(googleAccount.email);
+            if (isRegistered) {
+              // el usuario ya esta registrado
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const LoginPage()));
+            } else {
+              await authService.createUser(googleAccount.displayName!, '',
+                  googleAccount.email, '', googleAccount.id);
+              final user = await provider.googleRegister(googleAccount);
+
+              if (user != null) {
+                navigatorKey.currentState!.popUntil((route) => route.isFirst);
+
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const GenrePage()));
+              }
+            }
+          }
         },
       ),
     );

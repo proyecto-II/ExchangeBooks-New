@@ -20,9 +20,8 @@ class UserService {
 
     return user;
   }
-
-  async updateUser(user){
-    const updateUser = await User.findOneAndUpdate({_id: user._id,user,new: true})
+  async updateUser(id,user){
+    const updateUser = await User.findByIdAndUpdate(id,user,{new: true})
     return updateUser;
   }
 }
