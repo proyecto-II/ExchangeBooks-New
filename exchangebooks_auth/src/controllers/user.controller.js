@@ -1,16 +1,39 @@
 import UserService from "../services/user.service.js";
+import axios from "axios";
+import bcrypt from "bcrypt";
 
 const userService = new UserService();
 
 export async function createUser(req, res) {
   try {
+    const { password, ...others } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = await userService.create({
-      ...req.body,
+      ...others,
+      password: hashedPassword,
       username: req.body.email,
     });
+
+    const response = await axios.post("http://localhost:3001/email", {
+      email: req.body.email,
+      subject: "Bienvenido a Exchangebooks",
+      text: "Te damos la bienvenida a Exchangebooks, puedes acceder a nuestra plataforma con tus credenciales",
+    });
+
+    if (response.status !== 200)
+      return res.status(201).json({
+        message: "User created successfully",
+        isRegistered: true,
+        sendEmail: false,
+        user,
+      });
+
     return res.status(201).json({
       message: "User created successfully",
       isRegistered: true,
+      sendEmail: true,
       user,
     });
   } catch (err) {
