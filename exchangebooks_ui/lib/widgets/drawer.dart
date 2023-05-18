@@ -1,4 +1,3 @@
-import 'package:exchangebooks_ui/model/user.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

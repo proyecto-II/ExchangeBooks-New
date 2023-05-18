@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserService {
-  final url = 'http://192.168.4.39:3000';
+  final url = dotenv.env['API_URL'];
 
   Future<void> updateUser(
       String id, String name, String username, String lastname) async {
     try {
+      print(url);
       final user = {
         'id': id,
         'name': name,
