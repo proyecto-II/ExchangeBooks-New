@@ -13,7 +13,7 @@ class _Recomendations extends State<Recomendations> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: 500,
+      height: 390,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 4,
@@ -21,42 +21,36 @@ class _Recomendations extends State<Recomendations> {
           return GestureDetector(
             onTap: () {},
             child: SizedBox(
-              //Componente agregado ya que sin el SizedBox el texto mueve a los demas componentes
-              width: 150,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.network(
-                            'https://ekaresur.cl/cms/wp-content/uploads/2019/04/veronica-uribe-el-libro-de-oro-de-los-cuentos-de-hadas-1.jpg',
-                            width: 150,
-                            height: 225,
-                            fit: BoxFit.cover,
-                          ),
+                //Componente agregado ya que sin el SizedBox el texto mueve a los demas componentes
+                width: 150,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          'https://ekaresur.cl/cms/wp-content/uploads/2019/04/veronica-uribe-el-libro-de-oro-de-los-cuentos-de-hadas-1.jpg',
+                          width: 150,
+                          height: 225,
+                          fit: BoxFit.cover,
                         ),
-                        const Gap(25),
-                        const Text(
-                          'El libro de oro de los cuentos de hadas',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                        const Gap(10),
-                        const Text(
-                          'Verónica Uribe',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+                      ),
+                      const Gap(15),
+                      const Text(
+                        'El libro de oro de los cuentos de hadas',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      const Gap(10),
+                      const Text(
+                        'Verónica Uribe',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
+                  ),
+                )),
           );
         },
       ),

@@ -1,8 +1,12 @@
+import 'package:exchangebooks_ui/model/user.dart';
 import 'package:filter_list/filter_list.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
+import 'package:provider/provider.dart';
 import '../../provider/genre_list.dart';
+import '../../provider/google_sign_in.dart';
+import '../../services/user_service.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -13,25 +17,39 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditState extends State<EditProfile> {
+  User user = FirebaseAuth.instance.currentUser!;
+
   TextEditingController? nameController;
-  TextEditingController? nicknameController;
-  TextEditingController? passController;
-  TextEditingController? passConfirmController;
+  TextEditingController? usernameController;
+  TextEditingController? lastnameController;
   late List<Genre>? selectedGenreList = [];
+  final userService = UserService();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
+    nameController =
+        TextEditingController(text: user.displayName ?? 'Desconocido');
+    usernameController =
+        TextEditingController(text: user.displayName ?? 'Desconocido');
+    lastnameController = TextEditingController();
+
     super.initState();
   }
 
   @override
   void dispose() {
     nameController?.dispose();
-    nicknameController?.dispose();
-    passController?.dispose();
+    usernameController?.dispose();
+    lastnameController?.dispose();
     super.dispose();
+  }
+
+  Future<void> updateUser() async {
+    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
+    await UserService().updateUser(iuser.user!.id!, nameController!.text,
+        usernameController!.text, lastnameController!.text);
   }
 
   @override
@@ -63,12 +81,10 @@ class _EditState extends State<EditProfile> {
             children: [
               _formname(),
               const Gap(10),
-              _formNickname(),
+              _formUsername(),
               const Gap(10),
               _formpass(),
               const Gap(10),
-              _formpassconfirm(),
-              const Gap(25),
 
               const Text(
                 "Tus Preferencias",
@@ -96,7 +112,6 @@ class _EditState extends State<EditProfile> {
   Widget _formname() {
     return TextFormField(
       controller: nameController,
-      readOnly: true,
       decoration: InputDecoration(
         filled: true,
         fillColor: const Color.fromRGBO(243, 248, 255, 1),
@@ -107,10 +122,9 @@ class _EditState extends State<EditProfile> {
     );
   }
 
-  Widget _formNickname() {
+  Widget _formUsername() {
     return TextFormField(
-      controller: nicknameController,
-      readOnly: true,
+      controller: usernameController,
       decoration: InputDecoration(
         filled: true,
         fillColor: const Color.fromRGBO(243, 248, 255, 1),
@@ -123,26 +137,11 @@ class _EditState extends State<EditProfile> {
 
   Widget _formpass() {
     return TextFormField(
-      controller: passController,
-      obscureText: true,
+      controller: lastnameController,
       decoration: InputDecoration(
         filled: true,
         fillColor: const Color.fromRGBO(243, 248, 255, 1),
-        labelText: "Contraseña",
-        enabledBorder:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
-
-  Widget _formpassconfirm() {
-    return TextFormField(
-      controller: passConfirmController,
-      obscureText: true,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: const Color.fromRGBO(243, 248, 255, 1),
-        labelText: "Confirmar contraseña",
+        labelText: "Apellido",
         enabledBorder:
             OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -152,7 +151,8 @@ class _EditState extends State<EditProfile> {
   Widget _button() {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/profile_page');
+        updateUser();
+        Navigator.pop(context);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blueAccent[1000],

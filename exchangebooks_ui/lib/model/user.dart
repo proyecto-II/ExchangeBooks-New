@@ -8,7 +8,7 @@ class IUser {
   String? googleId;
 
   IUser(this.id, this.name, this.lastname, this.username, this.email,
-      this.password, this.googleId);
+      this.password);
 
   IUser.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
@@ -22,7 +22,7 @@ class IUser {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    data['_id'] = id;
     data['name'] = name;
     data['lastname'] = lastname;
     data['username'] = username;

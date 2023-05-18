@@ -20,6 +20,10 @@ class UserService {
 
     return user;
   }
+  async updateUser(id,user){
+    const updateUser = await User.findByIdAndUpdate(id,user,{new: true})
+    return updateUser;
+  }
 }
 
 export default UserService;

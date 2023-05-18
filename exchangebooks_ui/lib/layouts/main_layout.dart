@@ -29,7 +29,7 @@ class _MainLayout extends State<MainLayout> {
   Widget build(BuildContext context) {
     final screens = [
       const HomePage(),
-      SearchPage(),
+      const SearchPage(),
       const HomePage(),
       const ProfilePage()
     ];

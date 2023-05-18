@@ -65,3 +65,12 @@ export async function getUser(req, res) {
     return res.status(500).json({ message: "Server error", err });
   }
 }
+
+export async function editUser(req, res) {
+  try {
+    const user = await userService.updateUser(req.params.id,req.body);
+    return res.status(200).json(user);
+  } catch (err) {
+    return res.status(500).json({ message: "Server error" });
+  }
+}

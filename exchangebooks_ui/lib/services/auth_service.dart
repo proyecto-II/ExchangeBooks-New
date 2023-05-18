@@ -3,7 +3,7 @@ import 'package:exchangebooks_ui/model/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final apiUrl = 'http://192.168.4.21:3000';
+  final apiUrl = 'http://192.168.4.39:3000';
 
   Future<bool> verifyUser(String email) async {
     try {

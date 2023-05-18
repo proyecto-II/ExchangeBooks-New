@@ -40,26 +40,27 @@ class _Home extends State<HomePage> {
       ),
       drawer: const Drawers(),
       body: SafeArea(
-          child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Text(
+                    'Recomendados para ti',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(onPressed: () {}, child: const Text('Ver todo >'))
+                ],
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Text(
-                  'Recomendados para ti',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                ),
-                TextButton(onPressed: () {}, child: const Text('Ver todo >'))
-              ],
-            ),
-          ),
-          Recomendations(),
-        ],
-      )),
+            const Recomendations(),
+          ],
+        ),
+      ),
     );
   }
 }

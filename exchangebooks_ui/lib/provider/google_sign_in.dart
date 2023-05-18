@@ -9,7 +9,7 @@ import 'dart:convert';
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
   final authService = AuthService();
-  final apiUrl = 'http://192.168.4.21:3000';
+  final apiUrl = 'http://192.168.4.39:3000';
 
   IUser? _user;
 
