@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../provider/genre_list.dart';
+import '../../services/user_service.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -14,24 +15,33 @@ class EditProfile extends StatefulWidget {
 
 class _EditState extends State<EditProfile> {
   TextEditingController? nameController;
-  TextEditingController? nicknameController;
+  TextEditingController? usernameController;
   TextEditingController? passController;
   TextEditingController? passConfirmController;
   late List<Genre>? selectedGenreList = [];
+  final userService = UserService();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
+    nameController = TextEditingController();
+    usernameController = TextEditingController();
+    passController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
     nameController?.dispose();
-    nicknameController?.dispose();
+    usernameController?.dispose();
     passController?.dispose();
     super.dispose();
+  }
+
+  Future<void> updateUser() async {
+    await UserService().updateUser(
+        nameController!.text, usernameController!.text, passController!.text);
   }
 
   @override
@@ -63,7 +73,7 @@ class _EditState extends State<EditProfile> {
             children: [
               _formname(),
               const Gap(10),
-              _formNickname(),
+              _formUsername(),
               const Gap(10),
               _formpass(),
               const Gap(10),
@@ -96,7 +106,6 @@ class _EditState extends State<EditProfile> {
   Widget _formname() {
     return TextFormField(
       controller: nameController,
-      readOnly: true,
       decoration: InputDecoration(
         filled: true,
         fillColor: const Color.fromRGBO(243, 248, 255, 1),
@@ -107,10 +116,9 @@ class _EditState extends State<EditProfile> {
     );
   }
 
-  Widget _formNickname() {
+  Widget _formUsername() {
     return TextFormField(
-      controller: nicknameController,
-      readOnly: true,
+      controller: usernameController,
       decoration: InputDecoration(
         filled: true,
         fillColor: const Color.fromRGBO(243, 248, 255, 1),
@@ -152,6 +160,7 @@ class _EditState extends State<EditProfile> {
   Widget _button() {
     return ElevatedButton(
       onPressed: () {
+        updateUser();
         Navigator.pushNamed(context, '/profile_page');
       },
       style: ElevatedButton.styleFrom(
