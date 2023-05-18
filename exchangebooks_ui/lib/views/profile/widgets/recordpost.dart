@@ -46,11 +46,6 @@ class _RecordPosts extends State<RecordPosts> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
-                        const Gap(10),
-                        const Text(
-                          'Verónica Uribe',
-                          style: TextStyle(fontSize: 15),
-                        ),
                       ],
                     ),
                   )

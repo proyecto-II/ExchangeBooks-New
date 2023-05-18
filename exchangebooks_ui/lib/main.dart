@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/newpost.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/views/auth/genre_page.dart';
 import 'package:exchangebooks_ui/views/auth/login_page.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
           '/genre_page': (context) => const GenrePage(),
           '/edit_profile': (context) => const EditProfile(),
           '/profile_page': (context) => const ProfilePage(),
+          '/new_post': (context) => const NewPostPage(),
         },
         initialRoute: '/landing_page',
       ),

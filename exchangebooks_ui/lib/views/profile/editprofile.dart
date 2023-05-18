@@ -166,7 +166,7 @@ class _EditState extends State<EditProfile> {
             const Duration(seconds: 2),
           );
           // ignore: use_build_context_synchronously
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(); //Este cierra el circle indicator
           // ignore: use_build_context_synchronously
           Navigator.of(context)
               .pop(); //Por alguna razon con dos de estos envia de vuelta a la pagina anterior - (Buscar una solucion)
