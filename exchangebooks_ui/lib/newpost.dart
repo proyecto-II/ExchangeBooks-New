@@ -22,8 +22,6 @@ class _NewPost extends State<NewPostPage> {
   TextEditingController? authorController;
   TextEditingController? descriptionController;
   late List<Genre>? selectedGenreList = [];
-  late Future<File> imageFile;
-  late Image image;
   final ImagePicker _picker = ImagePicker();
   String _photoName = '';
 
