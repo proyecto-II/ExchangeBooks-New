@@ -137,6 +137,7 @@ class _Login extends State<LoginPage> {
             print("el usuario no esta regitrado");
             // mostrar error al usuario
           } else {
+            // ignore: use_build_context_synchronously
             showDialog(
                 context: context,
                 barrierDismissible: false,
@@ -173,11 +174,12 @@ class _Login extends State<LoginPage> {
         child: const Text('Iniciar Sesión con Google'),
         onPressed: () async {
           showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => const Center(
-                    child: CircularProgressIndicator(),
-                  ));
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
 
           final provider =
               Provider.of<GoogleSignInProvider>(context, listen: false);
@@ -198,6 +200,7 @@ class _Login extends State<LoginPage> {
                     builder: (context) => const LandingPage()));
               }
             } else {
+              // ignore: use_build_context_synchronously
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const RegisterPage()));
             }
