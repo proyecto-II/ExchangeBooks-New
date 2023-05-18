@@ -99,6 +99,7 @@ class _EditState extends State<EditProfile> {
               ///Aqui tienen que ir los diferentes generos
               const Gap(20),
               _buttonPreferences(),
+              _preferences(context),
               Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 100, horizontal: 75),
@@ -182,6 +183,36 @@ class _EditState extends State<EditProfile> {
         child: const Text('Actualizar'),
       );
     });
+  }
+
+  Widget _preferences(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 35,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: selectedGenreList!.length,
+          itemBuilder: (context, index) {
+            return Container(
+              width: 80,
+              margin: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                  color: Colors.amber[800],
+                  borderRadius: BorderRadius.circular(10)),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  selectedGenreList!.elementAt(index).name.toString(),
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   Widget _buttonPreferences() {
