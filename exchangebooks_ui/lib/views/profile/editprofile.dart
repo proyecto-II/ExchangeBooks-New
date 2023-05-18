@@ -50,6 +50,7 @@ class _EditState extends State<EditProfile> {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     await UserService().updateUser(iuser.user!.id!, nameController!.text,
         usernameController!.text, lastnameController!.text);
+    iuser.getUser(iuser.user!.email!);
   }
 
   @override
@@ -149,21 +150,38 @@ class _EditState extends State<EditProfile> {
   }
 
   Widget _button() {
-    return ElevatedButton(
-      onPressed: () {
-        updateUser();
-        Navigator.pop(context);
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueAccent[1000],
-        minimumSize: const Size(double.infinity, 50),
-        side: const BorderSide(
-          width: 0.5,
-          color: Colors.black,
+    return Builder(builder: (context) {
+      return ElevatedButton(
+        onPressed: () async {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+          updateUser();
+
+          await Future.delayed(
+            const Duration(seconds: 2),
+          );
+          // ignore: use_build_context_synchronously
+          Navigator.of(context).pop();
+          // ignore: use_build_context_synchronously
+          Navigator.of(context)
+              .pop(); //Por alguna razon con dos de estos envia de vuelta a la pagina anterior - (Buscar una solucion)
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blueAccent[1000],
+          minimumSize: const Size(double.infinity, 50),
+          side: const BorderSide(
+            width: 0.5,
+            color: Colors.black,
+          ),
         ),
-      ),
-      child: const Text('Actualizar'),
-    );
+        child: const Text('Actualizar'),
+      );
+    });
   }
 
   Widget _buttonPreferences() {
