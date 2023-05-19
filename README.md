@@ -5,11 +5,9 @@
 
 ## Introduction
 
-```diff
 ExchangeBooks is a software project, which consists of an opportunity to exchange books between users, it also has a recommendation system based on user preferences.
 The project is developed as a mobile application, and It has own server.
 The project is developing of the following technologies:
-```
 
 - [Flutter](https://flutter.dev)
 - [Express.js](https://expressjs.com/)
@@ -57,7 +55,7 @@ The REST API work in http://localhost:3000
 
 <h4>Sign up a new user</h4>
 
-<span style="color:green">POST</span> `/api/auth/create`
+<font color="greenyellow">POST</font> `/api/auth/create`
 
     curl -i -H 'Accept: application/json' http://localhost:3000/api/auth/create
 
@@ -71,7 +69,7 @@ googleId?: string
 
 <h4>Verify if a user is register in the database</h4>
 
-<span style="color:green">POST</span> `/api/auth/verify`
+<font color="greenyellow">POST</font> `/api/auth/verify`
 
     curl -i -H 'Accept: application/json' http://localhost:3000/api/auth/verify
 
@@ -79,10 +77,38 @@ googleId?: string
 email: string
 ```
 
+<h4>Edit user information</h4>
+
+<font color="orange">PUT</font> `/api/auth/updateUser/:userId`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/api/auth/updateUser/:userId
+
+```
+email: string
+```
+
 <h4>Get user information by email</h4>
 
-<span style="color:blue">GET</span> `/api/auth/get-user/:email`
+<font color="blue">GET</font> `/api/auth/get-user/:email`
 
     curl -i -H 'Accept: application/json' http://localhost:3000/api/auth/get-user/:email
 
 <br />
+
+## Genre Service
+
+<h4>Verify genre service is running</h4>
+
+<font color="blue">GET</font> `/api/genre`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/api/genre
+
+<h4>Create a genre</h4>
+
+<font color="greenyellow">POST</font> `/api/genre/create`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/api/genre/create
+
+```
+name: string
+```

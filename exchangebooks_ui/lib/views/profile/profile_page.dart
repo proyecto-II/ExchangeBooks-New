@@ -41,101 +41,107 @@ class _Profile extends State<ProfilePage> {
         "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(248, 255, 255, 255),
-        centerTitle: true,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_rounded),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            color: Colors.black,
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(248, 255, 255, 255),
+          centerTitle: true,
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu_rounded),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              color: Colors.black,
+            ),
+          ),
+          title: const Text(
+            'Perfil',
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ),
-        title: const Text(
-          'Perfil',
-          style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-      ),
-      drawer: const Drawers(),
-      body: FutureBuilder<List<Genre>>(
-          future: getGenres("nicopv.dev@gmail.com"),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              // While the data is loading, show a loading indicator
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              // If there was an error, display an error message
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            } else {
-              // Data has been loaded successfully, display it
-              return SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const Gap(20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/edit_profile");
-                            },
-                            icon: const Icon(Icons.edit),
-                          ),
-                          const Gap(10),
-                        ],
-                      ),
-                      Align(
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(image),
+        drawer: const Drawers(),
+        body: Consumer<GoogleSignInProvider>(
+          builder: (context, value, child) {
+            return FutureBuilder<List<Genre>>(
+                future: getGenres(user.email!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // While the data is loading, show a loading indicator
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    // If there was an error, display an error message
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    // Data has been loaded successfully, display it
+                    return SafeArea(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            const Gap(20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, "/edit_profile");
+                                  },
+                                  icon: const Icon(Icons.edit),
+                                ),
+                                const Gap(10),
+                              ],
+                            ),
+                            Align(
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(image),
+                              ),
+                            ),
+                            Text(
+                              '${iuser.user != null ? iuser.user!.name : ""} ${iuser.user != null ? iuser.user!.lastname : ""}',
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const Gap(25),
+                            const Text(
+                              'Mis Preferencias',
+                              style: TextStyle(
+                                color: Color.fromRGBO(20, 30, 71, 1),
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Gap(15),
+                            _preferences(context),
+                            const Gap(10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                const Text(
+                                  'Publicaciones Realizadas',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const Gap(15),
+                                TextButton(
+                                    onPressed: () {},
+                                    child: const Text('Ver todo >'))
+                              ],
+                            ),
+                            //Aqui deberian ir las preferencias del usuario
+                            const RecordPosts(),
+                          ],
                         ),
                       ),
-                      Text(
-                        '${iuser.user != null ? iuser.user!.name : ""} ${iuser.user != null ? iuser.user!.lastname : ""}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      const Gap(25),
-                      const Text(
-                        'Mis Preferencias',
-                        style: TextStyle(
-                          color: Color.fromRGBO(20, 30, 71, 1),
-                          fontFamily: 'Plus Jakarta Sans',
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Gap(15),
-                      _preferences(context),
-                      const Gap(10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const Text(
-                            'Publicaciones Realizadas',
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold),
-                          ),
-                          const Gap(15),
-                          TextButton(
-                              onPressed: () {}, child: const Text('Ver todo >'))
-                        ],
-                      ),
-                      //Aqui deberian ir las preferencias del usuario
-                      const RecordPosts(),
-                    ],
-                  ),
-                ),
-              );
-            }
-          }),
-    );
+                    );
+                  }
+                });
+          },
+        ));
   }
 
   Widget _preferences(BuildContext context) {
