@@ -4,6 +4,12 @@ import bcrypt from "bcrypt";
 
 const userService = new UserService();
 
+  /**
+  * Metodo que permite guardar un usuario en la base de datos Mongo, es aquel que permite registrar al usuario en la aplicación
+  * @param req Es la solicitud del usuario, la cual es recibida por el servidor
+  * @param res Respuesta que el servidor envia al usuario
+  * @return un Json que contiene el mensaje dependiendo si se guardo el usuario corrrectamente y el usuario en si.
+  */
 export async function createUser(req, res) {
   try {
     const { password, ...others } = req.body;
@@ -41,6 +47,12 @@ export async function createUser(req, res) {
   }
 }
 
+  /**
+  * Metodo que permite verificar un usuario
+  * @param req Es la solicitud del usuario, la cual es recibida por el servidor
+  * @param res Respuesta que el servidor envia al usuario
+  * @return un mensaje y un estado dependiendo si el usuario es encontrado en la base de datos, y a la vez si esta registrado en el sistema
+  */
 export async function verifyUser(req, res) {
   try {
     const user = await userService.verify(req.body.email);
@@ -55,6 +67,13 @@ export async function verifyUser(req, res) {
   }
 }
 
+
+  /**
+  * Metodo que permite actualizar los datos del usuario
+  * @param req Es la solicitud del usuario, la cual es recibida por el servidor
+  * @param res Respuesta que el servidor envia al usuario
+  * @return una respuesta con el estado 200 y el usuario en formato Json para que el usuario pueda obtener los datos actualizados
+  */
 export async function getUser(req, res) {
   try {
     const user = await userService.get(req.params.email);
@@ -66,6 +85,12 @@ export async function getUser(req, res) {
   }
 }
 
+  /**
+  * Metodo que permite actualizar los datos del usuario
+  * @param req Es la solicitud del usuario, la cual es recibida por el servidor
+  * @param res Respuesta que el servidor envia al usuario
+  * @return una respuesta con el estado 200 y el usuario en formato Json para que el usuario pueda obtener los datos actualizados
+  */
 export async function editUser(req, res) {
   try {
     const user = await userService.updateUser(req.params.id,req.body);

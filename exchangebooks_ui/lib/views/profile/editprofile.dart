@@ -206,15 +206,15 @@ class _EditState extends State<EditProfile> {
 
   //Si el usuario tiene ya tiene preferencias, entonces se muestran incluso si no ha entrado al Dialog de ver generos.
   /**
-  * Muestra 
+  * Widget que permite ver los generos del usuario en un ListView desplegado de manera horizontal
   * @param {BuildContext context} Parametro que es usado para realizar llamadas a distintos widgets u obtener datos del widget anterior.
   * @return Padding que contiene las diferentes preferencias del usuario ya guardadas en su cuenta,
             esta se actualiza cuando el usuario agrega una al Dialgo
   */
-
   Widget _preferences(BuildContext context) {
     final genres = Provider.of<GenreProvider>(context, listen: false);
     if (selectedGenreList!.isEmpty) {
+      //En caso de que la lista de seleccion este vacia muestra los generos que el usuario ya tiene guardados en el provider
       preSelectedGenre = genres.genres!;
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -244,6 +244,7 @@ class _EditState extends State<EditProfile> {
         ),
       );
     } else {
+      //En caso de que ya ha seleccionado items, entonces a dicha lista se le agrega los datos del provider
       for (var item in genres.genres!) {
         Genre genre = Genre.fromJson(item.toJson());
         selectedGenreList!.add(genre);
