@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/provider/genre_provider.dart';
 import 'package:exchangebooks_ui/services/genre_service.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,9 +54,11 @@ class _EditState extends State<EditProfile> {
 
   Future<void> updateUser() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
+    final genresProvider = Provider.of<GenreProvider>(context, listen: false);
     await UserService().updateUser(iuser.user!.id!, nameController!.text,
         usernameController!.text, lastnameController!.text);
     await UserService().updateGenresUser(iuser.user!.id!, selectedGenreList!);
+    genresProvider.setGenres(selectedGenreList!);
     iuser.getUser(iuser.user!.email!);
   }
 

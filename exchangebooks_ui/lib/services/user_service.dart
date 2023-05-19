@@ -56,11 +56,11 @@ class UserService {
     }
   }
 
-  Future<List<Genre>> getGenresByUser(String userId) async {
+  Future<List<Genre>> getGenresByUser(String email) async {
     List<Genre> genres = [];
     try {
       final response = await http.get(
-        Uri.parse('$url/api/genre/user/$userId'),
+        Uri.parse('$url/api/genre/user/$email'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },

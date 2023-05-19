@@ -20,8 +20,9 @@ export async function createUserGenre(req, res) {
 
 export async function getUserGenres(req, res) {
   try {
-    const userGenres = await userGenreService.getUserGenresById(
-      req.params.userId
+    console.log(req.params.email);
+    const userGenres = await userGenreService.getUserGenresByEmail(
+      req.params.email
     );
     return res.status(200).json(userGenres);
   } catch (err) {

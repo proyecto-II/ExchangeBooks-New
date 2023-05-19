@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/provider/genre_provider.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/user_service.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
@@ -23,16 +24,13 @@ class _Profile extends State<ProfilePage> {
 
   @override
   void initState() {
-    getGenres();
+    //getGenres();
     super.initState();
   }
 
-  Future<void> getGenres() async {
-    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
-    List<Genre> genres = await userService.getGenresByUser(iuser.user!.id!);
-    setState(() {
-      genreList = genres;
-    });
+  Future<List<Genre>> getGenres(String email) async {
+    List<Genre> genres = await userService.getGenresByUser(email);
+    return genres;
   }
 
   @override
@@ -60,68 +58,89 @@ class _Profile extends State<ProfilePage> {
         ),
       ),
       drawer: const Drawers(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Gap(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/edit_profile");
-                    },
-                    icon: const Icon(Icons.edit),
+      body: FutureBuilder<List<Genre>>(
+          future: getGenres("nicopv.dev@gmail.com"),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // While the data is loading, show a loading indicator
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              // If there was an error, display an error message
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else {
+              // Data has been loaded successfully, display it
+              return SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const Gap(20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/edit_profile");
+                            },
+                            icon: const Icon(Icons.edit),
+                          ),
+                          const Gap(10),
+                        ],
+                      ),
+                      Align(
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(image),
+                        ),
+                      ),
+                      Text(
+                        '${iuser.user != null ? iuser.user!.name : ""} ${iuser.user != null ? iuser.user!.lastname : ""}',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const Gap(25),
+                      const Text(
+                        'Mis Preferencias',
+                        style: TextStyle(
+                          color: Color.fromRGBO(20, 30, 71, 1),
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Gap(15),
+                      _preferences(context),
+                      const Gap(10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const Text(
+                            'Publicaciones Realizadas',
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold),
+                          ),
+                          const Gap(15),
+                          TextButton(
+                              onPressed: () {}, child: const Text('Ver todo >'))
+                        ],
+                      ),
+                      //Aqui deberian ir las preferencias del usuario
+                      const RecordPosts(),
+                    ],
                   ),
-                  const Gap(10),
-                ],
-              ),
-              Align(
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(image),
                 ),
-              ),
-              Text(
-                '${iuser.user != null ? iuser.user!.name : ""} ${iuser.user != null ? iuser.user!.lastname : ""}',
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const Gap(25),
-              const Text(
-                'Mis Preferencias',
-                style: TextStyle(
-                  color: Color.fromRGBO(20, 30, 71, 1),
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Gap(15),
-              _preferences(context),
-              const Gap(10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text(
-                    'Publicaciones Realizadas',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                  ),
-                  const Gap(15),
-                  TextButton(onPressed: () {}, child: const Text('Ver todo >'))
-                ],
-              ),
-              //Aqui deberian ir las preferencias del usuario
-              const RecordPosts(),
-            ],
-          ),
-        ),
-      ),
+              );
+            }
+          }),
     );
   }
 
   Widget _preferences(BuildContext context) {
+    final genresProvider = Provider.of<GenreProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: SizedBox(
@@ -129,7 +148,7 @@ class _Profile extends State<ProfilePage> {
         height: 35,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: genreList.length,
+          itemCount: genresProvider.genres!.length,
           itemBuilder: (context, index) {
             return Container(
               width: 80,
@@ -140,7 +159,7 @@ class _Profile extends State<ProfilePage> {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  genreList.elementAt(index).name!,
+                  genresProvider.genres!.elementAt(index).name!,
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
