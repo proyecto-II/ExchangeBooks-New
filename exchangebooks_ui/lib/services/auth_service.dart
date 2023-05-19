@@ -75,7 +75,7 @@ class AuthService {
   Future<void> createGenresUser(String id, List<Genre> genres) async {
     try {
       final response = await http.post(
-        Uri.parse('$apiUrl/api/genre/create'),
+        Uri.parse('$apiUrl/api/genre/user/create'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

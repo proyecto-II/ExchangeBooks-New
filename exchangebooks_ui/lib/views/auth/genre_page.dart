@@ -26,7 +26,10 @@ class _Genres extends State<GenrePage> {
   }
 
   Future<void> getGenres() async {
-    genreList = await GenreService().getGenres();
+    List<Genre> genres = await GenreService().getGenres();
+    setState(() {
+      genreList = genres;
+    });
   }
 
   Future<void> putGenres() async {
@@ -89,7 +92,8 @@ class _Genres extends State<GenrePage> {
               wrapSpacing: 20,
               backgroundColor: Colors.white),
           onApplyButtonClick: (list) {
-            // Se hace algo con la lista
+            selectedGenreList = list;
+            putGenres();
             Navigator.pushNamed(context, '/landing_page');
           },
           choiceChipLabel: (item) {

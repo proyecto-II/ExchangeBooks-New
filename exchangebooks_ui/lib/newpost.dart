@@ -43,14 +43,6 @@ class _NewPost extends State<NewPostPage> {
           style: TextStyle(
               fontSize: 27, fontWeight: FontWeight.bold, color: Colors.black),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-              ))
-        ],
       ),
       drawer: const Drawers(),
       body: SafeArea(
@@ -160,6 +152,7 @@ class _NewPost extends State<NewPostPage> {
             (imgFile) {
               File file = File(imgFile!.path);
               _photoName = Utility.base64String(file.readAsBytesSync());
+              setState(() {});
             },
           );
         },

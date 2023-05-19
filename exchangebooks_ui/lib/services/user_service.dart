@@ -42,7 +42,7 @@ class UserService {
       };
       log(update.toString());
       var response = await http.put(
-        Uri.parse("$url/api/genre/update/$id"),
+        Uri.parse("$url/api/genre/user/update/$id"),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -53,6 +53,36 @@ class UserService {
       }
     } catch (e) {
       log(e.toString());
+    }
+  }
+
+  Future<List<Genre>> getGenresByUser(String userId) async {
+    List<Genre> genres = [];
+    try {
+      final response = await http.get(
+        Uri.parse('$url/api/genre/user/$userId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      final jsonData = json.decode(response.body) as Map<String, dynamic>;
+
+      if (jsonData.containsKey("genres") &&
+          jsonData["genres"] is List<dynamic>) {
+        final data = jsonData["genres"] as List<dynamic>;
+        for (var item in data) {
+          if (item is Map<String, dynamic>) {
+            Genre genre = Genre.fromJson(item);
+
+            genres.add(genre);
+          }
+        }
+      }
+
+      return genres;
+    } catch (error) {
+      log(error.toString());
+      return genres;
     }
   }
 }
