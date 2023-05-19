@@ -33,6 +33,13 @@ class Drawers extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.post_add),
+            title: const Text('Nueva Publicación'),
+            onTap: () {
+              Navigator.pushNamed(context, '/new_post');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Cerrar Sesión'),
             onTap: () {
