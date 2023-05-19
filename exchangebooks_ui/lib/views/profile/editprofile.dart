@@ -207,6 +207,7 @@ class _EditState extends State<EditProfile> {
   //Si el usuario tiene ya tiene preferencias, entonces se muestran incluso si no ha entrado al Dialog de ver generos.
   Widget _preferences(BuildContext context) {
     final genres = Provider.of<GenreProvider>(context, listen: false);
+    preList = genres.genres!;
     if (selectedGenreList!.isEmpty) {
       preSelectedGenre = genres.genres!;
       return Padding(
@@ -286,13 +287,17 @@ class _EditState extends State<EditProfile> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [Text('Ver generos'), Icon(Icons.add)],
+        children: const [Text('Ver nuevos generos'), Icon(Icons.add)],
       ),
     );
   }
 
   void openFilterDialog() async {
     final genres = Provider.of<GenreProvider>(context, listen: false);
+    //Se removera de la lista del Dialog los generos que el usuario ya tiene seleccionado
+    genreList.removeWhere(
+        (item) => genres.genres!.any((item2) => item.id == item2.id));
+
     await FilterListDialog.display<Genre>(
       context,
       listData: genreList,
@@ -312,9 +317,6 @@ class _EditState extends State<EditProfile> {
         return genre!.name!;
       },
       validateSelectedItem: (list, item) {
-        if (genres.genres!.isNotEmpty) {
-          const ChoiceChipThemeData(selectedBackgroundColor: Colors.blue);
-        }
         return list!.contains(item);
       },
       onItemSearch: (genre, query) {
