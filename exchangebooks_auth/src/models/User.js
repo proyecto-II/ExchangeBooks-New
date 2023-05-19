@@ -5,13 +5,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  lastname: {
-    type: String,
-  },
   username: {
     type: String,
+    required: true,
     unique: true,
-    default: null,
   },
   email: {
     type: String,
@@ -20,10 +17,6 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-  },
-  googleId: {
-    type: String,
-    default: "",
   },
   createdAt: {
     type: Date,
