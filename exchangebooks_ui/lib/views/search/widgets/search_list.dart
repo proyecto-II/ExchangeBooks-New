@@ -16,7 +16,7 @@ class _SearchList extends State<SearchList> {
       height: MediaQuery.of(context).size.height - 270,
       child: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: 4,
+        itemCount: 10,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {},

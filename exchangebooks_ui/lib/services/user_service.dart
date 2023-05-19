@@ -34,15 +34,15 @@ class UserService {
     }
   }
 
-  Future<void> updateGenresUser(String id, List<Genre> genres) async {
+  Future<void> updateGenresUser(String email, List<Genre> genres) async {
     try {
       final update = {
-        'userId': id,
+        'userId': email,
         'genres': genres.map((genre) => genre.toJson()).toList()
       };
       log(update.toString());
       var response = await http.put(
-        Uri.parse("$url/api/genre/user/update/$id"),
+        Uri.parse("$url/api/genre/user/update/$email"),
         headers: {
           'Content-Type': 'application/json',
         },

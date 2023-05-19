@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/views/home/widgets/bookswidget.dart';
 import 'package:exchangebooks_ui/views/home/widgets/recomendationwidget.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,7 @@ class _Home extends State<HomePage> {
               ),
             ),
             const Recomendations(),
+            const BooksList(),
           ],
         ),
       ),

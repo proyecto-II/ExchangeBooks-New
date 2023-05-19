@@ -31,11 +31,13 @@ class _EditState extends State<EditProfile> {
 
   @override
   void initState() {
+    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     nameController =
-        TextEditingController(text: user.displayName ?? 'Desconocido');
+        TextEditingController(text: iuser.user!.name ?? 'Desconocido');
     usernameController =
-        TextEditingController(text: user.displayName ?? 'Desconocido');
-    lastnameController = TextEditingController();
+        TextEditingController(text: iuser.user!.username ?? 'Desconocido');
+    lastnameController =
+        TextEditingController(text: iuser.user!.lastname ?? 'Desconocido');
     getGenres();
     super.initState();
   }
@@ -57,7 +59,8 @@ class _EditState extends State<EditProfile> {
     final genresProvider = Provider.of<GenreProvider>(context, listen: false);
     await UserService().updateUser(iuser.user!.id!, nameController!.text,
         usernameController!.text, lastnameController!.text);
-    await UserService().updateGenresUser(iuser.user!.id!, selectedGenreList!);
+    await UserService()
+        .updateGenresUser(iuser.user!.email!, selectedGenreList!);
     genresProvider.setGenres(selectedGenreList!);
     iuser.getUser(iuser.user!.email!);
   }
@@ -103,16 +106,21 @@ class _EditState extends State<EditProfile> {
                     fontFamily: 'Plus Jakarta Sans',
                     fontWeight: FontWeight.bold),
               ),
-              const Text("Selecciona 3"),
 
               ///Aqui tienen que ir los diferentes generos
-              const Gap(20),
+              const Gap(10),
               _buttonPreferences(),
+              const Text(
+                'Seleccionados: ',
+                style: TextStyle(fontWeight: FontWeight.w700),
+              ),
+              const Gap(10),
               _preferences(context),
               Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 100, horizontal: 75),
-                  child: _button()),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 100, horizontal: 75),
+                child: _button(),
+              ),
             ],
           ),
         ),
@@ -179,7 +187,7 @@ class _EditState extends State<EditProfile> {
           Navigator.of(context).pop(); //Este cierra el circle indicator
           // ignore: use_build_context_synchronously
           Navigator.of(context)
-              .pop(); //Por alguna razon con dos de estos envia de vuelta a la pagina anterior - (Buscar una solucion)
+              .pop(); //Por alguna razon con dos de estos envia se vuelta a la pagina anterior - (Buscar una solucion)
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent[1000],
