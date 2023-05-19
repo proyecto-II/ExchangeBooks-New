@@ -72,7 +72,7 @@ class AuthService {
     return IUser.fromJson(jsonData);
   }
 
-  Future<void> createGenresUser(String id, List<Genre> genres) async {
+  Future<void> createGenresUser(String email, List<Genre> genres) async {
     try {
       final response = await http.post(
         Uri.parse('$apiUrl/api/genre/user/create'),
@@ -80,7 +80,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode({
-          'userId': id,
+          'userId': email,
           'genres': genres.map((genre) => genre.toJson()).toList()
         }),
       );

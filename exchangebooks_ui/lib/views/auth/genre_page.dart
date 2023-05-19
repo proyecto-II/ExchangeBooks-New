@@ -1,4 +1,5 @@
 import 'package:filter_list/filter_list.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../model/genre.dart';
@@ -18,6 +19,7 @@ class _Genres extends State<GenrePage> {
   List<Genre>? selectedGenreList = [];
   List<Genre> genreList = [];
   final authService = AuthService();
+  User user = FirebaseAuth.instance.currentUser!;
 
   @override
   void initState() {
@@ -34,7 +36,7 @@ class _Genres extends State<GenrePage> {
 
   Future<void> putGenres() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
-    authService.createGenresUser(iuser.user!.id!, selectedGenreList!);
+    authService.createGenresUser(user.email!, selectedGenreList!);
   }
 
   @override
