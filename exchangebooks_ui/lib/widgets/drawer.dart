@@ -11,6 +11,8 @@ class Drawers extends StatelessWidget {
     User user = FirebaseAuth.instance.currentUser!;
     final iuser = Provider.of<GoogleSignInProvider>(context);
     final email = user.email ?? "Desconocido";
+    final image = user.photoURL ??
+        "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
 
     return Drawer(
       child: ListView(
@@ -26,13 +28,8 @@ class Drawers extends StatelessWidget {
               '${iuser.user != null ? iuser.user!.name! : ""} ${iuser.user != null ? iuser.user!.lastname! : ''}',
               style: const TextStyle(color: Colors.black),
             ),
-            currentAccountPicture: const CircleAvatar(
-              backgroundColor: Color.fromARGB(143, 64, 255, 144),
-              child: Text("Apodo",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
-                  )),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: NetworkImage(image),
             ),
           ),
           ListTile(
