@@ -1,22 +1,21 @@
 import express from "express";
 import { connectDB } from "./config/database.js";
-import authRoutes from "./routes/auth.routes.js";
+import indexRoutes from "./routes/index.routes.js";
 
 const app = express();
-const SERVER_PORT = 3003;
+const SERVER_PORT = 3002;
 
-// middlewares
 app.use(express.json());
 
 // database
 connectDB();
 
 // routes
-app.use("/", authRoutes);
+app.use("/", indexRoutes);
 
 // listen
 app.listen(SERVER_PORT, () => {
   console.log(
-    `[🔋LISTEN][AUTH SERVICE] Server is running on port ${SERVER_PORT}`
+    `[🔋LISTEN][GENRE SERVICE] Server running on port ${SERVER_PORT}`
   );
 });

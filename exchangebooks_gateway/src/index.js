@@ -12,7 +12,8 @@ const checkService = new CheckService();
 
 const services = [
   { name: "Notification", url: `${API_URL}/notification` },
-  { name: "Category", url: `${API_URL}/category` },
+  { name: "Genre", url: `${API_URL}/genre` },
+  { name: "Auth", url: `${API_URL}/auth` },
 ];
 
 // middlewares
@@ -27,7 +28,9 @@ app.get("/", (req, res) => {
 });
 
 app.use(`${API_NAME}/notification`, proxy(`${API_HOST}:3001`));
-app.use(`${API_NAME}/category`, proxy(`${API_HOST}:3002`));
+app.use(`${API_NAME}/genre`, proxy(`${API_HOST}:3002`));
+app.use(`${API_NAME}/auth`, proxy(`${API_HOST}:3003`));
+
 app.get("/services", async (req, res) => {
   const results = await checkService.check(services);
 

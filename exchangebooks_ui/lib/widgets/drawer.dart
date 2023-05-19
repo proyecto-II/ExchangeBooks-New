@@ -9,8 +9,8 @@ class Drawers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User user = FirebaseAuth.instance.currentUser!;
+    final iuser = Provider.of<GoogleSignInProvider>(context);
     final email = user.email ?? "Desconocido";
-    final name = user.displayName ?? "Desconocido";
 
     return Drawer(
       child: ListView(
@@ -19,11 +19,11 @@ class Drawers extends StatelessWidget {
             decoration:
                 const BoxDecoration(color: Color.fromARGB(143, 255, 255, 255)),
             accountEmail: Text(
-              name,
+              email,
               style: const TextStyle(color: Colors.black),
             ),
             accountName: Text(
-              email,
+              '${iuser.user != null ? iuser.user!.name! : ""} ${iuser.user != null ? iuser.user!.lastname! : ''}',
               style: const TextStyle(color: Colors.black),
             ),
             currentAccountPicture: const CircleAvatar(
@@ -39,9 +39,13 @@ class Drawers extends StatelessWidget {
             leading: const Icon(Icons.logout),
             title: const Text('Cerrar Sesión'),
             onTap: () {
-              final provider =
-                  Provider.of<GoogleSignInProvider>(context, listen: false);
-              provider.logoout();
+              if (user.providerData[0].providerId == 'password') {
+                FirebaseAuth.instance.signOut();
+              } else {
+                final provider =
+                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                provider.logoout();
+              }
             },
           ),
         ],

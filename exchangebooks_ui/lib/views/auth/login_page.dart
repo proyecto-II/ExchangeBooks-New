@@ -1,4 +1,7 @@
+import 'package:exchangebooks_ui/main.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
+import 'package:exchangebooks_ui/services/auth_service.dart';
+import 'package:exchangebooks_ui/views/auth/register_page.dart';
 import 'package:exchangebooks_ui/views/landing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -16,6 +19,7 @@ class _Login extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   bool _passwordVisible = false;
+  final authService = AuthService();
 
   @override
   void initState() {
@@ -53,7 +57,7 @@ class _Login extends State<LoginPage> {
                   const Text('¿No tienes una cuenta?'),
                   TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/Registerpage');
+                        Navigator.pushNamed(context, '/register_page');
                       },
                       child: const Text("Registrate"))
                 ],
@@ -124,8 +128,36 @@ class _Login extends State<LoginPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10))),
         child: const Text('Iniciar Sesión'),
-        onPressed: () {
+        onPressed: () async {
           //Navigator.pushNamed(context, '/Homepage');
+          bool isRegistered =
+              await authService.verifyUser(emailController.text.trim());
+
+          if (isRegistered == false) {
+            print("el usuario no esta regitrado");
+            // mostrar error al usuario
+          } else {
+            // ignore: use_build_context_synchronously
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                      child: CircularProgressIndicator(),
+                    ));
+
+            final provider =
+                Provider.of<GoogleSignInProvider>(context, listen: false);
+            final user = await provider.emailPasswordSignIn(
+                emailController.text.trim(), passController.text.trim());
+
+            if (user != null) {
+              navigatorKey.currentState!.popUntil((route) => route.isFirst);
+
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const LandingPage()));
+            }
+          }
         },
       ),
     );
@@ -133,22 +165,45 @@ class _Login extends State<LoginPage> {
 
   Widget _buttonGoogle(BuildContext context) {
     return Container(
-      height: 100,
       padding: const EdgeInsets.all(20),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromRGBO(252, 163, 17, 1),
-          minimumSize: const Size(270, 100),
-        ),
+            minimumSize: const Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10))),
         child: const Text('Iniciar Sesión con Google'),
         onPressed: () async {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+
           final provider =
               Provider.of<GoogleSignInProvider>(context, listen: false);
-          final user = await provider.googleLogin();
+          final googleAccount = await provider.googleUser();
 
-          if (user != null) {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const LandingPage()));
+          if (googleAccount != null) {
+            bool isRegistered =
+                await authService.verifyUser(googleAccount.email);
+
+            if (isRegistered) {
+              final user = await provider.googleLogin(googleAccount);
+
+              if (user != null) {
+                navigatorKey.currentState!.popUntil((route) => route.isCurrent);
+
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const LandingPage()));
+              }
+            } else {
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const RegisterPage()));
+            }
           }
         },
       ),

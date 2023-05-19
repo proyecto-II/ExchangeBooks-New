@@ -1,6 +1,12 @@
+import 'package:exchangebooks_ui/provider/genre_provider.dart';
+import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/views/home/home_page.dart';
+import 'package:exchangebooks_ui/views/profile/profile_page.dart';
+import 'package:exchangebooks_ui/views/search/search_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
@@ -11,14 +17,24 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayout extends State<MainLayout> {
   int selectedIndex = 0;
+  User user = FirebaseAuth.instance.currentUser!;
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+    provider.getUser(user.email!); // Call the API to fetch user data
+    final genreProvider = Provider.of<GenreProvider>(context, listen: false);
+    genreProvider.getGenres(user.email!);
+  }
 
   @override
   Widget build(BuildContext context) {
     final screens = [
       const HomePage(),
+      const SearchPage(),
       const HomePage(),
-      const HomePage(),
-      const HomePage()
+      const ProfilePage()
     ];
 
     return Scaffold(
