@@ -144,7 +144,7 @@ class _Profile extends State<ProfilePage> {
   Widget _preferences(BuildContext context) {
     final genresProvider = Provider.of<GenreProvider>(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: 35,
