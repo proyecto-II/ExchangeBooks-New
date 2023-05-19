@@ -3,7 +3,7 @@ import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../provider/genre_list.dart';
+import '../../model/genre.dart';
 import '../../widgets/drawer.dart';
 
 class SearchPage extends StatefulWidget {
@@ -18,6 +18,7 @@ class _SearchPage extends State<SearchPage> {
   TextEditingController? searchcontroller;
   String book = "Todos";
   List<Genre>? selectedGenreList = [];
+  List<Genre> genreList = [];
 
   @override
   void initState() {

@@ -1,20 +1,44 @@
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
+import 'package:exchangebooks_ui/services/user_service.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/genre.dart';
 import 'widgets/recordpost.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _Profile createState() => _Profile();
+}
+
+class _Profile extends State<ProfilePage> {
+  List<Genre> genreList = [];
+  UserService userService = UserService();
+
+  @override
+  void initState() {
+    getGenres();
+    super.initState();
+  }
+
+  Future<void> getGenres() async {
+    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
+    List<Genre> genres = await userService.getGenresByUser(iuser.user!.id!);
+    setState(() {
+      genreList = genres;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     User user = FirebaseAuth.instance.currentUser!;
     final iuser = Provider.of<GoogleSignInProvider>(context);
-    final name = user.displayName ?? "Desconocido";
     final image = user.photoURL ??
         "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
 
@@ -105,7 +129,7 @@ class ProfilePage extends StatelessWidget {
         height: 35,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: 4,
+          itemCount: genreList.length,
           itemBuilder: (context, index) {
             return Container(
               width: 80,
@@ -113,11 +137,11 @@ class ProfilePage extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.amber[800],
                   borderRadius: BorderRadius.circular(10)),
-              child: const Align(
+              child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Fantasia",
-                  style: TextStyle(color: Colors.white),
+                  genreList.elementAt(index).name!,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             );

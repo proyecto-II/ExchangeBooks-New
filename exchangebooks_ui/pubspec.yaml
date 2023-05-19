@@ -39,6 +39,7 @@ dependencies:
   gap: ^3.0.0
   flutter_svg: ^2.0.4
   filter_list: ^1.0.2
+  image_picker: ^0.8.7+5
 
   # Google Sign in
   firebase_core: ^2.11.0
