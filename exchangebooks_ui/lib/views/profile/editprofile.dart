@@ -206,11 +206,11 @@ class _EditState extends State<EditProfile> {
 
   //Si el usuario tiene ya tiene preferencias, entonces se muestran incluso si no ha entrado al Dialog de ver generos.
   /**
-* send And Validate User OTP for SMS
-* @param {IMessageBody} phone
-* @return {Promise<IResponse<IMessageResponse>>} Response successfull
-operation
-*/
+  * Muestra 
+  * @param {BuildContext context} Parametro que es usado para realizar llamadas a distintos widgets u obtener datos del widget anterior.
+  * @return Padding que contiene las diferentes preferencias del usuario ya guardadas en su cuenta,
+            esta se actualiza cuando el usuario agrega una al Dialgo
+  */
 
   Widget _preferences(BuildContext context) {
     final genres = Provider.of<GenreProvider>(context, listen: false);
