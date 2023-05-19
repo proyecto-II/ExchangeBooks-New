@@ -1,3 +1,5 @@
+import 'package:exchangebooks_ui/newpost.dart';
+import 'package:exchangebooks_ui/provider/genre_provider.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/views/auth/genre_page.dart';
 import 'package:exchangebooks_ui/views/auth/login_page.dart';
@@ -30,8 +32,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-    return ChangeNotifierProvider(
-      create: (context) => GoogleSignInProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => GoogleSignInProvider(),
+        ),
+        ChangeNotifierProvider(create: (contexnt) => GenreProvider())
+      ],
       child: MaterialApp(
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
@@ -42,6 +49,7 @@ class MyApp extends StatelessWidget {
           '/genre_page': (context) => const GenrePage(),
           '/edit_profile': (context) => const EditProfile(),
           '/profile_page': (context) => const ProfilePage(),
+          '/new_post': (context) => const NewPostPage(),
         },
         initialRoute: '/landing_page',
       ),

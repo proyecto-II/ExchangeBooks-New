@@ -53,7 +53,11 @@ class _Home extends State<HomePage> {
                     'Recomendados para ti',
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   ),
-                  TextButton(onPressed: () {}, child: const Text('Ver todo >'))
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/new_post');
+                      },
+                      child: const Text('Ver todo >'))
                 ],
               ),
             ),

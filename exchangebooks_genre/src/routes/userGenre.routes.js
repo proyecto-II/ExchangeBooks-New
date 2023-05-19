@@ -13,7 +13,7 @@ router.post("/create", createUserGenre);
 // update user genres
 router.put("/update/:userId", updateUserGenres);
 
-// get all user genres by user id
-router.get("/:userId", getUserGenres);
+// get all genres by user id
+router.get("/:email", getUserGenres);
 
 export default router;

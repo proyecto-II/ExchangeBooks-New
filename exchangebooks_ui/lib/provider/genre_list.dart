@@ -1,16 +1,16 @@
-class Genre {
+class GenreList {
   final String? name;
-  Genre({this.name});
+  GenreList({this.name});
 }
 
-List<Genre> genreList = [
-  Genre(name: "Fantasia"),
-  Genre(name: "Ciencia Ficción"),
-  Genre(name: "SciFi"),
-  Genre(name: "Humor"),
-  Genre(name: "Terror"),
-  Genre(name: "Horror"),
-  Genre(name: "Romance"),
-  Genre(name: "Documental"),
-  Genre(name: "Tragedia"),
+List<GenreList> genreList = [
+  GenreList(name: "Fantasia"),
+  GenreList(name: "Ciencia Ficción"),
+  GenreList(name: "SciFi"),
+  GenreList(name: "Humor"),
+  GenreList(name: "Terror"),
+  GenreList(name: "Horror"),
+  GenreList(name: "Romance"),
+  GenreList(name: "Documental"),
+  GenreList(name: "Tragedia"),
 ];
