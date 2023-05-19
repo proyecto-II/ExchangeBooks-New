@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-
 import '../../model/genre.dart';
 import 'widgets/recordpost.dart';
 
@@ -64,17 +63,15 @@ class _Profile extends State<ProfilePage> {
                 future: getGenres(user.email!),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    // While the data is loading, show a loading indicator
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   } else if (snapshot.hasError) {
-                    // If there was an error, display an error message
                     return Center(
                       child: Text('Error: ${snapshot.error}'),
                     );
                   } else {
-                    // Data has been loaded successfully, display it
+                    // Se muestra si los datos se cargaron correctamente
                     return SafeArea(
                       child: SingleChildScrollView(
                         child: Column(
@@ -146,7 +143,6 @@ class _Profile extends State<ProfilePage> {
 
   Widget _preferences(BuildContext context) {
     final genresProvider = Provider.of<GenreProvider>(context);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: SizedBox(
