@@ -24,7 +24,9 @@ class _EditState extends State<EditProfile> {
   TextEditingController? usernameController;
   TextEditingController? lastnameController;
   List<Genre>? selectedGenreList = [];
+  List<Genre> preSelectedGenre = [];
   List<Genre> genreList = [];
+  List<Genre> preList = [];
   final userService = UserService();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -202,34 +204,71 @@ class _EditState extends State<EditProfile> {
     });
   }
 
+  //Si el usuario tiene ya tiene preferencias, entonces se muestran incluso si no ha entrado al Dialog de ver generos.
   Widget _preferences(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: 35,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: selectedGenreList!.length,
-          itemBuilder: (context, index) {
-            return Container(
-              width: 80,
-              margin: const EdgeInsets.symmetric(horizontal: 5),
-              decoration: BoxDecoration(
-                  color: Colors.amber[800],
-                  borderRadius: BorderRadius.circular(10)),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  selectedGenreList!.elementAt(index).name.toString(),
-                  style: const TextStyle(color: Colors.white),
+    final genres = Provider.of<GenreProvider>(context, listen: false);
+    if (selectedGenreList!.isEmpty) {
+      preSelectedGenre = genres.genres!;
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 35,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: preSelectedGenre.length,
+            itemBuilder: (context, index) {
+              return Container(
+                width: 80,
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    color: Colors.amber[800],
+                    borderRadius: BorderRadius.circular(10)),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    preSelectedGenre.elementAt(index).name.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      for (var item in genres.genres!) {
+        Genre genre = Genre.fromJson(item.toJson());
+        selectedGenreList!.add(genre);
+      }
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 35,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: selectedGenreList!.length,
+            itemBuilder: (context, index) {
+              return Container(
+                width: 80,
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    color: Colors.amber[800],
+                    borderRadius: BorderRadius.circular(10)),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    selectedGenreList!.elementAt(index).name.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buttonPreferences() {
@@ -253,6 +292,7 @@ class _EditState extends State<EditProfile> {
   }
 
   void openFilterDialog() async {
+    final genres = Provider.of<GenreProvider>(context, listen: false);
     await FilterListDialog.display<Genre>(
       context,
       listData: genreList,
@@ -268,8 +308,15 @@ class _EditState extends State<EditProfile> {
         headerTheme:
             const HeaderThemeData(searchFieldHintText: "Buscar generos"),
       ),
-      choiceChipLabel: (genre) => genre!.name,
-      validateSelectedItem: (list, val) => list!.contains(val),
+      choiceChipLabel: (genre) {
+        return genre!.name!;
+      },
+      validateSelectedItem: (list, item) {
+        if (genres.genres!.isNotEmpty) {
+          const ChoiceChipThemeData(selectedBackgroundColor: Colors.blue);
+        }
+        return list!.contains(item);
+      },
       onItemSearch: (genre, query) {
         return genre.name!.toLowerCase().contains(query.toLowerCase());
       },

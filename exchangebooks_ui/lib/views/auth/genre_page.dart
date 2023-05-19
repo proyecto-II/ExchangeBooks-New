@@ -34,7 +34,7 @@ class _Genres extends State<GenrePage> {
 
   Future<void> putGenres() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
-    authService.createGenresUser(iuser.user!.id!, selectedGenreList!);
+    authService.createGenresUser(iuser.user!.email!, selectedGenreList!);
   }
 
   @override
