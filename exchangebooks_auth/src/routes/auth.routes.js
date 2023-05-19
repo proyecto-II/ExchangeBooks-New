@@ -1,13 +1,5 @@
 import { Router } from "express";
 
-import {
-  createUser,
-  getUser,
-  verifyUser,
-  editUser
-} from "../controllers/user.controller.js";
-
-
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -15,10 +7,5 @@ router.get("/", (req, res) => {
     message: "Auth Service",
   });
 });
-
-router.post("/create", createUser);
-router.put("/updateUser/:id", editUser);
-router.post("/verify", verifyUser);
-router.get("/get-user/:email", getUser);
 
 export default router;

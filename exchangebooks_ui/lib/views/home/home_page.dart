@@ -1,4 +1,3 @@
-import 'package:exchangebooks_ui/views/home/widgets/recomendationwidget.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -40,31 +39,25 @@ class _Home extends State<HomePage> {
       ),
       drawer: const Drawers(),
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text(
-                    'Recomendados para ti',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/new_post');
-                      },
-                      child: const Text('Ver todo >'))
-                ],
-              ),
+          child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
             ),
-            const Recomendations(),
-          ],
-        ),
-      ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Text(
+                  'Recomendados para ti',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                TextButton(onPressed: () {}, child: const Text('Ver todo >'))
+              ],
+            ),
+          )
+        ],
+      )),
     );
   }
 }
