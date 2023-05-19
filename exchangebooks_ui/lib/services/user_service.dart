@@ -11,7 +11,6 @@ class UserService {
   Future<void> updateUser(
       String id, String name, String username, String lastname) async {
     try {
-      print(url);
       final user = {
         'id': id,
         'name': name,
@@ -35,11 +34,15 @@ class UserService {
     }
   }
 
-  Future<void> updateGenresUser(String id, Genre genre) async {
+  Future<void> updateGenresUser(String id, List<Genre> genres) async {
     try {
-      final update = {'id': id, 'genres': genre.toJson()};
+      final update = {
+        'userId': id,
+        'genres': genres.map((genre) => genre.toJson()).toList()
+      };
+      log(update.toString());
       var response = await http.put(
-        Uri.parse("$url/api/auth/updateUser/$id"),
+        Uri.parse("$url/api/genre/update/$id"),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -48,10 +51,8 @@ class UserService {
       if (response.statusCode != 200) {
         log(response.statusCode.toString());
       }
-      var result = jsonDecode(response.body);
-      log(result);
     } catch (e) {
-      log('Paso por aqui ${e.toString()}');
+      log(e.toString());
     }
   }
 }

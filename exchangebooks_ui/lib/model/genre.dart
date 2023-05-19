@@ -5,8 +5,8 @@ class Genre {
   Genre(this.id, this.name);
 
   Genre.fromJson(Map<String, dynamic> json) {
-    id = json['_id'];
-    name = json['name'];
+    id = json['_id'] as String;
+    name = json['name'] as String;
   }
 
   Map<String, dynamic> toJson() {

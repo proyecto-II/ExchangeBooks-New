@@ -1,10 +1,10 @@
-import 'package:exchangebooks_ui/model/user.dart';
+import 'package:exchangebooks_ui/services/genre_service.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import '../../provider/genre_list.dart';
+import '../../model/genre.dart';
 import '../../provider/google_sign_in.dart';
 import '../../services/user_service.dart';
 
@@ -22,7 +22,8 @@ class _EditState extends State<EditProfile> {
   TextEditingController? nameController;
   TextEditingController? usernameController;
   TextEditingController? lastnameController;
-  late List<Genre>? selectedGenreList = [];
+  List<Genre>? selectedGenreList = [];
+  List<Genre> genreList = [];
   final userService = UserService();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -34,7 +35,7 @@ class _EditState extends State<EditProfile> {
     usernameController =
         TextEditingController(text: user.displayName ?? 'Desconocido');
     lastnameController = TextEditingController();
-
+    getGenres();
     super.initState();
   }
 
@@ -46,10 +47,15 @@ class _EditState extends State<EditProfile> {
     super.dispose();
   }
 
+  Future<void> getGenres() async {
+    genreList = await GenreService().getGenres();
+  }
+
   Future<void> updateUser() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     await UserService().updateUser(iuser.user!.id!, nameController!.text,
         usernameController!.text, lastnameController!.text);
+    await UserService().updateGenresUser(iuser.user!.id!, selectedGenreList!);
     iuser.getUser(iuser.user!.email!);
   }
 

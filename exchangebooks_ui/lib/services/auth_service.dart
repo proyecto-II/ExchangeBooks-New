@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:exchangebooks_ui/model/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:developer';
+import '../model/genre.dart';
 
 class AuthService {
   final apiUrl = dotenv.env['API_URL'];
@@ -20,14 +22,14 @@ class AuthService {
 
       final jsonData = json.decode(response.body);
       if (response.statusCode == 404) {
-        print(jsonData['message']);
+        log(jsonData['message']);
         return false;
       } else {
-        print(jsonData['message']);
+        log(jsonData['message']);
         return true;
       }
     } catch (err) {
-      print(err);
+      log(err.toString());
       return false;
     }
   }
@@ -68,5 +70,28 @@ class AuthService {
     );
     final jsonData = json.decode(response.body);
     return IUser.fromJson(jsonData);
+  }
+
+  Future<void> createGenresUser(String id, List<Genre> genres) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$apiUrl/api/genre/create'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'userId': id,
+          'genres': genres.map((genre) => genre.toJson()).toList()
+        }),
+      );
+      final jsonData = json.decode(response.body);
+      if (response.statusCode == 201) {
+        log(jsonData['message']);
+      } else {
+        log('error');
+      }
+    } catch (err) {
+      log('Paso por aqui $err');
+    }
   }
 }

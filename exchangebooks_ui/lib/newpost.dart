@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:exchangebooks_ui/utils/photo_convert.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
-import 'provider/genre_list.dart';
+import 'model/genre.dart';
 import 'widgets/drawer.dart';
 
 class NewPostPage extends StatefulWidget {
@@ -22,6 +21,7 @@ class _NewPost extends State<NewPostPage> {
   TextEditingController? authorController;
   TextEditingController? descriptionController;
   late List<Genre>? selectedGenreList = [];
+  late List<Genre> genreList = [];
   final ImagePicker _picker = ImagePicker();
   String _photoName = '';
 

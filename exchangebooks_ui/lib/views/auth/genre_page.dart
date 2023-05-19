@@ -1,6 +1,10 @@
-import 'package:exchangebooks_ui/provider/genre_list.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../model/genre.dart';
+import '../../provider/google_sign_in.dart';
+import '../../services/auth_service.dart';
+import '../../services/genre_service.dart';
 
 class GenrePage extends StatefulWidget {
   const GenrePage({Key? key}) : super(key: key);
@@ -11,8 +15,24 @@ class GenrePage extends StatefulWidget {
 }
 
 class _Genres extends State<GenrePage> {
-  final List<Genre>? selectedGenreList =
-      []; //Esto es un test del filtro de preferencias
+  List<Genre>? selectedGenreList = [];
+  List<Genre> genreList = [];
+  final authService = AuthService();
+
+  @override
+  void initState() {
+    getGenres();
+    super.initState();
+  }
+
+  Future<void> getGenres() async {
+    genreList = await GenreService().getGenres();
+  }
+
+  Future<void> putGenres() async {
+    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
+    authService.createGenresUser(iuser.user!.id!, selectedGenreList!);
+  }
 
   @override
   Widget build(BuildContext context) {
