@@ -30,11 +30,13 @@ class _EditState extends State<EditProfile> {
 
   @override
   void initState() {
+    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     nameController =
-        TextEditingController(text: user.displayName ?? 'Desconocido');
+        TextEditingController(text: iuser.user!.name ?? 'Desconocido');
     usernameController =
-        TextEditingController(text: user.displayName ?? 'Desconocido');
-    lastnameController = TextEditingController();
+        TextEditingController(text: iuser.user!.username ?? 'Desconocido');
+    lastnameController =
+        TextEditingController(text: iuser.user!.lastname ?? 'Desconocido');
     getGenres();
     super.initState();
   }
