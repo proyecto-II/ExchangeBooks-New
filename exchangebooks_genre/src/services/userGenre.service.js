@@ -12,7 +12,7 @@ class UserGenreService {
     return await userGenres.save();
   }
 
-  async getUserGenresById(userId) {
+  async getUserGenresByEmail(userId) {
     return await UserGenre.findOne({ userId }).populate("genres").exec();
   }
 

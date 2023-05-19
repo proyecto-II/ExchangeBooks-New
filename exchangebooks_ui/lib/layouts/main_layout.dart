@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/provider/genre_provider.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/views/home/home_page.dart';
 import 'package:exchangebooks_ui/views/profile/profile_page.dart';
@@ -23,6 +24,8 @@ class _MainLayout extends State<MainLayout> {
     super.initState();
     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     provider.getUser(user.email!); // Call the API to fetch user data
+    final genreProvider = Provider.of<GenreProvider>(context, listen: false);
+    genreProvider.getGenres(user.email!);
   }
 
   @override
