@@ -134,3 +134,9 @@ Query
 ```
 folder: string
 ```
+
+Body
+
+```
+files: [".jpg", ".jpeg", ".png"]
+```

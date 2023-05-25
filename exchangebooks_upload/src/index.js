@@ -3,7 +3,7 @@ import uploadRoutes from "./routes/upload.routes.js";
 import bodyParser from "body-parser";
 
 const app = express();
-const SERVER_PORT = 3005;
+const SERVER_PORT = 3004;
 
 // midlewares
 app.use(bodyParser.urlencoded({ extended: true }));
