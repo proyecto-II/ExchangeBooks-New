@@ -9,6 +9,7 @@ router.get("/", (req, res) => {
   });
 });
 
+// http://localhost:3000/upload/files?folder=${value}
 router.post("/files", uplodImage.array("files", 3), (req, res, next) => {
   return res.status(200).json({
     message: "Upload files!!!",

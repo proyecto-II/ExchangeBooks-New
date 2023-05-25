@@ -112,3 +112,25 @@ email: string
 ```
 name: string
 ```
+
+<br />
+
+## Upload Service
+
+<h4>Verify upload service is running</h4>
+
+<font color="blue">GET</font> `/api/upload`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/api/upload
+
+<h4>Upload files to AWS S3</h4>
+
+<font color="greenyellow">POST</font> `/api/upload/files`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/api/upload/files?folder=${value}
+
+Query
+
+```
+folder: string
+```

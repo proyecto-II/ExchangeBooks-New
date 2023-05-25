@@ -15,13 +15,14 @@ export const uplodImage = multer({
   storage: multerS3({
     s3: s3Config,
     bucket: "exchangebooks",
-    acl: "public-read",
+    acl: "private",
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
     key: (req, file, cb) => {
       const extension = file.mimetype.split("/")[1];
-      cb(null, `images/${Date.now().toString()}.${extension}`);
+      const folder = req.query?.folder || "images";
+      cb(null, `${folder}/${Date.now().toString()}.${extension}`);
     },
   }),
 });
