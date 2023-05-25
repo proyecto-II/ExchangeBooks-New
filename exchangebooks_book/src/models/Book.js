@@ -21,6 +21,10 @@ const BookSchema = new Schema({
       type: String,
     },
   ],
+  type: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "BookType",
+  },
   createdAt: {
     type: Date,
     default: Date.now,
