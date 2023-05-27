@@ -36,7 +36,7 @@ class _Profile extends State<ProfilePage> {
   Widget build(BuildContext context) {
     User user = FirebaseAuth.instance.currentUser!;
     final iuser = Provider.of<GoogleSignInProvider>(context);
-    final image = user.photoURL ??
+    final image =
         "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
 
     return Scaffold(

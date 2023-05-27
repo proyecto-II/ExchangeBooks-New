@@ -9,11 +9,18 @@ router.get("/", (req, res) => {
   });
 });
 
-// http://localhost:3000/upload/files?folder=${value}
+// http://localhost:3000/api/upload/files?folder=${value}
 router.post("/files", uplodImage.array("files", 3), (req, res, next) => {
-  return res.status(200).json({
+  return res.status(200).send({
     message: "Upload files!!!",
     files: req.files,
+  });
+});
+
+// http://localhost:3000/api/upload/file?folder=${value}
+router.post("/file", uplodImage.single("files"), (req, res, next) => {
+  return res.status(200).json({
+    location: req.file.location,
   });
 });
 

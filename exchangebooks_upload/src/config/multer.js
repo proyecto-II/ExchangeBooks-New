@@ -20,7 +20,7 @@ export const uplodImage = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: (req, file, cb) => {
-      const extension = file.mimetype.split("/")[1];
+      const extension = file.originalname.split(".")[1];
       const folder = req.query?.folder || "images";
       cb(null, `${folder}/${Date.now().toString()}.${extension}`);
     },
