@@ -22,8 +22,8 @@ const BookSchema = new Schema({
     },
   ],
   type: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "BookType",
+    type: String,
+    enum: ["Comic", "Manga", "Libro"],
   },
   createdAt: {
     type: Date,

@@ -1,5 +1,5 @@
 import express from "express";
-import indexRoutes from "./routes/index.routes.js";
+import bookRoutes from "./routes/book.routes.js";
 import { connectDB } from "./config/database.js";
 
 const app = express();
@@ -12,7 +12,7 @@ connectDB();
 app.use(express.json());
 
 // routes
-app.use("/", indexRoutes);
+app.use(bookRoutes);
 
 // listen
 app.listen(SERVER_PORT, () => {

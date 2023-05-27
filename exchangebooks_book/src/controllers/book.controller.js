@@ -12,3 +12,14 @@ export async function getAllBooks(req, res) {
     });
   }
 }
+
+export async function createBook(req, res) {
+  try {
+    const book = await bookService.create(req.body);
+    return res.status(201).send(book);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+}
