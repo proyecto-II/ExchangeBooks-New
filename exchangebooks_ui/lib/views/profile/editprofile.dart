@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:exchangebooks_ui/provider/genre_provider.dart';
 import 'package:exchangebooks_ui/services/genre_service.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../model/genre.dart';
 import '../../provider/google_sign_in.dart';
@@ -26,7 +29,7 @@ class EditProfile extends StatefulWidget {
 
 class _EditState extends State<EditProfile> {
   User user = FirebaseAuth.instance.currentUser!;
-
+  File? _selectedImage;
   TextEditingController? nameController;
   TextEditingController? usernameController;
   TextEditingController? lastnameController;
@@ -64,17 +67,35 @@ class _EditState extends State<EditProfile> {
   Future<void> updateUser() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     final genresProvider = Provider.of<GenreProvider>(context, listen: false);
-    await UserService().updateUser(iuser.user!.id!, nameController!.text,
-        usernameController!.text, lastnameController!.text);
-    await UserService()
-        .updateGenresUser(iuser.user!.email!, selectedGenreList!);
-    genresProvider.setGenres(selectedGenreList!);
-    iuser.getUser(iuser.user!.email!);
+    final location = await userService.updateAvatar(_selectedImage!.path);
+    await userService.updateUser(iuser.user!.id!, nameController!.text,
+        usernameController!.text, lastnameController!.text, location);
+
+    // remover este actualizar generos para actualizar en el modal de generos
+    // await UserService()
+    //     .updateGenresUser(iuser.user!.email!, selectedGenreList!);
+    // genresProvider.setGenres(selectedGenreList!);
+
+    await iuser.getUser(iuser.user!.email!);
+  }
+
+  Future<void> _selectImageFromGallery() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedImage != null) {
+      setState(() {
+        _selectedImage = File(pickedImage.path);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final genresProvider = Provider.of<GenreProvider>(context, listen: false);
+    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(249, 251, 251, 251),
@@ -98,16 +119,28 @@ class _EditState extends State<EditProfile> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Image.network(
-                  "https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_1280.png",
-                  fit: BoxFit.cover,
-                  width: 120,
-                  height: 120,
+              InkWell(
+                onTap: _selectImageFromGallery,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: _selectedImage != null
+                      ? Image.file(
+                          _selectedImage!,
+                          fit: BoxFit.cover,
+                          width: 120,
+                          height: 120,
+                        )
+                      : Image.network(
+                          iuser.user!.photoUrl != ""
+                              ? iuser.user!.photoUrl!
+                              : "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg",
+                          fit: BoxFit.cover,
+                          width: 120,
+                          height: 120,
+                        ),
                 ),
               ),
               const Gap(20),
@@ -137,7 +170,7 @@ class _EditState extends State<EditProfile> {
               _preferences(context),
               const Gap(20),
               const SizedBox(
-                height: 80,
+                height: 100,
               ),
               _button()
             ],

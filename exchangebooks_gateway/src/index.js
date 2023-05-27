@@ -14,6 +14,8 @@ const services = [
   { name: "Notification", url: `${API_URL}/notification` },
   { name: "Genre", url: `${API_URL}/genre` },
   { name: "Auth", url: `${API_URL}/auth` },
+  { name: "Upload", url: `${API_URL}/upload` },
+  { name: "Book", url: `${API_URL}/book` },
 ];
 
 // middlewares
@@ -30,6 +32,8 @@ app.get("/", (req, res) => {
 app.use(`${API_NAME}/notification`, proxy(`${API_HOST}:3001`));
 app.use(`${API_NAME}/genre`, proxy(`${API_HOST}:3002`));
 app.use(`${API_NAME}/auth`, proxy(`${API_HOST}:3003`));
+app.use(`${API_NAME}/upload`, proxy(`${API_HOST}:3004`));
+app.use(`${API_NAME}/book`, proxy(`${API_HOST}:3005`));
 
 app.get("/services", async (req, res) => {
   const results = await checkService.check(services);

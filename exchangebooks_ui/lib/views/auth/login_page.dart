@@ -129,10 +129,11 @@ class _Login extends State<LoginPage> {
                 borderRadius: BorderRadius.circular(10))),
         child: const Text('Iniciar Sesión'),
         onPressed: () async {
+          print("iniciar sesion");
           //Navigator.pushNamed(context, '/Homepage');
           bool isRegistered =
               await authService.verifyUser(emailController.text.trim());
-
+          print(isRegistered);
           if (isRegistered == false) {
             print("el usuario no esta regitrado");
             // mostrar error al usuario
