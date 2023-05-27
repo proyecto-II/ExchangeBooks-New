@@ -31,3 +31,15 @@ export async function getAllGenres(req, res) {
     });
   }
 }
+
+export async function getGenresByList(req, res) {
+  try {
+    const { genres } = req.body;
+    const result = await genreService.getGenresByList(genres);
+    return res.status(200).send(result);
+  } catch (err) {
+    return res.status(500).json({
+      message: "Error fetching genres",
+    });
+  }
+}

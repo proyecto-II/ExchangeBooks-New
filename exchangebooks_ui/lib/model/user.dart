@@ -6,6 +6,7 @@ class IUser {
   String? email;
   String? password;
   String? googleId;
+  String? photoUrl;
 
   IUser(this.id, this.name, this.lastname, this.username, this.email,
       this.password);
@@ -18,6 +19,7 @@ class IUser {
     email = json['email'];
     password = json['password'];
     googleId = json['googleId'];
+    photoUrl = json['photoUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -29,6 +31,7 @@ class IUser {
     data['email'] = password;
     data['password'] = password;
     data['googleId'] = googleId;
+    data['photoUrl'] = photoUrl;
     return data;
   }
 }

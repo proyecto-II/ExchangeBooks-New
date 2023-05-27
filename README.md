@@ -112,3 +112,58 @@ email: string
 ```
 name: string
 ```
+
+<br />
+
+## Upload Service
+
+<h4>Verify upload service is running</h4>
+
+<font color="blue">GET</font> `/api/upload`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/api/upload
+
+<h4>Upload files to AWS S3</h4>
+
+<font color="greenyellow">POST</font> `/api/upload/files`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/api/upload/files?folder=${value}
+
+Query
+
+```
+folder: string
+```
+
+Body
+
+```
+files: [".jpg", ".jpeg", ".png"]
+```
+
+<br />
+
+## Book Service
+
+<h4>Verify book service is running</h4>
+
+<font color="blue">GET</font> `/api/book`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/api/book
+
+<h4>Create a book (post)</h4>
+
+<font color="greenyellow">POST</font> `/api/book/create`
+
+    curl -i -H 'Accept: application/json' http://localhost:3000/api/book/create
+
+Body
+
+```
+title: string
+description: string
+author: string
+userId: string
+genres: [string]
+type: string
+```

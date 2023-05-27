@@ -1,14 +1,24 @@
+import 'dart:io';
+
 import 'package:exchangebooks_ui/provider/genre_provider.dart';
 import 'package:exchangebooks_ui/services/genre_service.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../model/genre.dart';
 import '../../provider/google_sign_in.dart';
 import '../../services/user_service.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
+/*
+* Edit profile view
+* @param {} phone
+* @return {StatefulWidget} Widget
+operation
+*/
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
 
@@ -19,7 +29,7 @@ class EditProfile extends StatefulWidget {
 
 class _EditState extends State<EditProfile> {
   User user = FirebaseAuth.instance.currentUser!;
-
+  File? _selectedImage;
   TextEditingController? nameController;
   TextEditingController? usernameController;
   TextEditingController? lastnameController;
@@ -57,20 +67,40 @@ class _EditState extends State<EditProfile> {
   Future<void> updateUser() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     final genresProvider = Provider.of<GenreProvider>(context, listen: false);
-    await UserService().updateUser(iuser.user!.id!, nameController!.text,
-        usernameController!.text, lastnameController!.text);
-    await UserService()
-        .updateGenresUser(iuser.user!.email!, selectedGenreList!);
-    genresProvider.setGenres(selectedGenreList!);
-    iuser.getUser(iuser.user!.email!);
+    final location = await userService.updateAvatar(_selectedImage!.path);
+    await userService.updateUser(iuser.user!.id!, nameController!.text,
+        usernameController!.text, lastnameController!.text, location);
+
+    // remover este actualizar generos para actualizar en el modal de generos
+    // await UserService()
+    //     .updateGenresUser(iuser.user!.email!, selectedGenreList!);
+    // genresProvider.setGenres(selectedGenreList!);
+
+    await iuser.getUser(iuser.user!.email!);
+  }
+
+  Future<void> _selectImageFromGallery() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedImage != null) {
+      setState(() {
+        _selectedImage = File(pickedImage.path);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final genresProvider = Provider.of<GenreProvider>(context, listen: false);
+    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(249, 251, 251, 251),
         centerTitle: true,
+        elevation: 0,
         title: const Text(
           'Editar Perfil',
           style: TextStyle(
@@ -84,43 +114,65 @@ class _EditState extends State<EditProfile> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(LineAwesomeIcons.angle_left),
         ),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             children: [
+              InkWell(
+                onTap: _selectImageFromGallery,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: _selectedImage != null
+                      ? Image.file(
+                          _selectedImage!,
+                          fit: BoxFit.cover,
+                          width: 120,
+                          height: 120,
+                        )
+                      : Image.network(
+                          iuser.user!.photoUrl != ""
+                              ? iuser.user!.photoUrl!
+                              : "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg",
+                          fit: BoxFit.cover,
+                          width: 120,
+                          height: 120,
+                        ),
+                ),
+              ),
+              const Gap(20),
               _formname(),
-              const Gap(10),
+              const Gap(12),
               _formUsername(),
-              const Gap(10),
-              _formpass(),
-              const Gap(10),
-
-              const Text(
-                "Tus Preferencias",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.bold),
+              const Gap(12),
+              _formlastname(),
+              const Gap(12),
+              Row(
+                children: [
+                  const Text(
+                    "Generos",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                      onPressed: () {
+                        openFilterDialog(genresProvider.genres!);
+                      },
+                      icon: const Icon(LineAwesomeIcons.plus))
+                ],
               ),
-
-              ///Aqui tienen que ir los diferentes generos
-              const Gap(10),
-              _buttonPreferences(),
-              const Text(
-                'Seleccionados: ',
-                style: TextStyle(fontWeight: FontWeight.w700),
-              ),
-              const Gap(10),
               _preferences(context),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 100, horizontal: 75),
-                child: _button(),
+              const Gap(20),
+              const SizedBox(
+                height: 100,
               ),
+              _button()
             ],
           ),
         ),
@@ -128,135 +180,133 @@ class _EditState extends State<EditProfile> {
     );
   }
 
+  /*
+  * Name input
+  * @param {} 
+  * @return {TextFormField} Widget
+  */
   Widget _formname() {
     return TextFormField(
       controller: nameController,
       decoration: InputDecoration(
-        filled: true,
-        fillColor: const Color.fromRGBO(243, 248, 255, 1),
-        labelText: "Nombre",
-        enabledBorder:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
+          focusColor: Colors.orange,
+          filled: true,
+          fillColor: Color.fromRGBO(243, 248, 255, 1),
+          labelText: "Nombre",
+          prefixIcon: Icon(LineAwesomeIcons.user),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(100))),
     );
   }
 
+  /*
+  * Username input
+  * @param {} 
+  * @return {TextFormField} Widget
+  */
   Widget _formUsername() {
     return TextFormField(
       controller: usernameController,
       decoration: InputDecoration(
-        filled: true,
-        fillColor: const Color.fromRGBO(243, 248, 255, 1),
-        labelText: "Apodo",
-        enabledBorder:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
+          filled: true,
+          fillColor: Color.fromRGBO(243, 248, 255, 1),
+          labelText: "Apodo",
+          prefixIcon: Icon(LineAwesomeIcons.user_circle),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(100))),
     );
   }
 
-  Widget _formpass() {
+  /*
+  * Lastname input
+  * @param {} 
+  * @return {TextFormField} Widget
+  */
+  Widget _formlastname() {
     return TextFormField(
       controller: lastnameController,
       decoration: InputDecoration(
         filled: true,
         fillColor: const Color.fromRGBO(243, 248, 255, 1),
         labelText: "Apellido",
-        enabledBorder:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        prefixIcon: const Icon(LineAwesomeIcons.user),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
       ),
     );
   }
 
   Widget _button() {
     return Builder(builder: (context) {
-      return ElevatedButton(
-        onPressed: () async {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-          updateUser();
+      return SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () async {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+            updateUser();
 
-          await Future.delayed(
-            const Duration(seconds: 2),
-          );
-          // ignore: use_build_context_synchronously
-          Navigator.of(context).pop(); //Este cierra el circle indicator
-          // ignore: use_build_context_synchronously
-          Navigator.of(context)
-              .pop(); //Por alguna razon con dos de estos envia se vuelta a la pagina anterior - (Buscar una solucion)
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blueAccent[1000],
-          minimumSize: const Size(double.infinity, 50),
-          side: const BorderSide(
-            width: 0.5,
-            color: Colors.black,
-          ),
+            await Future.delayed(
+              const Duration(seconds: 2),
+            );
+            // ignore: use_build_context_synchronously
+            Navigator.of(context).pop(); //Este cierra el circle indicator
+            // ignore: use_build_context_synchronously
+            Navigator.of(context)
+                .pop(); //Por alguna razon con dos de estos envia se vuelta a la pagina anterior - (Buscar una solucion)
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              minimumSize: const Size(double.infinity, 50),
+              side: BorderSide.none,
+              shape: const StadiumBorder(),
+              elevation: 1.2),
+          child: const Text('Editar Perfil'),
         ),
-        child: const Text('Actualizar'),
       );
     });
   }
 
+  /*
+  * User genres
+  * @param {BuildContext} context
+  * @return {Widget} Widget
+  */
   Widget _preferences(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: 35,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: selectedGenreList!.length,
-          itemBuilder: (context, index) {
-            return Container(
-              width: 80,
-              margin: const EdgeInsets.symmetric(horizontal: 5),
-              decoration: BoxDecoration(
-                  color: Colors.amber[800],
-                  borderRadius: BorderRadius.circular(10)),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  selectedGenreList!.elementAt(index).name.toString(),
-                  style: const TextStyle(color: Colors.white),
-                ),
+    final genresProvider = Provider.of<GenreProvider>(context, listen: false);
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 35,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: genresProvider.genres!.length,
+        itemBuilder: (context, index) {
+          return Container(
+            width: 80,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+                color: Colors.amber[800],
+                borderRadius: BorderRadius.circular(100)),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                genresProvider.genres!.elementAt(index).name.toString(),
+                style: const TextStyle(color: Colors.white),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buttonPreferences() {
-    return ElevatedButton(
-      onPressed: () {
-        openFilterDialog();
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.amber[600],
-        minimumSize: const Size(100, 35),
-        side: const BorderSide(
-          width: 0.5,
-          color: Colors.black,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [Text('Ver generos'), Icon(Icons.add)],
-      ),
-    );
-  }
-
-  void openFilterDialog() async {
+  void openFilterDialog(List<Genre> genresPre) async {
     await FilterListDialog.display<Genre>(
       context,
       listData: genreList,
-      selectedListData: selectedGenreList,
+      selectedListData: genresPre,
       applyButtonText: 'Aplicar',
       allButtonText: 'Todo',
       resetButtonText: 'Revertir',
