@@ -3,10 +3,36 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../model/genre.dart';
+
 class PostService {
   final url = dotenv.env['API_URL_AWS'];
+  final apiUrl = dotenv.env['API_URL'];
 
-  Future<void> createPost() async {}
+  Future<void> createPost(String title, String author, String description,
+      String userId, List<Genre> genres, String type, String image) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$apiUrl/api/book/create'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'title': title,
+          'author': author,
+          'description': description,
+          'userId': userId,
+          'genres': genres.map((genre) => genre.toJson()).toList(),
+          'type': type,
+          'images': {"_id": image}
+        }),
+      );
+      final jsonData = json.decode(response.body);
+      log(jsonData);
+    } catch (err) {
+      log('Error de Post $err');
+    }
+  }
 
   Future<String> postImage(String image) async {
     try {

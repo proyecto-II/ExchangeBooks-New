@@ -1,12 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
+import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/utils/photo_convert.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'model/genre.dart';
+import 'services/genre_service.dart';
 import 'widgets/drawer.dart';
 
 class NewPostPage extends StatefulWidget {
@@ -18,18 +23,40 @@ class NewPostPage extends StatefulWidget {
 }
 
 class _NewPost extends State<NewPostPage> {
-  TextEditingController? titleController;
-  TextEditingController? authorController;
-  TextEditingController? descriptionController;
+  TextEditingController? titleController = TextEditingController();
+  TextEditingController? authorController = TextEditingController();
+  TextEditingController? descriptionController = TextEditingController();
   late List<Genre>? selectedGenreList = [];
   late List<Genre> genreList = [];
   final ImagePicker _picker = ImagePicker();
   String _photoName = '';
   File? _imageTaken;
 
+  @override
+  void initState() {
+    getGenres();
+    super.initState();
+  }
+
+  Future<void> getGenres() async {
+    List<Genre> genres = await GenreService().getGenres();
+    setState(() {
+      genreList = genres;
+    });
+  }
+
   Future<void> _createPost() async {
+    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     final location = await PostService().postImage(_imageTaken!.path);
     print(location);
+    await PostService().createPost(
+        titleController!.text,
+        authorController!.text,
+        descriptionController!.text,
+        iuser.user!.id!,
+        selectedGenreList!,
+        'Libro',
+        location);
   }
 
   @override
@@ -53,7 +80,9 @@ class _NewPost extends State<NewPostPage> {
       ),
       drawer: const Drawers(),
       body: SafeArea(
-        child: _form(),
+        child: SingleChildScrollView(
+          child: _form(),
+        ),
       ),
     );
   }
@@ -79,6 +108,7 @@ class _NewPost extends State<NewPostPage> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
           ),
           _buttonGenre(),
+          _genresSelected(context),
           const Gap(15),
           TextField(
             controller: authorController,
@@ -126,21 +156,48 @@ class _NewPost extends State<NewPostPage> {
   }
 
   Widget _buttonGenre() {
-    return ElevatedButton(
-      onPressed: () {
-        openFilterDialog();
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.amber[600],
-        minimumSize: const Size(100, 35),
-        side: const BorderSide(
-          width: 0.5,
-          color: Colors.black,
+    return Row(
+      children: [
+        const Text(
+          "Generos",
+          style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'Plus Jakarta Sans',
+              fontWeight: FontWeight.bold),
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [Text('Ver generos'), Icon(Icons.add)],
+        const Spacer(),
+        IconButton(
+            onPressed: () {
+              openFilterDialog();
+            },
+            icon: const Icon(LineAwesomeIcons.plus))
+      ],
+    );
+  }
+
+  Widget _genresSelected(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 35,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: selectedGenreList!.length,
+        itemBuilder: (context, index) {
+          return Container(
+            width: 80,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+                color: Colors.amber[800],
+                borderRadius: BorderRadius.circular(100)),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                selectedGenreList!.elementAt(index).name.toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
