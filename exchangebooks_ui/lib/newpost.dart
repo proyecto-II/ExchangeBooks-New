@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/utils/photo_convert.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,12 @@ class _NewPost extends State<NewPostPage> {
   late List<Genre> genreList = [];
   final ImagePicker _picker = ImagePicker();
   String _photoName = '';
+  File? _imageTaken;
+
+  Future<void> _createPost() async {
+    final location = await PostService().postImage(_imageTaken!.path);
+    print(location);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,8 +157,8 @@ class _NewPost extends State<NewPostPage> {
                       : ImageSource.gallery)
               .then(
             (imgFile) {
-              File file = File(imgFile!.path);
-              _photoName = Utility.base64String(file.readAsBytesSync());
+              _imageTaken = File(imgFile!.path);
+              _photoName = Utility.base64String(_imageTaken!.readAsBytesSync());
               setState(() {});
             },
           );
@@ -234,6 +241,7 @@ class _NewPost extends State<NewPostPage> {
   Widget _buttonPost() {
     return ElevatedButton(
       onPressed: () async {
+        _createPost();
         Navigator.of(context).pop();
       },
       style: ElevatedButton.styleFrom(
