@@ -12,6 +12,12 @@ class GenreService {
   async getAll() {
     return await Genre.find();
   }
+
+  async getGenresByList(list) {
+    const genres = await Genre.find().where("_id").in(list).exec();
+
+    return genres;
+  }
 }
 
 export default GenreService;

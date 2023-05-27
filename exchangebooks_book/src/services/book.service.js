@@ -1,10 +1,26 @@
 import Book from "../models/Book.js";
+import axios from "axios";
 
 class BookService {
   constructor() {}
 
   async getAll() {
-    return await Book.find();
+    const books = await Book.find().exec();
+    const fetchCategories = books.map(async (book) => {
+      try {
+        const { genres, ...others } = book._doc;
+        const response = await axios.post("http://localhost:3002/list", {
+          genres,
+        });
+
+        return { ...others, genres: response.data };
+      } catch (err) {
+        return null;
+      }
+    });
+    const result = await Promise.all(fetchCategories);
+
+    return result;
   }
 
   async get(id) {

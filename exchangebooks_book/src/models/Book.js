@@ -25,6 +25,11 @@ const BookSchema = new Schema({
     type: String,
     enum: ["Comic", "Manga", "Libro"],
   },
+  images: [
+    {
+      type: String,
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
