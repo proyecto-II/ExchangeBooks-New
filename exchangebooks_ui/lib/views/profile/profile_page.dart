@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
+import '../../model/book.dart';
 import '../../model/genre.dart';
 import 'widgets/recordpost.dart';
 
@@ -19,6 +20,7 @@ class ProfilePage extends StatefulWidget {
 
 class _Profile extends State<ProfilePage> {
   List<Genre> genreList = [];
+  List<Book> posts = [];
   UserService userService = UserService();
 
   @override
@@ -36,9 +38,8 @@ class _Profile extends State<ProfilePage> {
   Widget build(BuildContext context) {
     User user = FirebaseAuth.instance.currentUser!;
     final iuser = Provider.of<GoogleSignInProvider>(context);
-    final image = iuser.user!.photoUrl != null
-        ? iuser.user!.photoUrl!
-        : "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
+    final image = user.photoURL ??
+        "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
 
     return Scaffold(
         appBar: AppBar(
@@ -131,7 +132,7 @@ class _Profile extends State<ProfilePage> {
                               ],
                             ),
                             //Aqui deberian ir las preferencias del usuario
-                            const RecordPosts(),
+                            RecordPosts(userId: iuser.user!.id!),
                           ],
                         ),
                       ),

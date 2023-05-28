@@ -13,6 +13,17 @@ export async function getAllBooks(req, res) {
   }
 }
 
+export async function getBooksByUser(req,res){
+  try{
+    const books = await bookService.getBooksByUser(req.params.userId);
+    return res.status(200).send(books);
+  }catch(err){
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+}
+
 export async function createBook(req, res) {
   try {
     const book = await bookService.create(req.body);

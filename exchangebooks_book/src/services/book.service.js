@@ -40,6 +40,10 @@ class BookService {
   async delete(id) {
     return await Book.findByIdAndDelete(id);
   }
+
+  async getBooksByUser(userId){
+    return await Book.find({userId:userId});
+  }
 }
 
 export default BookService;

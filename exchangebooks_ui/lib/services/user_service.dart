@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:exchangebooks_ui/model/book.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -90,7 +91,6 @@ class UserService {
         for (var item in data) {
           if (item is Map<String, dynamic>) {
             Genre genre = Genre.fromJson(item);
-
             genres.add(genre);
           }
         }
@@ -100,6 +100,27 @@ class UserService {
     } catch (error) {
       log(error.toString());
       return genres;
+    }
+  }
+
+  Future<List<Book>> getPostByUser(String userId) async {
+    List<Book> books = [];
+    try {
+      final response = await http.get(
+        Uri.parse('$url/api/book/list/$userId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      for (var item in jsonData) {
+        Book book = Book.fromJson(item);
+        books.add(book);
+      }
+      return books;
+    } catch (error) {
+      log(error.toString());
+      return books;
     }
   }
 }

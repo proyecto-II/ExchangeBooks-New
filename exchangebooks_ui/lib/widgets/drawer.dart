@@ -11,9 +11,8 @@ class Drawers extends StatelessWidget {
     User user = FirebaseAuth.instance.currentUser!;
     final iuser = Provider.of<GoogleSignInProvider>(context);
     final email = user.email ?? "Desconocido";
-    final image = iuser.user!.photoUrl ??
+    final image = user.photoURL ??
         "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
-
     return Drawer(
       child: ListView(
         children: <Widget>[

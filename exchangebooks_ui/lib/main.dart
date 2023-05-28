@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'postview.dart';
 import 'views/profile/editprofile.dart';
 
 void main() async {
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           '/edit_profile': (context) => const EditProfile(),
           '/profile_page': (context) => const ProfilePage(),
           '/new_post': (context) => const NewPostPage(),
+          '/post_view': (context) => const PostPage(),
         },
         initialRoute: '/landing_page',
       ),
