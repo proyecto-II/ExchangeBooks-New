@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
+import '../../model/book.dart';
 import '../../model/genre.dart';
 import 'widgets/recordpost.dart';
 
@@ -19,6 +20,7 @@ class ProfilePage extends StatefulWidget {
 
 class _Profile extends State<ProfilePage> {
   List<Genre> genreList = [];
+  List<Book> posts = [];
   UserService userService = UserService();
 
   @override
@@ -130,7 +132,7 @@ class _Profile extends State<ProfilePage> {
                               ],
                             ),
                             //Aqui deberian ir las preferencias del usuario
-                            const RecordPosts(),
+                            RecordPosts(userId: iuser.user!.id!),
                           ],
                         ),
                       ),

@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../model/book.dart';
+import '../../../services/user_service.dart';
+
 class RecordPosts extends StatefulWidget {
-  const RecordPosts({Key? key}) : super(key: key);
+  const RecordPosts({super.key, required this.userId});
+  final String userId;
   @override
   // ignore: library_private_types_in_public_api
   _RecordPosts createState() => _RecordPosts();
 }
 
 class _RecordPosts extends State<RecordPosts> {
+  List<Book> posts = [];
+  UserService userService = UserService();
+
+  @override
+  void initState() {
+    getPosts(widget.userId);
+    super.initState();
+  }
+
+  Future<List<Book>> getPosts(String userId) async {
+    posts = await userService.getPostByUser(userId);
+    setState(() {});
+    return posts;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -16,7 +35,7 @@ class _RecordPosts extends State<RecordPosts> {
       height: 500,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 4,
+        itemCount: posts.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {},
@@ -34,16 +53,16 @@ class _RecordPosts extends State<RecordPosts> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: Image.network(
-                            'https://ekaresur.cl/cms/wp-content/uploads/2019/04/veronica-uribe-el-libro-de-oro-de-los-cuentos-de-hadas-1.jpg',
+                            posts.elementAt(index).images!.first.toString(),
                             width: 150,
                             height: 200,
                             fit: BoxFit.cover,
                           ),
                         ),
                         const Gap(25),
-                        const Text(
-                          'El libro de oro de los cuentos de hadas',
-                          style: TextStyle(
+                        Text(
+                          posts.elementAt(index).title!,
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       ],

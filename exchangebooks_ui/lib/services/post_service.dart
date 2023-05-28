@@ -52,4 +52,6 @@ class PostService {
       return 'Error al subir la imagen';
     }
   }
+
+  Future<void> getPosts() async {}
 }
