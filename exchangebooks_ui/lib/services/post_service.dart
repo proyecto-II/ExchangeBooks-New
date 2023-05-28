@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import '../model/book.dart';
 import '../model/genre.dart';
 
 class PostService {
@@ -53,5 +53,24 @@ class PostService {
     }
   }
 
-  Future<void> getPosts() async {}
+  Future<List<Book>> getAllPosts() async {
+    List<Book> posts = [];
+    try {
+      final response = await http.get(
+        Uri.parse('$url/api/book/list'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      for (var item in jsonData) {
+        Book book = Book.fromJson(item);
+        posts.add(book);
+      }
+      return posts;
+    } catch (error) {
+      log(error.toString());
+      return posts;
+    }
+  }
 }
