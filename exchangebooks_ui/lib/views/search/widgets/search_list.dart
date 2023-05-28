@@ -19,7 +19,9 @@ class _SearchList extends State<SearchList> {
         itemCount: 10,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/post_view');
+            },
             child: SizedBox(
               width: 150,
               child: FittedBox(
