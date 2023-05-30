@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getRecomentationBooks } from "../controllers/recomendation.controller";
+import { getRecomentationBooks } from "../controllers/recomendation.controller.js";
 
 const router = Router();
 
-router.post("/recomendation", getRecomentationBooks);
+router.post("/books", getRecomentationBooks);
 
 export default router;

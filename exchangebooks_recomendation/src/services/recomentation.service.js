@@ -1,4 +1,4 @@
-import { openai } from "../../../exchangebooks_book/src/config/openai";
+import { openai } from "../config/openai.js";
 
 class RecomentationService {
   constructor() {}
