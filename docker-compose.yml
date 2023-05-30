@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  exchangebooks_gateway:
+    build: ./exchangebooks_gateway
+    container_name: exchangebooks_gateway
+    ports:
+      - "3000:3000"
+    environment:
+      NOTIFICATION_SERVICE_URL: exchangebooks_notification
+      GENRE_SERVICE_URL: exchangebooks_genre
+      AUTH_SERVICE_URL: exchangebooks_auth
+      UPLOAD_SERVICE_URL: exchangebooks_upload
+      BOOK_SERVICE_URL: exchangebooks_book
+      RECOMENDATION_SERVICE_URL: exchangebooks_recomendation
+
+  exchangebooks_notification:
+    build: ./exchangebooks_notification
+    container_name: exchangebooks_notification
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./exchangebooks_notification/.env
+
+  exchangebooks_genre:
+    build: ./exchangebooks_genre
+    container_name: exchangebooks_genre
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./exchangebooks_genre/.env
+
+  exchangebooks_auth:
+    build: ./exchangebooks_auth
+    container_name: exchangebooks_auth
+    ports:
+      - "3003:3003"
+    env_file:
+      - ./exchangebooks_auth/.env
+
+  exchangebooks_upload:
+    build: ./exchangebooks_upload
+    container_name: exchangebooks_upload
+    ports:
+      - "3004:3004"
+    env_file:
+      - ./exchangebooks_upload/.env
+
+  exchangebooks_book:
+    build: ./exchangebooks_book
+    container_name: exchangebooks_book
+    ports:
+      - "3005:3005"
+    env_file:
+      - ./exchangebooks_book/.env
+
+  exchangebooks_recomendation:
+    build: ./exchangebooks_recomendation
+    container_name: exchangebooks_recomendation
+    ports:
+      - "3006:3006"
+    env_file:
+      - ./exchangebooks_recomendation/.env
