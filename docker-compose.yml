@@ -1,5 +1,9 @@
 version: "3.8"
 
+networks:
+  mynetwork:
+    driver: bridge
+
 services:
   exchangebooks_gateway:
     build: ./exchangebooks_gateway
@@ -13,6 +17,8 @@ services:
       UPLOAD_SERVICE_URL: exchangebooks_upload
       BOOK_SERVICE_URL: exchangebooks_book
       RECOMENDATION_SERVICE_URL: exchangebooks_recomendation
+    networks:
+      - mynetwork
 
   exchangebooks_notification:
     build: ./exchangebooks_notification
@@ -21,6 +27,8 @@ services:
       - "3001:3001"
     env_file:
       - ./exchangebooks_notification/.env
+    networks:
+      - mynetwork
 
   exchangebooks_genre:
     build: ./exchangebooks_genre
@@ -29,6 +37,8 @@ services:
       - "3002:3002"
     env_file:
       - ./exchangebooks_genre/.env
+    networks:
+      - mynetwork
 
   exchangebooks_auth:
     build: ./exchangebooks_auth
@@ -37,6 +47,8 @@ services:
       - "3003:3003"
     env_file:
       - ./exchangebooks_auth/.env
+    networks:
+      - mynetwork
 
   exchangebooks_upload:
     build: ./exchangebooks_upload
@@ -45,6 +57,8 @@ services:
       - "3004:3004"
     env_file:
       - ./exchangebooks_upload/.env
+    networks:
+      - mynetwork
 
   exchangebooks_book:
     build: ./exchangebooks_book
@@ -53,6 +67,8 @@ services:
       - "3005:3005"
     env_file:
       - ./exchangebooks_book/.env
+    networks:
+      - mynetwork
 
   exchangebooks_recomendation:
     build: ./exchangebooks_recomendation
@@ -61,3 +77,5 @@ services:
       - "3006:3006"
     env_file:
       - ./exchangebooks_recomendation/.env
+    networks:
+      - mynetwork

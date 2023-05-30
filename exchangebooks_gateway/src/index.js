@@ -65,7 +65,7 @@ app.get("/services", async (req, res) => {
   });
 });
 
-app.listen(SERVER_PORT, () => {
+app.listen(SERVER_PORT, "0.0.0.0", () => {
   console.log(
     `[🔋LISTEN][⚡GATEWAY SERVICE] Server running on port ${SERVER_PORT}`
   );
