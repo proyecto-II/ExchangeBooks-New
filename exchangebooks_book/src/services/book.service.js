@@ -15,7 +15,7 @@ class BookService {
 
         return { ...others, genres: response.data };
       } catch (err) {
-        return null;
+        return book;
       }
     });
     const result = await Promise.all(fetchCategories);
@@ -41,8 +41,18 @@ class BookService {
     return await Book.findByIdAndDelete(id);
   }
 
-  async getBooksByUser(userId){
-    return await Book.find({userId:userId});
+  async getBooksByUser(userId) {
+    return await Book.find({ userId: userId });
+  }
+
+  async search(query) {
+    const books = await Book.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { author: { $regex: query, $options: "i" } },
+      ],
+    });
+    return books;
   }
 }
 
