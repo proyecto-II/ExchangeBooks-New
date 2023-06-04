@@ -9,9 +9,9 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'model/genre.dart';
-import 'services/genre_service.dart';
-import 'widgets/drawer.dart';
+import '../../model/genre.dart';
+import '../../services/genre_service.dart';
+import '../../widgets/drawer.dart';
 
 class NewPostPage extends StatefulWidget {
   const NewPostPage({Key? key}) : super(key: key);
@@ -47,7 +47,6 @@ class _NewPost extends State<NewPostPage> {
   Future<void> _createPost() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     final location = await PostService().postImage(_imageTaken!.path);
-    print(location);
     await PostService().createPost(
         titleController!.text,
         authorController!.text,

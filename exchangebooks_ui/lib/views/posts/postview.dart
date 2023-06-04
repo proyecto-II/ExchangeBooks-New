@@ -1,10 +1,13 @@
+import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'widgets/drawer.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
+import '../../model/book.dart';
+
 class PostPage extends StatefulWidget {
-  const PostPage({Key? key}) : super(key: key);
+  const PostPage({Key? key, required this.book}) : super(key: key);
+  final Book book;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -12,8 +15,10 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostView extends State<PostPage> {
+  late Book book;
   @override
   void initState() {
+    book = widget.book;
     super.initState();
   }
 
@@ -68,11 +73,11 @@ class _PostView extends State<PostPage> {
                 textAlign: TextAlign.start,
               ),
               const Gap(10),
-              const SizedBox(
+              SizedBox(
                 height: 270,
                 child: SingleChildScrollView(
                   child: Text(
-                    "Una adolescente retrocede en el tiempo para presenciar las experiencias de su abuela en los campos de internamiento japoneses de la época de la Segunda Guerra Mundial en Displacement, una novela gráfica histórica de Kiku Hughes. Kiku está de vacaciones en San Francisco cuando de repente se ve desplazada al campo de internamiento japonés-estadounidense de la década de 1940 al que su difunta abuela, Ernestina, fue reubicada a la fuerza durante la Segunda Guerra Mundial. Estos desplazamientos siguen ocurriendo hasta que Kiku se encuentra atrapada en el tiempo. Al vivir junto a su joven abuela y otros ciudadanos estadounidenses de origen japonés en campos de internamiento, Kiku recibe la educación que nunca recibió en la clase de historia. Ella es testigo de la vida de los japoneses-estadounidenses a quienes se les negaron sus libertades civiles y sufrieron mucho, pero lograron cultivar la comunidad y cometer actos de resistencia para sobrevivir. Kiku Hughes teje una historia fascinante y agridulce que destaca el impacto intergeneracional y el poder de la memoria.",
+                    book.description!,
                     textAlign: TextAlign.justify,
                   ),
                 ),
@@ -118,7 +123,7 @@ class _PostView extends State<PostPage> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.network(
-                  'https://ekaresur.cl/cms/wp-content/uploads/2019/04/veronica-uribe-el-libro-de-oro-de-los-cuentos-de-hadas-1.jpg',
+                  book.images!.first,
                   width: 150,
                   height: 220,
                   fit: BoxFit.cover,
@@ -129,21 +134,21 @@ class _PostView extends State<PostPage> {
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
-                        'El libro de oro de los cuentos de hadas',
-                        style: TextStyle(
+                        book.title!,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
                       ),
-                      Gap(5),
+                      const Gap(5),
                       Text(
-                        'Verónica Uribe',
-                        style: TextStyle(fontSize: 15),
+                        book.author!,
+                        style: const TextStyle(fontSize: 15),
                       ),
-                      Gap(10),
-                      Text(
+                      const Gap(10),
+                      const Text(
                         'Publicado por:',
                         style: TextStyle(
                           fontSize: 15,
@@ -151,20 +156,18 @@ class _PostView extends State<PostPage> {
                         ),
                       ),
                       Text(
-                        'Apodo',
-                        style: TextStyle(fontSize: 15),
+                        'Apodo', //Aqui se tiene que agregar al que publico el libro
+                        style: const TextStyle(fontSize: 15),
                       ),
-                      Gap(15),
-                      Text(
+                      const Gap(15),
+                      const Text(
                         'Géneros',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        'Fantasía, Ciencia Ficción',
-                      ),
+                      _genres()
                     ],
                   ),
                 ),
@@ -174,6 +177,19 @@ class _PostView extends State<PostPage> {
         ],
       ),
     );
+  }
+
+  Widget _genres() {
+    return SizedBox(
+        width: 200,
+        height: 30,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: book.genres!.length,
+          itemBuilder: (context, index) {
+            return Text('${book.genres!.elementAt(index).name!} ');
+          },
+        ));
   }
 
   Widget _postList() {

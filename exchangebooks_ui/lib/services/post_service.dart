@@ -63,7 +63,6 @@ class PostService {
         },
       );
       final jsonData = json.decode(response.body) as List<dynamic>;
-      log(jsonData.toString());
       for (var item in jsonData) {
         Book book = Book.fromJson(item);
         posts.add(book);
@@ -71,7 +70,7 @@ class PostService {
       log(posts.toString());
       return posts;
     } catch (error) {
-      log('Aca $error');
+      log('Error ocurrido en PostService $error');
       return posts;
     }
   }

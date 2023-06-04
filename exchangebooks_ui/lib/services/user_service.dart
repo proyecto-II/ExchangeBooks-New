@@ -119,7 +119,7 @@ class UserService {
       }
       return books;
     } catch (error) {
-      log(error.toString());
+      log('Error ocurrido en GetPostByUser $error');
       return books;
     }
   }

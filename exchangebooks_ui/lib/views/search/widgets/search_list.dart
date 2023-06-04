@@ -1,4 +1,5 @@
 import 'package:exchangebooks_ui/services/post_service.dart';
+import 'package:exchangebooks_ui/views/posts/postview.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -37,7 +38,13 @@ class _SearchList extends State<SearchList> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/post_view');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PostPage(
+                          book: allBooks.elementAt(index),
+                        )),
+              );
             },
             child: SizedBox(
               width: 150,

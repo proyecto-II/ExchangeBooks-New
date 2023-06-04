@@ -42,7 +42,21 @@ class BookService {
   }
 
   async getBooksByUser(userId){
-    return await Book.find({userId:userId});
+    const books = await Book.find({userId:userId}).exec();
+    const fetchCategories = books.map(async (book) => {
+      try {
+        const { genres, ...others } = book._doc;
+        const response = await axios.post("http://localhost:3002/list", {
+          genres,
+        });
+
+        return { ...others, genres: response.data };
+      } catch (err) {
+        return null;
+      }
+    });
+    const result = await Promise.all(fetchCategories);
+    return result;
   }
 }
 
