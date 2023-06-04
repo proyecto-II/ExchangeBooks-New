@@ -5,7 +5,7 @@ class Book {
   String? title;
   String? author;
   String? description;
-  List<String>? genres;
+  List<Genre>? genres;
   String? type;
   List<String>? images;
 
@@ -18,7 +18,8 @@ class Book {
     author = json['author'];
     description = json['description'];
     if (json['genres'] != null) {
-      genres = List<String>.from(json['genres']);
+      genres = List<Genre>.from(
+          json['genres'].map((genreJson) => Genre.fromJson(genreJson)));
     }
     type = json['type'];
     if (json['images'] != null) {
@@ -32,9 +33,9 @@ class Book {
     data['title'] = title;
     data['author'] = author;
     data['description'] = description;
-    data['genres'] = genres;
+    data['genres'] = genres?.toList();
     data['type'] = type;
-    data['images'] = images;
+    data['images'] = images?.toList();
     return data;
   }
 }

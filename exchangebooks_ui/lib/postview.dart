@@ -129,7 +129,7 @@ class _PostView extends State<PostPage> {
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: const [
                       Text(
                         'El libro de oro de los cuentos de hadas',
                         style: TextStyle(
@@ -137,12 +137,12 @@ class _PostView extends State<PostPage> {
                           fontSize: 20,
                         ),
                       ),
-                      const Gap(10),
+                      Gap(5),
                       Text(
                         'Verónica Uribe',
                         style: TextStyle(fontSize: 15),
                       ),
-                      const Gap(10),
+                      Gap(10),
                       Text(
                         'Publicado por:',
                         style: TextStyle(
@@ -154,7 +154,7 @@ class _PostView extends State<PostPage> {
                         'Apodo',
                         style: TextStyle(fontSize: 15),
                       ),
-                      const Gap(10),
+                      Gap(15),
                       Text(
                         'Géneros',
                         style: TextStyle(
@@ -207,9 +207,9 @@ class _PostView extends State<PostPage> {
                           ),
                         ),
                         const Gap(25),
-                        Text(
+                        const Text(
                           'El libro de la vida',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       ],
@@ -221,23 +221,6 @@ class _PostView extends State<PostPage> {
           );
         },
       ),
-    );
-  }
-
-  Widget _buttonPost() {
-    return ElevatedButton(
-      onPressed: () async {
-        Navigator.of(context).pop();
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueAccent[1000],
-        minimumSize: const Size(200, 50),
-        side: const BorderSide(
-          width: 0.5,
-          color: Colors.black,
-        ),
-      ),
-      child: const Text('Publicar'),
     );
   }
 }

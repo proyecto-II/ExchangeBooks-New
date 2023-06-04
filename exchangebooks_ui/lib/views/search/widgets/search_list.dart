@@ -1,5 +1,8 @@
+import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
+import '../../../model/book.dart';
 
 class SearchList extends StatefulWidget {
   const SearchList({Key? key}) : super(key: key);
@@ -9,6 +12,20 @@ class SearchList extends StatefulWidget {
 }
 
 class _SearchList extends State<SearchList> {
+  List<Book> allBooks = [];
+  PostService postService = PostService();
+
+  @override
+  void initState() {
+    getBooks();
+    super.initState();
+  }
+
+  void getBooks() async {
+    allBooks = await postService.getAllPosts();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -16,7 +33,7 @@ class _SearchList extends State<SearchList> {
       height: MediaQuery.of(context).size.height - 270,
       child: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: 10,
+        itemCount: allBooks.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
@@ -37,7 +54,7 @@ class _SearchList extends State<SearchList> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.network(
-                              'https://ekaresur.cl/cms/wp-content/uploads/2019/04/veronica-uribe-el-libro-de-oro-de-los-cuentos-de-hadas-1.jpg',
+                              allBooks.elementAt(index).images!.first,
                               width: 150,
                               height: 150,
                               fit: BoxFit.cover,
@@ -47,20 +64,20 @@ class _SearchList extends State<SearchList> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'El libro de oro de los cuentos de hadas',
-                                style: TextStyle(
+                              Text(
+                                allBooks.elementAt(index).title!,
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18),
                               ),
                               const Gap(10),
-                              const Text(
-                                'Verónica Uribe',
+                              Text(
+                                allBooks.elementAt(index).author!,
                                 style: TextStyle(fontSize: 15),
                               ),
                               const Gap(10),
-                              const Text(
-                                'Publicado por:',
-                                style: TextStyle(
+                              Text(
+                                'Publicado por: ${allBooks.elementAt(index).type}',
+                                style: const TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold),
                               ),
                               const Text(

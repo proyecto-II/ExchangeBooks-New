@@ -57,19 +57,21 @@ class PostService {
     List<Book> posts = [];
     try {
       final response = await http.get(
-        Uri.parse('$url/api/book/list'),
+        Uri.parse('$apiUrl/api/book/list'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
       final jsonData = json.decode(response.body) as List<dynamic>;
+      log(jsonData.toString());
       for (var item in jsonData) {
         Book book = Book.fromJson(item);
         posts.add(book);
       }
+      log(posts.toString());
       return posts;
     } catch (error) {
-      log(error.toString());
+      log('Aca $error');
       return posts;
     }
   }
