@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createBook,
   getAllBooks,
+  getBook,
   getBooksByUser,
   searchBooks,
 } from "../controllers/book.controller.js";
@@ -18,5 +19,6 @@ router.get("/list", getAllBooks);
 router.post("/create", createBook);
 router.get("/list/:userId", getBooksByUser);
 router.get("/search", searchBooks);
+router.get("/:bookId", getBook);
 
 export default router;

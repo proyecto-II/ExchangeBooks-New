@@ -46,3 +46,16 @@ export async function searchBooks(req, res) {
     });
   }
 }
+
+export async function getBook(req, res) {
+  try {
+    const { bookId } = req.params;
+    const book = await bookService.getById(bookId);
+
+    return res.status(200).send(book);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+}

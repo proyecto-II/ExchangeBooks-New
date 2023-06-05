@@ -68,9 +68,20 @@ export async function getUser(req, res) {
 
 export async function editUser(req, res) {
   try {
-    const user = await userService.updateUser(req.params.id,req.body);
+    const user = await userService.updateUser(req.params.id, req.body);
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).json({ message: "Server error" });
+  }
+}
+
+export async function getUserById(req, res) {
+  try {
+    const user = await userService.getById(req.params.id);
+    if (user) return res.status(200).json({ user });
+
+    return res.status(404).json({ message: "User not found" });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error", err });
   }
 }

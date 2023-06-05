@@ -20,9 +20,15 @@ class UserService {
 
     return user;
   }
-  async updateUser(id,user){
-    const updateUser = await User.findByIdAndUpdate(id,user,{new: true})
+
+  async updateUser(id, user) {
+    const updateUser = await User.findByIdAndUpdate(id, user, { new: true });
     return updateUser;
+  }
+
+  async getById(id) {
+    const user = await User.findById(id);
+    return user;
   }
 }
 

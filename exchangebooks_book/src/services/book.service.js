@@ -1,3 +1,4 @@
+import { AUTH_SERVICE_URL } from "../config/constants.js";
 import Book from "../models/Book.js";
 import axios from "axios";
 
@@ -23,9 +24,23 @@ class BookService {
     return result;
   }
 
-  async get(id) {
+  async getById(id) {
     const book = await Book.findById(id);
-    return book;
+    try {
+      const { userId, ...others } = book._doc;
+      const { data, status } = await axios.get(
+        `${AUTH_SERVICE_URL}/user/${book.userId}`
+      );
+
+      if (status == 200) {
+        return {
+          ...others,
+          user: data.user,
+        };
+      }
+    } catch (err) {
+      return book;
+    }
   }
 
   async create(book) {
