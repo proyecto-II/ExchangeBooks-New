@@ -4,9 +4,9 @@ import {
   createUser,
   getUser,
   verifyUser,
-  editUser
+  editUser,
+  getUserById,
 } from "../controllers/user.controller.js";
-
 
 const router = Router();
 
@@ -20,5 +20,6 @@ router.post("/create", createUser);
 router.put("/updateUser/:id", editUser);
 router.post("/verify", verifyUser);
 router.get("/get-user/:email", getUser);
+router.get("/user/:id", getUserById);
 
 export default router;
