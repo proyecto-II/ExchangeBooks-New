@@ -36,8 +36,8 @@ class PostService {
 
   Future<String> postImage(String image) async {
     try {
-      var request =
-          http.MultipartRequest('POST', Uri.parse("$url/file?folder=books"));
+      var request = http.MultipartRequest(
+          'POST', Uri.parse("$apiUrl/api/upload/file?folder=books"));
       request.files.add(await http.MultipartFile.fromPath('files', image));
       final response = await request.send();
 
@@ -72,6 +72,25 @@ class PostService {
     } catch (error) {
       log('Error ocurrido en PostService $error');
       return posts;
+    }
+  }
+
+  Future<Book?> getPostById(String id) async {
+    Book post;
+    try {
+      final response = await http.get(
+        Uri.parse('$apiUrl/api/book/$id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      final jsonData = json.decode(response.body);
+      post = Book.fromJson(jsonData);
+      log(post.toString());
+      return post;
+    } catch (error) {
+      log('Error ocurrido en getPostById $error');
+      return null;
     }
   }
 }

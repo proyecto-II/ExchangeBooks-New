@@ -12,7 +12,7 @@ class UserService {
   Future<String> updateAvatar(String image) async {
     try {
       var request = http.MultipartRequest(
-          'POST', Uri.parse("http://192.168.43.4:3004/file?folder=avatars"));
+          'POST', Uri.parse("$url/api/upload/file?folder=avatars"));
       request.files.add(await http.MultipartFile.fromPath('files', image));
       final response = await request.send();
       if (response.statusCode == 200) {
