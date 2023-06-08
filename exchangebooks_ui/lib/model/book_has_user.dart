@@ -1,6 +1,7 @@
 import 'package:exchangebooks_ui/model/genre.dart';
+import 'package:exchangebooks_ui/model/user.dart';
 
-class Book {
+class BookUser {
   String? id;
   String? title;
   String? author;
@@ -8,11 +9,12 @@ class Book {
   List<Genre>? genres;
   String? type;
   List<String>? images;
+  IUser? user;
 
-  Book(this.id, this.title, this.author, this.description, this.genres,
-      this.type, this.images);
+  BookUser(this.id, this.title, this.author, this.description, this.genres,
+      this.type, this.images, this.user);
 
-  Book.fromJson(Map<String, dynamic> json) {
+  BookUser.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     title = json['title'];
     author = json['author'];
@@ -25,6 +27,7 @@ class Book {
     if (json['images'] != null) {
       images = List<String>.from(json['images']);
     }
+    user = json['user'] != null ? IUser.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +39,9 @@ class Book {
     data['genres'] = genres?.toList();
     data['type'] = type;
     data['images'] = images?.toList();
+    if (user != null) {
+      data['user'] = user!.toJson();
+    }
     return data;
   }
 }

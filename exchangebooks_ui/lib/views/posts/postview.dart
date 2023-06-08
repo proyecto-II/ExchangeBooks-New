@@ -1,13 +1,15 @@
+import 'package:exchangebooks_ui/model/book_has_user.dart';
+import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
-import '../../model/book.dart';
+import '../../model/book_has_user.dart';
 
 class PostPage extends StatefulWidget {
-  const PostPage({Key? key, required this.book}) : super(key: key);
-  final Book book;
+  const PostPage({Key? key, required this.idBook}) : super(key: key);
+  final String idBook;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -15,99 +17,119 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostView extends State<PostPage> {
-  late Book book;
+  late BookUser book;
+
   @override
   void initState() {
-    book = widget.book;
     super.initState();
+  }
+
+  Future<BookUser?> getBook(String idBook) async {
+    book = (await PostService().getPostById(idBook))!;
+    return book;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(248, 255, 255, 255),
-        centerTitle: true,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_rounded),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            color: Colors.black,
-          ),
-        ),
-        title: const Text(
-          'Exchangebook',
-          style: TextStyle(
-              fontSize: 27, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-      ),
-      drawer: const Drawers(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text(
-                    'Intercambiar',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
+    return FutureBuilder(
+        future: getBook(widget.idBook),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: const Color.fromARGB(248, 255, 255, 255),
+                centerTitle: true,
+                leading: Builder(
+                  builder: (context) => IconButton(
+                    icon: const Icon(Icons.menu_rounded),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                    color: Colors.black,
                   ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        LineAwesomeIcons.facebook_messenger,
-                        color: Colors.blue,
-                        size: 50,
-                      )),
-                ],
+                ),
+                title: const Text(
+                  'Exchangebook',
+                  style: TextStyle(
+                      fontSize: 27,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
               ),
-              _post(),
-              const Gap(20),
-              const Text(
-                'Descripción',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.start,
-              ),
-              const Gap(10),
-              SizedBox(
-                height: 270,
+              drawer: const Drawers(),
+              body: SafeArea(
                 child: SingleChildScrollView(
-                  child: Text(
-                    book.description!,
-                    textAlign: TextAlign.justify,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Text(
+                                'Intercambiar',
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.left,
+                              ),
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    LineAwesomeIcons.facebook_messenger,
+                                    color: Colors.blue,
+                                    size: 50,
+                                  )),
+                            ],
+                          ),
+                          _post(),
+                          const Gap(20),
+                          const Text(
+                            'Descripción',
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.start,
+                          ),
+                          const Gap(10),
+                          SizedBox(
+                            height: 270,
+                            child: SingleChildScrollView(
+                              child: Text(
+                                book.description!,
+                                textAlign: TextAlign.justify,
+                              ),
+                            ),
+                          ),
+                          const Gap(10),
+                          Container(
+                            decoration: BoxDecoration(color: Colors.grey[200]),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  ' Otros libros',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Ver todo >'))
+                              ],
+                            ),
+                          ),
+                          const Gap(10),
+                          _postList(),
+                        ]),
                   ),
                 ),
               ),
-              const Gap(10),
-              Container(
-                decoration: BoxDecoration(color: Colors.grey[200]),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      ' Otros libros',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Ver todo >'))
-                  ],
-                ),
-              ),
-              const Gap(10),
-              _postList(),
-            ]),
-          ),
-        ),
-      ),
-    );
+            );
+          } else if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          }
+          return const CircularProgressIndicator();
+        });
   }
 
   Widget _post() {
@@ -156,7 +178,8 @@ class _PostView extends State<PostPage> {
                         ),
                       ),
                       Text(
-                        'Apodo', //Aqui se tiene que agregar al que publico el libro
+                        book.user!
+                            .username!, //Aqui se tiene que agregar al que publico el libro
                         style: const TextStyle(fontSize: 15),
                       ),
                       const Gap(15),

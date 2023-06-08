@@ -27,18 +27,23 @@ class BookService {
   async getById(id) {
     const book = await Book.findById(id);
     try {
-      const { userId, ...others } = book._doc;
+      const { userId,genres, ...others } = book._doc;
       const { data, status } = await axios.get(
         `${AUTH_SERVICE_URL}/user/${book.userId}`
       );
+      const response = await axios.post("http://localhost:3002/list", {
+        genres,
+      });
 
       if (status == 200) {
         return {
           ...others,
+          genres: response.data,
           user: data.user,
         };
       }
     } catch (err) {
+      console.log(err);
       return book;
     }
   }
@@ -72,6 +77,16 @@ class BookService {
     });
     const result = await Promise.all(fetchCategories);
     return result;
+  }
+
+  async search(query) {
+    const books = await Book.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { author: { $regex: query, $options: "i" } },
+      ],
+    });
+    return books;
   }
 }
 

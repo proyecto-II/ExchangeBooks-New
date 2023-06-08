@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:exchangebooks_ui/model/book_has_user.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../model/book.dart';
@@ -63,11 +64,11 @@ class PostService {
         },
       );
       final jsonData = json.decode(response.body) as List<dynamic>;
+      log(jsonData.toString());
       for (var item in jsonData) {
         Book book = Book.fromJson(item);
         posts.add(book);
       }
-      log(posts.toString());
       return posts;
     } catch (error) {
       log('Error ocurrido en PostService $error');
@@ -75,8 +76,8 @@ class PostService {
     }
   }
 
-  Future<Book?> getPostById(String id) async {
-    Book post;
+  Future<BookUser?> getPostById(String id) async {
+    BookUser post;
     try {
       final response = await http.get(
         Uri.parse('$apiUrl/api/book/$id'),
@@ -85,7 +86,8 @@ class PostService {
         },
       );
       final jsonData = json.decode(response.body);
-      post = Book.fromJson(jsonData);
+      log(jsonData.toString());
+      post = BookUser.fromJson(jsonData);
       log(post.toString());
       return post;
     } catch (error) {

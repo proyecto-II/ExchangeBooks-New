@@ -42,7 +42,7 @@ class _SearchList extends State<SearchList> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => PostPage(
-                          book: allBooks.elementAt(index),
+                          idBook: allBooks.elementAt(index).id!,
                         )),
               );
             },
@@ -79,7 +79,7 @@ class _SearchList extends State<SearchList> {
                               const Gap(10),
                               Text(
                                 allBooks.elementAt(index).author!,
-                                style: TextStyle(fontSize: 15),
+                                style: const TextStyle(fontSize: 15),
                               ),
                               const Gap(10),
                               Text(
