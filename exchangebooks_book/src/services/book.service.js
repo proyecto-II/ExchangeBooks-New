@@ -101,6 +101,7 @@ class BookService {
         const { data, status } = await axios.get(
           `${AUTH_SERVICE_URL}/user/${userId}`
         );
+
         const response = await axios.post("http://localhost:3002/list", {
           genres,
         });
