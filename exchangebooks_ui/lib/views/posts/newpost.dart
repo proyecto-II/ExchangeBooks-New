@@ -296,8 +296,7 @@ class _NewPost extends State<NewPostPage> {
   Widget _buttonPost() {
     return ElevatedButton(
       onPressed: () async {
-        _createPost();
-        Navigator.of(context).pop();
+        _showAlert(context);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blueAccent[1000],
@@ -311,11 +310,104 @@ class _NewPost extends State<NewPostPage> {
     );
   }
 
-  void _dialog() async {
-    return showDialog(
+  void _showAlert(BuildContext context) {
+    showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
-        return Text("data");
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Text(
+                '¿Está seguro de querer realizar esta acción?',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+                await Future.delayed(
+                  const Duration(seconds: 2),
+                );
+                _createPost();
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+                // ignore: use_build_context_synchronously
+                _successAlert(context);
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('Continuar'),
+            ),
+            TextButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancelar'),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  void _successAlert(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Image.asset(width: 100, height: 100, 'assets/img/success.png'),
+              const Text(
+                '¡¡Se ha publicado el libro con exito!!',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        ));
       },
     );
   }

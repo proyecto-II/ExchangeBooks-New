@@ -154,7 +154,7 @@ class _SearchList extends State<SearchList> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: Image.network(
-                                    allBooks.elementAt(index).images!.first,
+                                    filterBooks.elementAt(index).images!.first,
                                     width: 100,
                                     height: 100,
                                     fit: BoxFit.cover,
@@ -205,7 +205,7 @@ class _SearchList extends State<SearchList> {
               ),
             );
           } else {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
         });
   }

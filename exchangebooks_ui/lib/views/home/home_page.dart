@@ -41,30 +41,34 @@ class _Home extends State<HomePage> {
       ),
       drawer: const Drawers(),
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Text(
+                      'Recomendados para ti',
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/new_post');
+                        },
+                        child: const Text('Ver todo >'))
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text(
-                    'Recomendados para ti',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/new_post');
-                      },
-                      child: const Text('Ver todo >'))
-                ],
-              ),
-            ),
-            const Recomendations(),
-            const BooksList(),
-          ],
+              const Recomendations(),
+              const BooksList(),
+            ],
+          ),
         ),
       ),
     );
