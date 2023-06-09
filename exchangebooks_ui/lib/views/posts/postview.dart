@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
-import '../../model/book_has_user.dart';
-
 class PostPage extends StatefulWidget {
   const PostPage({Key? key, required this.idBook}) : super(key: key);
   final String idBook;
@@ -41,8 +39,8 @@ class _PostView extends State<PostPage> {
                 centerTitle: true,
                 leading: Builder(
                   builder: (context) => IconButton(
-                    icon: const Icon(Icons.menu_rounded),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
+                    icon: const Icon(Icons.arrow_back_ios_new_sharp),
+                    onPressed: () => Navigator.pop(context),
                     color: Colors.black,
                   ),
                 ),
@@ -112,8 +110,7 @@ class _PostView extends State<PostPage> {
                                 ),
                                 TextButton(
                                     onPressed: () {
-                                      Navigator.popAndPushNamed(
-                                          context, "/profile_page");
+                                      Navigator.pop(context);
                                     },
                                     child: const Text('Ver todo >'))
                               ],

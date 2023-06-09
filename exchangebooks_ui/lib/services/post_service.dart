@@ -37,8 +37,8 @@ class PostService {
 
   Future<String> postImage(String image) async {
     try {
-      var request = http.MultipartRequest(
-          'POST', Uri.parse("$apiUrl/api/upload/file?folder=books"));
+      var request =
+          http.MultipartRequest('POST', Uri.parse("$url/file?folder=books"));
       request.files.add(await http.MultipartFile.fromPath('files', image));
       final response = await request.send();
 

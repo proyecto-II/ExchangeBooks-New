@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/services/genre_service.dart';
 import 'package:exchangebooks_ui/views/search/widgets/search_list.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,15 @@ class _SearchPage extends State<SearchPage> {
   @override
   void initState() {
     searchcontroller = TextEditingController();
+    getGenres();
     super.initState();
+  }
+
+  Future<void> getGenres() async {
+    List<Genre> genres = await GenreService().getGenres();
+    setState(() {
+      genreList = genres;
+    });
   }
 
   @override
