@@ -9,12 +9,20 @@ class BookService {
     const books = await Book.find().exec();
     const fetchCategories = books.map(async (book) => {
       try {
-        const { genres, ...others } = book._doc;
-        const response = await axios.post("http://localhost:3002/list", {
-          genres,
-        });
+        const { genres, userId, ...others } = book._doc;
+        const { data, status: genreStatus } = await axios.post(
+          "http://localhost:3002/list",
+          {
+            genres,
+          }
+        );
+        const { data: userData, status: userStatus } = await axios.get(
+          `${AUTH_SERVICE_URL}/user/${userId}`
+        );
 
-        return { ...others, genres: response.data };
+        if (genreStatus === 200 && userStatus === 200) {
+          return { ...others, genres: data, user: userData.user };
+        }
       } catch (err) {
         return book;
       }
