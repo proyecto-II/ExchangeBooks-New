@@ -73,7 +73,7 @@ class _NewPost extends State<NewPostPage> {
         title: const Text(
           'Nueva Publicación',
           style: TextStyle(
-              fontSize: 27, fontWeight: FontWeight.bold, color: Colors.black),
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
         ),
       ),
       drawer: const Drawers(),

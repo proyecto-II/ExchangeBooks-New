@@ -58,7 +58,6 @@ class UserService {
         'userId': email,
         'genres': genres.map((genre) => genre.toJson()).toList()
       };
-      log(update.toString());
       var response = await http.put(
         Uri.parse("$url/api/genre/user/update/$email"),
         headers: {

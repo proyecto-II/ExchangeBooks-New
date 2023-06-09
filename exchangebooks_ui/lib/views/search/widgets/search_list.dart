@@ -82,14 +82,14 @@ class _SearchList extends State<SearchList> {
                                 style: const TextStyle(fontSize: 15),
                               ),
                               const Gap(10),
-                              Text(
-                                'Publicado por: ${allBooks.elementAt(index).type}',
-                                style: const TextStyle(
+                              const Text(
+                                'Publicado por:',
+                                style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold),
                               ),
-                              const Text(
-                                'Apodo',
-                                style: TextStyle(fontSize: 15),
+                              Text(
+                                allBooks.elementAt(index).author!,
+                                style: const TextStyle(fontSize: 15),
                               ),
                             ],
                           ),
