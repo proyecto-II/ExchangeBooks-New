@@ -112,7 +112,8 @@ class _PostView extends State<PostPage> {
                                 ),
                                 TextButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      Navigator.popAndPushNamed(
+                                          context, "/profile_page");
                                     },
                                     child: const Text('Ver todo >'))
                               ],

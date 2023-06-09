@@ -64,7 +64,6 @@ class PostService {
         },
       );
       final jsonData = json.decode(response.body) as List<dynamic>;
-      log(jsonData.toString());
       for (var item in jsonData) {
         Book book = Book.fromJson(item);
         posts.add(book);
@@ -86,9 +85,7 @@ class PostService {
         },
       );
       final jsonData = json.decode(response.body);
-      log(jsonData.toString());
       post = BookUser.fromJson(jsonData);
-      log(post.toString());
       return post;
     } catch (error) {
       log('Error ocurrido en getPostById $error');

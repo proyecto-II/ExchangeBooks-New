@@ -47,34 +47,34 @@ class _SearchList extends State<SearchList> {
               );
             },
             child: SizedBox(
-              width: 150,
-              child: FittedBox(
-                child: Column(
-                  children: [
-                    const Gap(20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              allBooks.elementAt(index).images!.first,
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
+              width: 100,
+              child: Column(
+                children: [
+                  const Gap(20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            allBooks.elementAt(index).images!.first,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
                           ),
-                          const Gap(10),
-                          Column(
+                        ),
+                        const Gap(10),
+                        FittedBox(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 allBooks.elementAt(index).title!,
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
+                                    fontWeight: FontWeight.bold, fontSize: 17),
                               ),
                               const Gap(10),
                               Text(
@@ -93,11 +93,11 @@ class _SearchList extends State<SearchList> {
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
           );

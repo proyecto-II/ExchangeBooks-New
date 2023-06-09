@@ -87,7 +87,9 @@ class _SearchPage extends State<SearchPage> {
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
             ),
-            const SearchList(),
+            const Expanded(
+              child: SearchList(),
+            ),
           ],
         ),
       ),
