@@ -1,3 +1,5 @@
+import 'package:exchangebooks_ui/model/book_has_user.dart';
+import 'package:exchangebooks_ui/services/book_service.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -9,49 +11,80 @@ class BooksList extends StatefulWidget {
 }
 
 class _BooksList extends State<BooksList> {
+  List<BookUser> books = [];
+  bool isLoading = true;
+  final BookService _bookService = BookService();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBooks();
+  }
+
+  void fetchBooks() async {
+    try {
+      List<BookUser> bookList = await _bookService.getAllBooks();
+      setState(() {
+        books = bookList;
+        isLoading = false;
+      });
+    } catch (error) {
+      // Manejo de errores
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width - 10,
-      height: MediaQuery.of(context).size.height - 600,
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {},
-            child: SizedBox(
-              width: 150,
-              child: FittedBox(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Gap(20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          'https://ekaresur.cl/cms/wp-content/uploads/2019/04/veronica-uribe-el-libro-de-oro-de-los-cuentos-de-hadas-1.jpg',
-                          width: MediaQuery.of(context).size.width,
-                          height: 300,
-                          fit: BoxFit.cover,
-                        ),
+      height: MediaQuery.of(context).size.height,
+      child: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: books.length,
+              itemBuilder: (context, index) {
+                BookUser book = books[index];
+                return GestureDetector(
+                  onTap: () {},
+                  child: SizedBox(
+                    width: 150,
+                    child: FittedBox(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Gap(20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                book.images![0],
+                                width: MediaQuery.of(context).size.width,
+                                height: 300,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const Gap(4),
+                          Text(
+                            book.title!,
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          )
+                        ],
                       ),
                     ),
-                    const Text(
-                      'El Libro de Oro',
-                      textAlign: TextAlign.right,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    )
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }
