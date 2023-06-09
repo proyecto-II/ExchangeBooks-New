@@ -59,3 +59,26 @@ export async function getBook(req, res) {
     });
   }
 }
+
+export async function edit(req, res) {
+  try {
+    console.log(req.params.id);
+    const book = await bookService.edit(req.params.id, req.body);
+    return res.status(200).json(book);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+}
+
+export async function deleteBook(req, res) {
+  try {
+    const books = await bookService.delete(req.params.id);
+    return res.status(200).send('Libro eliminado con exito');
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+}

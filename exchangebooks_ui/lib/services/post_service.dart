@@ -114,4 +114,32 @@ class PostService {
       return null;
     }
   }
+
+  Future<void> editPost(String id, String userId, Book post) async {
+    try {
+      final book = {
+        'title': post.title,
+        'author': post.author,
+        'userId': userId,
+        "description": post.description,
+        "genres": post.genres,
+        "type": post.type,
+        "images": post.images,
+      };
+      var response = await http.put(
+        Uri.parse("$url/api/book/edit/$id"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(book),
+      );
+      if (response.statusCode != 200) {
+        log(response.statusCode.toString());
+      }
+      var result = jsonDecode(response.body);
+      log(result);
+    } catch (e) {
+      log('Paso por aqui ${e.toString()}');
+    }
+  }
 }

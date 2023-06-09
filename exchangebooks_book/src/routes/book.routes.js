@@ -5,6 +5,8 @@ import {
   getBook,
   getBooksByUser,
   searchBooks,
+  edit,
+  deleteBook,
 } from "../controllers/book.controller.js";
 
 const router = Router();
@@ -20,5 +22,7 @@ router.post("/create", createBook);
 router.get("/list/:userId", getBooksByUser);
 router.get("/search", searchBooks);
 router.get("/:bookId", getBook);
+router.put("/edit/:id", edit);
+router.delete("/delete/:id", deleteBook);
 
 export default router;
