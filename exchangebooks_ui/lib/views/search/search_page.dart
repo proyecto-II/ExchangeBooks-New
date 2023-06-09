@@ -74,10 +74,9 @@ class _SearchPage extends State<SearchPage> {
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        book = value;
-                      }
+                    onEditingComplete: () {
+                      book = searchcontroller!.text;
+                      setState(() {});
                     },
                   ),
                 ),
@@ -96,8 +95,8 @@ class _SearchPage extends State<SearchPage> {
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
             ),
-            const Expanded(
-              child: SearchList(),
+            Expanded(
+              child: SearchList(prefixFilter: book),
             ),
           ],
         ),
