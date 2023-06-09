@@ -94,7 +94,23 @@ class BookService {
         { author: { $regex: query, $options: "i" } },
       ],
     });
-    return books;
+    const fetchUser = books.map(async (book) => {
+      try {
+        const { userId, ...others } = book._doc;
+
+        const { data, status } = await axios.get(
+          `${AUTH_SERVICE_URL}/user/${userId}`
+        );
+        if (status == 200) {
+          return { ...others, user: data.user };
+        }
+      } catch (err) {
+        return book;
+      }
+    });
+
+    const result = await Promise.all(fetchUser);
+    return result;
   }
 }
 
