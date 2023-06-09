@@ -35,18 +35,23 @@ class BookService {
   async getById(id) {
     const book = await Book.findById(id);
     try {
-      const { userId, ...others } = book._doc;
+      const { userId,genres, ...others } = book._doc;
       const { data, status } = await axios.get(
         `${AUTH_SERVICE_URL}/user/${book.userId}`
       );
+      const response = await axios.post("http://localhost:3002/list", {
+        genres,
+      });
 
       if (status == 200) {
         return {
           ...others,
+          genres: response.data,
           user: data.user,
         };
       }
     } catch (err) {
+      console.log(err);
       return book;
     }
   }
@@ -64,8 +69,22 @@ class BookService {
     return await Book.findByIdAndDelete(id);
   }
 
-  async getBooksByUser(userId) {
-    return await Book.find({ userId: userId });
+  async getBooksByUser(userId){
+    const books = await Book.find({userId:userId}).exec();
+    const fetchCategories = books.map(async (book) => {
+      try {
+        const { genres, ...others } = book._doc;
+        const response = await axios.post("http://localhost:3002/list", {
+          genres,
+        });
+
+        return { ...others, genres: response.data };
+      } catch (err) {
+        return null;
+      }
+    });
+    const result = await Promise.all(fetchCategories);
+    return result;
   }
 
   async search(query) {

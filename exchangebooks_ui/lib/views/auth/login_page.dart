@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:exchangebooks_ui/main.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/auth_service.dart';
@@ -135,7 +137,7 @@ class _Login extends State<LoginPage> {
               await authService.verifyUser(emailController.text.trim());
           print(isRegistered);
           if (isRegistered == false) {
-            print("el usuario no esta regitrado");
+            log("el usuario no esta regitrado");
             // mostrar error al usuario
           } else {
             // ignore: use_build_context_synchronously
@@ -147,6 +149,7 @@ class _Login extends State<LoginPage> {
                     ));
 
             final provider =
+                // ignore: use_build_context_synchronously
                 Provider.of<GoogleSignInProvider>(context, listen: false);
             final user = await provider.emailPasswordSignIn(
                 emailController.text.trim(), passController.text.trim());
