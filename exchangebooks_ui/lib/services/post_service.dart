@@ -54,8 +54,8 @@ class PostService {
     }
   }
 
-  Future<List<Book>> getAllPosts() async {
-    List<Book> posts = [];
+  Future<List<BookUser>> getAllPosts() async {
+    List<BookUser> posts = [];
     try {
       final response = await http.get(
         Uri.parse('$apiUrl/api/book/list'),
@@ -65,7 +65,7 @@ class PostService {
       );
       final jsonData = json.decode(response.body) as List<dynamic>;
       for (var item in jsonData) {
-        Book book = Book.fromJson(item);
+        BookUser book = BookUser.fromJson(item);
         posts.add(book);
       }
       return posts;

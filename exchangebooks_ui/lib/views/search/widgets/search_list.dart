@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/model/book_has_user.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/views/posts/postview.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class SearchList extends StatefulWidget {
 }
 
 class _SearchList extends State<SearchList> {
-  List<Book> allBooks = [];
+  List<BookUser> allBooks = [];
   PostService postService = PostService();
 
   @override
@@ -88,7 +89,7 @@ class _SearchList extends State<SearchList> {
                                     fontSize: 15, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                allBooks.elementAt(index).author!,
+                                allBooks.elementAt(index).user!.username!,
                                 style: const TextStyle(fontSize: 15),
                               ),
                             ],

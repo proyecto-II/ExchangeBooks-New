@@ -310,4 +310,13 @@ class _NewPost extends State<NewPostPage> {
       child: const Text('Publicar'),
     );
   }
+
+  void _dialog() async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Text("data");
+      },
+    );
+  }
 }
