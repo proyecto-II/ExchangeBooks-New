@@ -75,6 +75,28 @@ class PostService {
     }
   }
 
+  Future<List<BookUser>> getFilterPosts(String filterPrefix) async {
+    List<BookUser> posts = [];
+    try {
+      final response = await http.get(
+        Uri.parse('$apiUrl/api/book/search?q=$filterPrefix'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      log(jsonData.toString());
+      for (var item in jsonData) {
+        BookUser book = BookUser.fromJson(item);
+        posts.add(book);
+      }
+      return posts;
+    } catch (error) {
+      log('Error ocurrido en PostServiceFilter $error');
+      return posts;
+    }
+  }
+
   Future<BookUser?> getPostById(String id) async {
     BookUser post;
     try {

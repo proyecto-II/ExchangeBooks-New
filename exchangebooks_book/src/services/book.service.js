@@ -96,13 +96,16 @@ class BookService {
     });
     const fetchUser = books.map(async (book) => {
       try {
-        const { userId, ...others } = book._doc;
+        const { userId,genres, ...others } = book._doc;
 
         const { data, status } = await axios.get(
           `${AUTH_SERVICE_URL}/user/${userId}`
         );
+        const response = await axios.post("http://localhost:3002/list", {
+          genres,
+        });
         if (status == 200) {
-          return { ...others, user: data.user };
+          return { ...others,genres:response.data, user: data.user };
         }
       } catch (err) {
         return book;
