@@ -30,104 +30,105 @@ class _PostView extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getBook(widget.idBook),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Scaffold(
-              appBar: AppBar(
-                backgroundColor: const Color.fromARGB(248, 255, 255, 255),
-                centerTitle: true,
-                leading: Builder(
-                  builder: (context) => IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_sharp),
-                    onPressed: () => Navigator.pop(context),
-                    color: Colors.black,
-                  ),
-                ),
-                title: const Text(
-                  'Exchangebook',
-                  style: TextStyle(
-                      fontSize: 27,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
+      future: getBook(widget.idBook),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: const Color.fromARGB(248, 255, 255, 255),
+              centerTitle: true,
+              leading: Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new_sharp),
+                  onPressed: () => Navigator.pop(context),
+                  color: Colors.black,
                 ),
               ),
-              drawer: const Drawers(),
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              title: const Text(
+                'Exchangebook',
+                style: TextStyle(
+                    fontSize: 27,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            ),
+            drawer: const Drawers(),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Text(
-                                'Intercambiar',
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.left,
-                              ),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    LineAwesomeIcons.facebook_messenger,
-                                    color: Colors.blue,
-                                    size: 50,
-                                  )),
-                            ],
-                          ),
-                          _post(),
-                          const Gap(20),
                           const Text(
-                            'Descripción',
+                            'Intercambiar',
                             style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.start,
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.left,
                           ),
-                          const Gap(10),
-                          SizedBox(
-                            height: 270,
-                            child: SingleChildScrollView(
-                              child: Text(
-                                book.description!,
-                                textAlign: TextAlign.justify,
-                              ),
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                LineAwesomeIcons.facebook_messenger,
+                                color: Colors.blue,
+                                size: 50,
+                              )),
+                        ],
+                      ),
+                      _post(),
+                      const Gap(20),
+                      const Text(
+                        'Descripción',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.start,
+                      ),
+                      const Gap(10),
+                      SizedBox(
+                        height: 270,
+                        child: SingleChildScrollView(
+                          child: Text(
+                            book.description!,
+                            textAlign: TextAlign.justify,
+                          ),
+                        ),
+                      ),
+                      const Gap(10),
+                      Container(
+                        decoration: BoxDecoration(color: Colors.grey[200]),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              ' Otros libros',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
                             ),
-                          ),
-                          const Gap(10),
-                          Container(
-                            decoration: BoxDecoration(color: Colors.grey[200]),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  ' Otros libros',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Ver todo >'))
-                              ],
-                            ),
-                          ),
-                          const Gap(10),
-                          _postList(),
-                        ]),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Ver todo >'))
+                          ],
+                        ),
+                      ),
+                      const Gap(10),
+                      _postList(),
+                    ],
                   ),
                 ),
               ),
-            );
-          } else if (snapshot.hasError) {
-            return Text("Error: ${snapshot.error}");
-          }
-          return const CircularProgressIndicator();
-        });
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
   }
 
   Widget _post() {
