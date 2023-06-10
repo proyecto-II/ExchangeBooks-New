@@ -97,7 +97,7 @@ export async function getUserById(req, res) {
 export async function resetPassword(req, res) {
   try {
     const { email } = req.body;
-
+    console.log(email);
     // generate code
     const code = await generateVerficationCode();
     const codeExpires = await genereteExpiresDate();

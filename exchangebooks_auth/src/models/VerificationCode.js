@@ -3,7 +3,6 @@ import mongoose, { Schema } from "mongoose";
 const VerificationCodeSchema = new Schema({
   email: {
     type: String,
-    unique: true,
     required: true,
   },
   code: {

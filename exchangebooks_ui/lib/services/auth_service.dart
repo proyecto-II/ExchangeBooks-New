@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:exchangebooks_ui/model/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart';
 import 'dart:developer';
 import '../model/genre.dart';
 
@@ -93,5 +94,18 @@ class AuthService {
     } catch (err) {
       log('Paso por aqui $err');
     }
+  }
+
+  Future<Response> sendResetPasswordEmail(String email) async {
+    final response = await http.post(
+      Uri.parse('$apiUrl/api/auth/reset-password'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'email': email,
+      }),
+    );
+    return response;
   }
 }

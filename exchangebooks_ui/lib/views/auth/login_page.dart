@@ -109,7 +109,9 @@ class _Login extends State<LoginPage> {
         ),
       ),
       TextButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/forgot_password_page');
+        },
         child: Text(
           '¿Olvido su contraseña?',
           style: TextStyle(color: Colors.grey[600]),

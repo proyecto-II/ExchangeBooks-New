@@ -54,6 +54,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
 
   line_awesome_flutter: ^2.0.0
+  pinput: ^2.2.31
 
 dev_dependencies:
   flutter_test:
