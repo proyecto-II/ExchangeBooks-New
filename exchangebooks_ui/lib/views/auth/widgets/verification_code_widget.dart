@@ -1,9 +1,52 @@
+import 'package:exchangebooks_ui/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
-class VerficationCodeWidget extends StatelessWidget {
+// ignore: must_be_immutable
+class VerficationCodeWidget extends StatefulWidget {
   String? email;
   VerficationCodeWidget({super.key, required this.email});
+
+  @override
+  State<VerficationCodeWidget> createState() => _VerficationCodeWidgetState();
+}
+
+class _VerficationCodeWidgetState extends State<VerficationCodeWidget> {
+  final codeController = TextEditingController();
+  final focusNode = FocusNode();
+
+  final authService = AuthService();
+  bool isLoading = false;
+
+  void updateIsLoading(bool value) {
+    setState(() {
+      isLoading = value;
+    });
+  }
+
+  Future<void> validateCode() async {
+    updateIsLoading(true);
+
+    final isValid = await authService.verifyCode(codeController.text);
+    debugPrint('Code validation: $isValid');
+
+    if (isValid) {
+      // go to change password page
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, "/change_password_page");
+    } else {
+      // show error
+    }
+
+    updateIsLoading(false);
+  }
+
+  @override
+  void dispose() {
+    codeController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +75,7 @@ class VerficationCodeWidget extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                           height: 1.5)),
                   TextSpan(
-                      text: email,
+                      text: widget.email,
                       style: const TextStyle(
                           fontSize: 16.0,
                           color: Color(0xff005BE0),
@@ -43,21 +86,20 @@ class VerficationCodeWidget extends StatelessWidget {
               const SizedBox(
                 height: 40.0,
               ),
-              const SizedBox(
+              SizedBox(
                 child: Pinput(
                   length: 6,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  controller: codeController,
                 ),
               ),
               const Expanded(child: SizedBox()),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login_page');
-                },
+                onPressed: validateCode,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(30, 35, 44, 1),
-                  minimumSize: const Size(double.infinity, 48),
+                  backgroundColor: const Color.fromRGBO(252, 163, 17, 1),
+                  minimumSize: const Size(double.infinity, 52),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                     side: BorderSide.none,

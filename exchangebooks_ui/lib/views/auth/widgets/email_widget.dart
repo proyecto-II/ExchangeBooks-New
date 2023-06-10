@@ -1,4 +1,5 @@
 import 'package:exchangebooks_ui/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EmailWidget extends StatefulWidget {
@@ -15,6 +16,7 @@ class _EmailWidgetState extends State<EmailWidget> {
   final authService = AuthService();
 
   bool isLoading = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void updateIsLoading(bool value) {
     setState(() {
@@ -24,15 +26,35 @@ class _EmailWidgetState extends State<EmailWidget> {
 
   Future<void> sendEmail() async {
     updateIsLoading(true);
-    try {
-      final response =
-          await authService.sendResetPasswordEmail(emailController.text);
 
-      if (response.statusCode == 200) {
-        widget.onEmailChanged(emailController.text);
-      }
-    } catch (err) {
-      print(err);
+    try {
+      // Find the ScaffoldMessenger in the widget tree
+      // and use it to show a SnackBar.
+
+      await _auth.sendPasswordResetEmail(email: emailController.text.trim());
+      final complete = SnackBar(
+        content: const Text('El correo ha sido enviado!'),
+        action: SnackBarAction(
+          label: 'Cerrar',
+          onPressed: () {
+            // Some code to undo the change.
+          },
+        ),
+      );
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(complete);
+    } on FirebaseAuthException catch (err) {
+      debugPrint(err.message);
+      final error = SnackBar(
+        content: Text(err.message!),
+        action: SnackBarAction(
+          label: 'Cerrar',
+          onPressed: () {
+            // Some code to undo the change.
+          },
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(error);
     } finally {
       updateIsLoading(false);
     }
@@ -56,7 +78,7 @@ class _EmailWidgetState extends State<EmailWidget> {
                 text: const TextSpan(children: [
                   TextSpan(
                       text:
-                          "Se enviara un codigo de validacion para poder acceder al cambio de contraseña",
+                          "Se enviara un correo de validacion para poder acceder al cambio de contraseña",
                       style: TextStyle(
                           fontSize: 16.0,
                           color: Color(0xff808d9e),
@@ -102,7 +124,7 @@ class _EmailWidgetState extends State<EmailWidget> {
                         ),
                         elevation: 0,
                       ),
-                      child: const Text('Enviar Código de Confirmación'),
+                      child: const Text('Enviar Correo'),
                     )
             ],
           ),

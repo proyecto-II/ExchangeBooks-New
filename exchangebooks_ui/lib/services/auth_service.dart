@@ -108,4 +108,35 @@ class AuthService {
     );
     return response;
   }
+
+  Future<bool> verifyCode(String code) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$apiUrl/api/auth/validate-code/$code'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (response.statusCode == 200) {
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  Future<Response> changePassword(String password) async {
+    final response = await http.post(
+      Uri.parse('$apiUrl/api/auth/change-password'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'password': password,
+      }),
+    );
+    return response;
+  }
 }

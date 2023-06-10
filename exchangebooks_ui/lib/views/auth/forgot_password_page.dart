@@ -29,8 +29,6 @@ class _ForgotPassword extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return email == ""
-        ? EmailWidget(onEmailChanged: updateEmail)
-        : VerficationCodeWidget(email: email);
+    return EmailWidget(onEmailChanged: updateEmail);
   }
 }

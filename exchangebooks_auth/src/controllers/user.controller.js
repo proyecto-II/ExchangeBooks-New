@@ -131,7 +131,9 @@ export async function validateVerificationCode(req, res) {
     const { code } = req.params;
     const isValidate = await userService.validateVerificationCode(code);
 
-    return res.status(200).json({ isValidate });
+    if (!isValidate) return res.status(404).json({ isValidate: false });
+
+    return res.status(200).json({ isValidate: true });
   } catch (err) {
     return res.status(500).json({
       message: err.message,

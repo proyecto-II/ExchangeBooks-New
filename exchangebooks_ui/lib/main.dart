@@ -1,4 +1,5 @@
 import 'package:exchangebooks_ui/provider/search_provider.dart';
+import 'package:exchangebooks_ui/views/auth/change_password_page.dart';
 import 'package:exchangebooks_ui/views/auth/forgot_password_page.dart';
 import 'package:exchangebooks_ui/views/posts/newpost.dart';
 import 'package:exchangebooks_ui/provider/genre_provider.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
           '/profile_page': (context) => const ProfilePage(),
           '/new_post': (context) => const NewPostPage(),
           '/forgot_password_page': (context) => const ForgotPasswordPage(),
+          '/change_password_page': (context) => const ChangePasswordPage()
         },
         initialRoute: '/landing_page',
       ),
