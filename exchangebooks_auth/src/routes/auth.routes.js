@@ -6,6 +6,8 @@ import {
   verifyUser,
   editUser,
   getUserById,
+  resetPassword,
+  validateVerificationCode,
 } from "../controllers/user.controller.js";
 
 const router = Router();
@@ -21,5 +23,7 @@ router.put("/updateUser/:id", editUser);
 router.post("/verify", verifyUser);
 router.get("/get-user/:email", getUser);
 router.get("/user/:id", getUserById);
+router.post("/reset-password", resetPassword);
+router.get("/validate-code/:code", validateVerificationCode);
 
 export default router;
