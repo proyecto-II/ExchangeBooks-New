@@ -4,6 +4,7 @@ import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:photo_view/photo_view.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({Key? key, required this.idBook}) : super(key: key);
@@ -25,6 +26,11 @@ class _PostView extends State<PostPage> {
   Future<BookUser?> getBook(String idBook) async {
     book = (await PostService().getPostById(idBook))!;
     return book;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -53,7 +59,7 @@ class _PostView extends State<PostPage> {
               ),
             ),
             drawer: const Drawers(),
-            body: SafeArea(
+            body: InteractiveViewer(
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -141,13 +147,20 @@ class _PostView extends State<PostPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  book.images!.first,
-                  width: 150,
-                  height: 220,
-                  fit: BoxFit.cover,
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _zoomImage(context);
+                  });
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    book.images!.first,
+                    width: 150,
+                    height: 220,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const Gap(10),
@@ -177,8 +190,7 @@ class _PostView extends State<PostPage> {
                         ),
                       ),
                       Text(
-                        book.user!
-                            .username!, //Aqui se tiene que agregar al que publico el libro
+                        book.user!.username!,
                         style: const TextStyle(fontSize: 15),
                       ),
                       const Gap(15),
@@ -189,7 +201,7 @@ class _PostView extends State<PostPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      _genres()
+                      _genres(),
                     ],
                   ),
                 ),
@@ -259,6 +271,37 @@ class _PostView extends State<PostPage> {
           );
         },
       ),
+    );
+  }
+
+  void _zoomImage(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              color: Colors.transparent,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width - 30,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: PhotoView(
+                      imageProvider: NetworkImage(book.images!.first),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
