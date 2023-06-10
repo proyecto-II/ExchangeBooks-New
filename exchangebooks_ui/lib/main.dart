@@ -5,6 +5,7 @@ import 'package:exchangebooks_ui/views/auth/genre_page.dart';
 import 'package:exchangebooks_ui/views/auth/login_page.dart';
 import 'package:exchangebooks_ui/views/auth/register_page.dart';
 import 'package:exchangebooks_ui/views/landing_page.dart';
+import 'package:exchangebooks_ui/views/posts/user_editpost.dart';
 import 'package:exchangebooks_ui/views/profile/profile_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

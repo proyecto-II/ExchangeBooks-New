@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:exchangebooks_ui/model/book.dart';
+import 'package:exchangebooks_ui/model/book_has_user.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/utils/photo_convert.dart';
@@ -9,14 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import '../../model/genre.dart';
 import '../../services/genre_service.dart';
 import '../../widgets/drawer.dart';
 
 class EditPostPage extends StatefulWidget {
   const EditPostPage({Key? key, required this.book}) : super(key: key);
-  final Book book;
+  final BookUser book;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -30,6 +30,7 @@ class _NewPost extends State<EditPostPage> {
   late List<Genre>? selectedGenreList = [];
   late List<Genre> genreList = [];
   final ImagePicker _picker = ImagePicker();
+  String _photoName = '';
   File? _imageTaken;
 
   @override
@@ -52,16 +53,17 @@ class _NewPost extends State<EditPostPage> {
   }
 
   Future<void> _editPost() async {
-    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     final location = await PostService().postImage(_imageTaken!.path);
-    await PostService().createPost(
+    BookUser editPost = BookUser(
+        widget.book.id,
         titleController!.text,
         authorController!.text,
         descriptionController!.text,
-        iuser.user!.id!,
-        selectedGenreList!,
-        'Libro',
-        location);
+        selectedGenreList,
+        widget.book.type,
+        widget.book.images,
+        widget.book.user);
+    await PostService().editPost(editPost, location);
   }
 
   @override
@@ -72,13 +74,13 @@ class _NewPost extends State<EditPostPage> {
         centerTitle: true,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_rounded),
-            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => Navigator.pop(context),
             color: Colors.black,
           ),
         ),
         title: const Text(
-          'Nueva Publicación',
+          'Editar Publicación',
           style: TextStyle(
               fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -220,8 +222,7 @@ class _NewPost extends State<EditPostPage> {
               .then(
             (imgFile) {
               _imageTaken = File(imgFile!.path);
-              widget.book.images!.first =
-                  Utility.base64String(_imageTaken!.readAsBytesSync());
+              _photoName = Utility.base64String(_imageTaken!.readAsBytesSync());
               setState(() {});
             },
           );
@@ -229,7 +230,7 @@ class _NewPost extends State<EditPostPage> {
         child: SizedBox(
           width: 250,
           height: 150,
-          child: widget.book.images!.first != null
+          child: _photoName != null
               ? Container(
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
@@ -237,21 +238,14 @@ class _NewPost extends State<EditPostPage> {
                     ),
                   ),
                   // ignore: unnecessary_new
-                  child: widget.book.images!.first.isNotEmpty
+                  child: _photoName.isNotEmpty
                       ? Image.memory(
-                          base64Decode(widget.book.images!.first),
+                          base64Decode(_photoName),
                           fit: BoxFit.cover,
                         )
-                      : Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20)),
-                            border: Border.all(color: Colors.purple),
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            size: 50,
-                          ),
+                      : Image.network(
+                          widget.book.images!.first,
+                          fit: BoxFit.cover,
                         ),
                 )
               : Container(

@@ -215,15 +215,16 @@ class _PostView extends State<PostPage> {
 
   Widget _genres() {
     return SizedBox(
-        width: 200,
-        height: 30,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: book.genres!.length,
-          itemBuilder: (context, index) {
-            return Text('${book.genres!.elementAt(index).name!} ');
-          },
-        ));
+      width: 200,
+      height: 30,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: book.genres!.length,
+        itemBuilder: (context, index) {
+          return Text('${book.genres!.elementAt(index).name!} ');
+        },
+      ),
+    );
   }
 
   Widget _postList() {
@@ -274,6 +275,12 @@ class _PostView extends State<PostPage> {
     );
   }
 
+  // ignore: slash_for_doc_comments
+  /***
+  * Widget que permite hacerle zoom a la imagen del libro
+  * @param {BuildContext context} Parametro que es usado para realizar llamadas a distintos widgets u obtener datos del widget anterior.
+  * @return Un Dialog con la imagen en la cual se le puede hacer gracias a la libreria PhotoView, la que trabaja con InteractiveViewer para los cambios de tamaño de la imagen
+  ***/
   void _zoomImage(BuildContext context) {
     showDialog(
       context: context,

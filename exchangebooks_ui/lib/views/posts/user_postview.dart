@@ -1,9 +1,11 @@
 import 'package:exchangebooks_ui/model/book_has_user.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
+import 'package:exchangebooks_ui/views/posts/user_editpost.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:photo_view/photo_view.dart';
 
 class UserPostPage extends StatefulWidget {
   const UserPostPage({Key? key, required this.idBook}) : super(key: key);
@@ -25,6 +27,10 @@ class _UserPostView extends State<UserPostPage> {
   Future<BookUser?> getBook(String idBook) async {
     book = (await PostService().getPostById(idBook))!;
     return book;
+  }
+
+  void deleteBook() async {
+    await PostService().deleteBook(book.id!);
   }
 
   @override
@@ -70,7 +76,15 @@ class _UserPostView extends State<UserPostPage> {
                             textAlign: TextAlign.left,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditPostPage(book: book),
+                                  ),
+                                );
+                              },
                               icon: const Icon(
                                 LineAwesomeIcons.edit,
                                 color: Colors.blue,
@@ -88,7 +102,10 @@ class _UserPostView extends State<UserPostPage> {
                             textAlign: TextAlign.left,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                deleteBook();
+                                Navigator.pop(context);
+                              },
                               icon: const Icon(
                                 LineAwesomeIcons.trash,
                                 color: Colors.red,
@@ -138,13 +155,20 @@ class _UserPostView extends State<UserPostPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  book.images!.first,
-                  width: 150,
-                  height: 220,
-                  fit: BoxFit.cover,
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _zoomImage(context);
+                  });
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    book.images!.first,
+                    width: 150,
+                    height: 220,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const Gap(10),
@@ -166,19 +190,6 @@ class _UserPostView extends State<UserPostPage> {
                         style: const TextStyle(fontSize: 15),
                       ),
                       const Gap(10),
-                      const Text(
-                        'Publicado por:',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        book.user!
-                            .username!, //Aqui se tiene que agregar al que publico el libro
-                        style: const TextStyle(fontSize: 15),
-                      ),
-                      const Gap(15),
                       const Text(
                         'Géneros',
                         style: TextStyle(
@@ -209,5 +220,42 @@ class _UserPostView extends State<UserPostPage> {
             return Text('${book.genres!.elementAt(index).name!} ');
           },
         ));
+  }
+
+  // ignore: slash_for_doc_comments
+  /***
+  * Widget que permite hacerle zoom a la imagen del libro
+  * @param {BuildContext context} Parametro que es usado para realizar llamadas a distintos widgets u obtener datos del widget anterior.
+  * @return Un Dialog con la imagen en la cual se le puede hacer gracias a la libreria PhotoView, la que trabaja con InteractiveViewer para los cambios de tamaño de la imagen
+  ***/
+  void _zoomImage(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              color: Colors.transparent,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width - 30,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: PhotoView(
+                      imageProvider: NetworkImage(book.images!.first),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
