@@ -1,8 +1,12 @@
+import 'package:exchangebooks_ui/model/book_has_user.dart';
+import 'package:exchangebooks_ui/provider/search_provider.dart';
+import 'package:exchangebooks_ui/services/book_service.dart';
 import 'package:exchangebooks_ui/services/genre_service.dart';
 import 'package:exchangebooks_ui/views/search/widgets/search_list.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
 import '../../model/genre.dart';
 import '../../widgets/drawer.dart';
@@ -18,6 +22,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPage extends State<SearchPage> {
   TextEditingController? searchcontroller;
   String book = "Todos";
+  String category = "";
   List<Genre>? selectedGenreList = [];
   List<Genre> genreList = [];
 
@@ -128,9 +133,15 @@ class _SearchPage extends State<SearchPage> {
       enableOnlySingleSelection: false,
       searchFieldHint: 'Buscar genero',
       onApplyButtonClick: (list) {
-        setState(() {
-          selectedGenreList = list;
-        });
+        // if (list!.isNotEmpty) {
+        //   final ids = list.map((item) => item.id).whereType<String>().toList();
+        //   if (ids.isNotEmpty) {
+        //     filterBooks(ids);
+        //   }
+        // }
+        // setState(() {
+        //   selectedGenreList = list;
+        // });
       },
     );
   }

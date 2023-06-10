@@ -35,7 +35,7 @@ class BookService {
   async getById(id) {
     const book = await Book.findById(id);
     try {
-      const { userId,genres, ...others } = book._doc;
+      const { userId, genres, ...others } = book._doc;
       const { data, status } = await axios.get(
         `${AUTH_SERVICE_URL}/user/${book.userId}`
       );
@@ -69,8 +69,8 @@ class BookService {
     return await Book.findByIdAndDelete(id);
   }
 
-  async getBooksByUser(userId){
-    const books = await Book.find({userId:userId}).exec();
+  async getBooksByUser(userId) {
+    const books = await Book.find({ userId: userId }).exec();
     const fetchCategories = books.map(async (book) => {
       try {
         const { genres, ...others } = book._doc;
@@ -96,7 +96,7 @@ class BookService {
     });
     const fetchUser = books.map(async (book) => {
       try {
-        const { userId,genres, ...others } = book._doc;
+        const { userId, genres, ...others } = book._doc;
 
         const { data, status } = await axios.get(
           `${AUTH_SERVICE_URL}/user/${userId}`
@@ -106,7 +106,38 @@ class BookService {
           genres,
         });
         if (status == 200) {
-          return { ...others,genres:response.data, user: data.user };
+          return { ...others, genres: response.data, user: data.user };
+        }
+      } catch (err) {
+        return book;
+      }
+    });
+
+    const result = await Promise.all(fetchUser);
+    return result;
+  }
+
+  async getByGenres(genres) {
+    const filterBooks = await Book.find({
+      genres: { $in: genres },
+    });
+
+    const fetchUser = filterBooks.map(async (book) => {
+      try {
+        const { userId, genres, ...others } = book._doc;
+
+        const { data, status } = await axios.get(
+          `${AUTH_SERVICE_URL}/user/${userId}`
+        );
+
+        const { data: genresData, status: genreStatus } = await axios.post(
+          "http://localhost:3002/list",
+          {
+            genres,
+          }
+        );
+        if (status === 200 && genreStatus === 200) {
+          return { ...others, genres: genresData, user: data.user };
         }
       } catch (err) {
         return book;

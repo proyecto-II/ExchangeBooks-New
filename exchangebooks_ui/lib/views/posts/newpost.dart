@@ -30,6 +30,7 @@ class _NewPost extends State<NewPostPage> {
   final ImagePicker _picker = ImagePicker();
   String _photoName = '';
   File? _imageTaken;
+  File? _selectedImage;
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _NewPost extends State<NewPostPage> {
 
   Future<void> _createPost() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
-    final location = await PostService().postImage(_imageTaken!.path);
+    final location = await PostService().postImage(_selectedImage!.path);
     await PostService().createPost(
         titleController!.text,
         authorController!.text,
@@ -55,6 +56,19 @@ class _NewPost extends State<NewPostPage> {
         selectedGenreList!,
         'Libro',
         location);
+  }
+
+  Future<void> _selectImageFromGallery() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedImage != null) {
+      setState(() {
+        _selectedImage = File(pickedImage.path);
+      });
+    }
   }
 
   @override
@@ -205,23 +219,12 @@ class _NewPost extends State<NewPostPage> {
       alignment: Alignment.center,
       child: GestureDetector(
         onTap: () async {
-          _picker
-              .pickImage(
-                  source: ImageSource != null
-                      ? ImageSource.camera
-                      : ImageSource.gallery)
-              .then(
-            (imgFile) {
-              _imageTaken = File(imgFile!.path);
-              _photoName = Utility.base64String(_imageTaken!.readAsBytesSync());
-              setState(() {});
-            },
-          );
+          _selectImageFromGallery();
         },
         child: SizedBox(
           width: 250,
           height: 150,
-          child: _photoName != null
+          child: _selectedImage != null
               ? Container(
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
@@ -230,9 +233,11 @@ class _NewPost extends State<NewPostPage> {
                   ),
                   // ignore: unnecessary_new
                   child: _photoName.isNotEmpty
-                      ? Image.memory(
-                          base64Decode(_photoName),
+                      ? Image.file(
+                          _selectedImage!,
                           fit: BoxFit.cover,
+                          width: 120,
+                          height: 120,
                         )
                       : Container(
                           decoration: BoxDecoration(

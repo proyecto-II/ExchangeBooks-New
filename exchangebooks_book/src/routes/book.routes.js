@@ -5,6 +5,7 @@ import {
   getBook,
   getBooksByUser,
   searchBooks,
+  filterBooksByGenre,
 } from "../controllers/book.controller.js";
 
 const router = Router();
@@ -20,5 +21,6 @@ router.post("/create", createBook);
 router.get("/list/:userId", getBooksByUser);
 router.get("/search", searchBooks);
 router.get("/:bookId", getBook);
+router.post("/list/genres", filterBooksByGenre);
 
 export default router;

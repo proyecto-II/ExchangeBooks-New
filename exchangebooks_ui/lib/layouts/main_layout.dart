@@ -1,5 +1,6 @@
 import 'package:exchangebooks_ui/provider/genre_provider.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
+import 'package:exchangebooks_ui/provider/search_provider.dart';
 import 'package:exchangebooks_ui/views/home/home_page.dart';
 import 'package:exchangebooks_ui/views/profile/profile_page.dart';
 import 'package:exchangebooks_ui/views/search/search_page.dart';
@@ -18,14 +19,26 @@ class MainLayout extends StatefulWidget {
 class _MainLayout extends State<MainLayout> {
   int selectedIndex = 0;
   User user = FirebaseAuth.instance.currentUser!;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     provider.getUser(user.email!); // Call the API to fetch user data
     final genreProvider = Provider.of<GenreProvider>(context, listen: false);
     genreProvider.getGenres(user.email!);
+    final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    await searchProvider.getAllBooks();
+
+    setState(() {
+      isLoading =
+          false; // Cambia el estado a false cuando los datos se hayan cargado
+    });
   }
 
   @override
@@ -36,6 +49,14 @@ class _MainLayout extends State<MainLayout> {
       const HomePage(),
       const ProfilePage()
     ];
+
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     return Scaffold(
       body: IndexedStack(

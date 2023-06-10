@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/provider/search_provider.dart';
 import 'package:exchangebooks_ui/views/posts/newpost.dart';
 import 'package:exchangebooks_ui/provider/genre_provider.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => GoogleSignInProvider(),
         ),
-        ChangeNotifierProvider(create: (contexnt) => GenreProvider())
+        ChangeNotifierProvider(create: (context) => GenreProvider()),
+        ChangeNotifierProvider(create: (context) => SearchProvider())
       ],
       child: MaterialApp(
         navigatorKey: navigatorKey,
