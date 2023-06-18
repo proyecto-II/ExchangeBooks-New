@@ -55,6 +55,8 @@ dependencies:
 
   line_awesome_flutter: ^2.0.0
 
+  socket_io_client: ^2.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

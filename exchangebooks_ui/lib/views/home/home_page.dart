@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/services/chat.service.dart';
 import 'package:exchangebooks_ui/views/home/widgets/bookswidget.dart';
 import 'package:exchangebooks_ui/views/home/widgets/recomendationwidget.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
@@ -12,6 +13,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _Home extends State<HomePage> {
+  final chatService = ChatService();
+
+  @override
+  void initState() {
+    super.initState();
+    chatService.initConnection();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
