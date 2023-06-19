@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'package:exchangebooks_ui/model/message.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,8 +19,15 @@ class ChatService {
 
   Future<void> sendMessage(Message message) async {
     socket.emit(
-      'new_message',
+      'send_message',
       {message.toJson()},
+    );
+  }
+
+  Future<void> joinChat(String chatId) async {
+    socket.emit(
+      'join-chat',
+      {chatId},
     );
   }
 }

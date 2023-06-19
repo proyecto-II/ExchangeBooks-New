@@ -23,42 +23,47 @@ class _MessagesView extends State<MessagesPage> {
   List<Message> messageList = [
     Message(
       id: '1',
-      senderId: '6466eb87505e236447066413',
-      receiverId: '6477eb87505e236447066272',
-      message: 'Hola, ¿cómo estás?',
-      timestamp: DateTime.now(),
+      sender: '6466eb87505e236447066413',
+      content: 'Hola, ¿cómo estás?',
+      createdAt: DateTime.now(),
     ),
     Message(
       id: '2',
-      senderId: '6477eb87505e236447066272',
-      receiverId: '6466eb87505e236447066413',
-      message: '¡Hola! Estoy bien, gracias.',
-      timestamp: DateTime.now(),
+      sender: '6477eb87505e236447066272',
+      content: '¡Hola! Estoy bien, gracias.',
+      createdAt: DateTime.now(),
     ),
     Message(
       id: '3',
-      senderId: '6466eb87505e236447066413',
-      receiverId: '6477eb87505e236447066272',
-      message: '¿Qué has estado haciendo?',
-      timestamp: DateTime.now(),
+      sender: '6466eb87505e236447066413',
+      content: '¿Qué has estado haciendo?',
+      createdAt: DateTime.now(),
     ),
     Message(
       id: '4',
-      senderId: '6477eb87505e236447066272',
-      receiverId: '6466eb87505e236447066413',
-      message: 'Muchas cosas',
-      timestamp: DateTime.now(),
+      sender: '6477eb87505e236447066272',
+      content: 'Muchas cosas',
+      createdAt: DateTime.now(),
     ),
   ];
+
+  @override
+  void initState() {
+    joinChat();
+    super.initState();
+  }
+
+  void joinChat() {
+    ChatService().joinChat('ahsbfhbasbdas');
+  }
 
   void sendMessage() {
     final user = Provider.of<GoogleSignInProvider>(context, listen: false);
     if (_messageController.text.isNotEmpty) {
       Message message = Message(
-          message: _messageController.text,
-          senderId: user.user!.id,
-          receiverId: widget.user.id,
-          timestamp: DateTime.now());
+          content: _messageController.text,
+          sender: user.user!.id,
+          createdAt: DateTime.now());
       messageList.add(message);
       ChatService().sendMessage(message);
       setState(() {});
@@ -117,7 +122,7 @@ class _MessagesView extends State<MessagesPage> {
 
   Widget _messages(Message message) {
     final user = Provider.of<GoogleSignInProvider>(context);
-    var alignment = message.senderId == user.user!.id
+    var alignment = message.sender == user.user!.id
         ? Alignment.centerRight
         : Alignment.centerLeft;
     return Container(
@@ -125,20 +130,20 @@ class _MessagesView extends State<MessagesPage> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: message.senderId == user.user!.id
+          crossAxisAlignment: message.sender == user.user!.id
               ? CrossAxisAlignment.end
               : CrossAxisAlignment.start,
           children: [
             MessageBox(
-              message: message.message!,
-              color: message.senderId == user.user!.id
+              message: message.content!,
+              color: message.sender == user.user!.id
                   ? Colors.orange[200]!
                   : const Color.fromRGBO(222, 223, 247, 1),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                '${message.timestamp!.hour}:${message.timestamp!.minute}',
+                '${message.createdAt!.hour}:${message.createdAt!.minute}',
                 style: const TextStyle(color: Colors.grey),
               ),
             )
