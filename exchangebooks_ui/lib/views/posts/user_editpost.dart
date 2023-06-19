@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import '../../layouts/main_layout.dart';
 import '../../model/genre.dart';
 import '../../services/genre_service.dart';
 import '../../widgets/drawer.dart';
@@ -342,11 +343,8 @@ class _NewPost extends State<EditPostPage> {
                 );
                 _editPost();
                 // ignore: use_build_context_synchronously
-                Navigator.of(context).pop();
-                // ignore: use_build_context_synchronously
-                Navigator.of(context).pop();
-                // ignore: use_build_context_synchronously
-                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const MainLayout()));
                 // ignore: use_build_context_synchronously
                 _successAlert(context);
               },

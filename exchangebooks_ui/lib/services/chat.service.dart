@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -12,6 +13,6 @@ class ChatService {
 
   Future<void> initConnection() async {
     socket.connect();
-    socket.onConnect((_) => {print("Socket connection established")});
+    socket.onConnect((_) => {log("Socket connection established")});
   }
 }

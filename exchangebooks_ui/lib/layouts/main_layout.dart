@@ -23,7 +23,7 @@ class _MainLayout extends State<MainLayout> {
   void initState() {
     super.initState();
     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-    provider.getUser(user.email!); // Call the API to fetch user data
+    provider.getUser(user.email!);
     final genreProvider = Provider.of<GenreProvider>(context, listen: false);
     genreProvider.getGenres(user.email!);
   }
@@ -38,10 +38,7 @@ class _MainLayout extends State<MainLayout> {
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: screens,
-      ),
+      body: screens[selectedIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
@@ -84,6 +81,7 @@ class _MainLayout extends State<MainLayout> {
             selectedIndex: selectedIndex,
             onTabChange: (index) {
               setState(() {
+                //print(index);
                 selectedIndex = index;
               });
             },

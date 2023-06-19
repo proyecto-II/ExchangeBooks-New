@@ -1,3 +1,4 @@
+import 'package:exchangebooks_ui/layouts/main_layout.dart';
 import 'package:exchangebooks_ui/model/book_has_user.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/views/posts/user_editpost.dart';
@@ -62,59 +63,32 @@ class _UserPostView extends State<UserPostPage> {
             body: SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Text(
-                            'Editar',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.left,
+                      _postImage(),
+                      const Gap(10),
+                      FittedBox(
+                        child: Text(
+                          book.title!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
                           ),
-                          IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditPostPage(book: book),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(
-                                LineAwesomeIcons.edit,
-                                color: Colors.blue,
-                                size: 50,
-                              )),
-                        ],
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Text(
-                            'Eliminar',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.left,
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                deleteBook();
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(
-                                LineAwesomeIcons.trash,
-                                color: Colors.red,
-                                size: 50,
-                              )),
-                        ],
-                      ),
-                      _post(),
                       const Gap(20),
+                      const Text(
+                        'Generos:',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.start,
+                      ),
+                      const Gap(5),
+                      _genres(context),
+                      const Gap(10),
                       const Text(
                         'Descripción',
                         style: TextStyle(
@@ -136,6 +110,41 @@ class _UserPostView extends State<UserPostPage> {
                 ),
               ),
             ),
+            floatingActionButton: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditPostPage(book: book),
+                      ),
+                    );
+                  },
+                  label: const Text('Editar'),
+                  icon: const Icon(Icons.edit),
+                  backgroundColor: Colors.blue[800],
+                  splashColor: Colors.purple,
+                  heroTag: 'editar',
+                ),
+                const Gap(5),
+                FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const MainLayout(),
+                      ),
+                    );
+                  },
+                  label: const Text('Eliminar'),
+                  icon: const Icon(LineAwesomeIcons.trash),
+                  backgroundColor: Colors.red[800],
+                  splashColor: Colors.purple,
+                  heroTag: 'eliminar',
+                ),
+              ],
+            ),
           );
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
@@ -145,81 +154,57 @@ class _UserPostView extends State<UserPostPage> {
     );
   }
 
-  Widget _post() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        children: [
-          const Gap(15),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _zoomImage(context);
-                  });
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    book.images!.first,
-                    width: 150,
-                    height: 220,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const Gap(10),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        book.title!,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      const Gap(5),
-                      Text(
-                        book.author!,
-                        style: const TextStyle(fontSize: 15),
-                      ),
-                      const Gap(10),
-                      const Text(
-                        'Géneros',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      _genres()
-                    ],
-                  ),
-                ),
-              ),
-            ],
+  Widget _postImage() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _zoomImage(context);
+        });
+      },
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.network(
+            book.images!.first,
+            height: 220,
+            fit: BoxFit.cover,
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _genres() {
+  /*
+  * User genres
+  * @param {BuildContext} context
+  * @return {Widget} Widget
+  */
+  Widget _genres(BuildContext context) {
     return SizedBox(
-        width: 200,
-        height: 30,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: book.genres!.length,
-          itemBuilder: (context, index) {
-            return Text('${book.genres!.elementAt(index).name!} ');
-          },
-        ));
+      width: MediaQuery.of(context).size.width,
+      height: 35,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: book.genres!.length,
+        itemBuilder: (context, index) {
+          return Container(
+            width: 80,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+                color: Colors.amber[800],
+                borderRadius: BorderRadius.circular(100)),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                book.genres!.elementAt(index).name.toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   // ignore: slash_for_doc_comments

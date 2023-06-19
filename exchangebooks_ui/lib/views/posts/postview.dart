@@ -66,24 +66,6 @@ class _PostView extends State<PostPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Text(
-                            'Intercambiar',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.left,
-                          ),
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                LineAwesomeIcons.facebook_messenger,
-                                color: Colors.blue,
-                                size: 50,
-                              )),
-                        ],
-                      ),
                       _post(),
                       const Gap(20),
                       const Text(
@@ -128,11 +110,18 @@ class _PostView extends State<PostPage> {
                 ),
               ),
             ),
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () {},
+              label: const Text('Intercambiar'),
+              icon: const Icon(Icons.message),
+              backgroundColor: Colors.orange[800],
+              splashColor: Colors.purple,
+            ),
           );
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
         }
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator.adaptive());
       },
     );
   }

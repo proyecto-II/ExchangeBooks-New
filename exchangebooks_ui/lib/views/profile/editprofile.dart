@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import '../../layouts/main_layout.dart';
 import '../../model/genre.dart';
 import '../../provider/google_sign_in.dart';
 import '../../services/user_service.dart';
@@ -67,6 +68,7 @@ class _EditState extends State<EditProfile> {
   Future<void> updateUser() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     final genresProvider = Provider.of<GenreProvider>(context, listen: false);
+    print(_selectedImage!.path);
     final location = await userService.updateAvatar(_selectedImage!.path);
     await userService.updateUser(iuser.user!.id!, nameController!.text,
         usernameController!.text, lastnameController!.text, location);
@@ -252,10 +254,11 @@ class _EditState extends State<EditProfile> {
               const Duration(seconds: 2),
             );
             // ignore: use_build_context_synchronously
-            Navigator.of(context).pop(); //Este cierra el circle indicator
-            // ignore: use_build_context_synchronously
-            Navigator.of(context)
-                .pop(); //Por alguna razon con dos de estos envia se vuelta a la pagina anterior - (Buscar una solucion)
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const MainLayout(),
+              ),
+            );
           },
           style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
