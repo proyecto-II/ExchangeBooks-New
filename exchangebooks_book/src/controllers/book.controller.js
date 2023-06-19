@@ -123,4 +123,16 @@ export async function deleteBook(req, res) {
       message: err.message,
     });
   }
+
+export async function filterBooksByGenre(req, res) {
+  try {
+    const { genres } = req.body;
+    const books = await bookService.getByGenres(genres);
+
+    return res.status(200).send(books);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
 }

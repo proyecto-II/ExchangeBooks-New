@@ -100,6 +100,7 @@ class PostService {
         },
       );
       final jsonData = json.decode(response.body) as List<dynamic>;
+
       for (var item in jsonData) {
         BookUser book = BookUser.fromJson(item);
         posts.add(book);

@@ -7,6 +7,7 @@ import {
   searchBooks,
   edit,
   deleteBook,
+  filterBooksByGenre
 } from "../controllers/book.controller.js";
 
 const router = Router();
@@ -24,5 +25,6 @@ router.get("/search", searchBooks);
 router.get("/:bookId", getBook);
 router.put("/edit/:id", edit);
 router.delete("/delete/:id", deleteBook);
+router.post("/list/genres", filterBooksByGenre);
 
 export default router;

@@ -1,5 +1,4 @@
 import { Server } from "socket.io";
-import Message from "../models/Message.js";
 
 export function initSocket(server) {
   const io = new Server(server, {
@@ -10,20 +9,21 @@ export function initSocket(server) {
 
   io.on("connection", (socket) => {
     console.log(`[🙍‍♂️NEW CONNECTION] User connected`);
-    socket.on("new_message", async (data) => {
-      try {
-        const message = {
-          senderId: data.senderId,
-          receiverId: data.receiverId,
-          message: data.message,
-          timestamp: data.timestamp,
-        };
 
-        const save = await Message.create(message);
-        console.log("Mensaje guardado:", save);
-      } catch (error) {
-        console.log("Error al guardar el mensaje:", error);
-      }
+    // los envetos se ejecutan cuando en el cliente se emiten con el nombre correspondiente
+    // ingresar al chat con el identificador
+    socket.on("join-chat", (chatId) => {
+      socket.join(chatId);
+    });
+
+    // enviar mensaje con el chatId
+    socket.on("send-message", (data) => {
+      io.to(data.chatId).emit("receive-message", data);
+    });
+
+    // cuando se desconecta un usuario
+    socket.on("disconnect", () => {
+      console.log(`[⚠DISCONNECT] User disconnected`);
     });
   });
 }
