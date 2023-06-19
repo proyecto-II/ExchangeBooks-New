@@ -1,4 +1,3 @@
-import 'package:exchangebooks_ui/layouts/main_layout.dart';
 import 'package:exchangebooks_ui/model/book_has_user.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/views/posts/user_editpost.dart';
@@ -130,13 +129,7 @@ class _UserPostView extends State<UserPostPage> {
                 ),
                 const Gap(5),
                 FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const MainLayout(),
-                      ),
-                    );
-                  },
+                  onPressed: () {},
                   label: const Text('Eliminar'),
                   icon: const Icon(LineAwesomeIcons.trash),
                   backgroundColor: Colors.red[800],
@@ -176,7 +169,7 @@ class _UserPostView extends State<UserPostPage> {
   }
 
   /*
-  * User genres
+  * Book genres
   * @param {BuildContext} context
   * @return {Widget} Widget
   */

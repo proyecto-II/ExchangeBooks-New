@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/google_sign_in.dart';
+import '../chat/messages_page.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({Key? key, required this.idBook}) : super(key: key);
@@ -35,6 +39,7 @@ class _PostView extends State<PostPage> {
 
   @override
   Widget build(BuildContext context) {
+    final iuser = Provider.of<GoogleSignInProvider>(context);
     return FutureBuilder(
       future: getBook(widget.idBook),
       builder: (context, snapshot) {
@@ -110,13 +115,22 @@ class _PostView extends State<PostPage> {
                 ),
               ),
             ),
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: () {},
-              label: const Text('Intercambiar'),
-              icon: const Icon(Icons.message),
-              backgroundColor: Colors.orange[800],
-              splashColor: Colors.purple,
-            ),
+            floatingActionButton: snapshot.data!.user!.id != iuser.user!.id
+                ? FloatingActionButton.extended(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MessagesPage(user: snapshot.data!.user!),
+                        ),
+                      );
+                    },
+                    label: const Text('Intercambiar'),
+                    icon: const Icon(Icons.message),
+                    backgroundColor: Colors.orange[800],
+                    splashColor: Colors.purple,
+                  )
+                : null,
           );
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
