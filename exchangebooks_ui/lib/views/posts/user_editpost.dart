@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:exchangebooks_ui/layouts/main_layout.dart';
+import 'package:exchangebooks_ui/model/book.dart';
+import 'package:exchangebooks_ui/model/book_has_user.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/utils/photo_convert.dart';
@@ -9,33 +10,39 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:provider/provider.dart';
+import '../../layouts/main_layout.dart';
 import '../../model/genre.dart';
 import '../../services/genre_service.dart';
 import '../../widgets/drawer.dart';
 
-class NewPostPage extends StatefulWidget {
-  const NewPostPage({Key? key}) : super(key: key);
+class EditPostPage extends StatefulWidget {
+  const EditPostPage({Key? key, required this.book}) : super(key: key);
+  final BookUser book;
 
   @override
   // ignore: library_private_types_in_public_api
   _NewPost createState() => _NewPost();
 }
 
-class _NewPost extends State<NewPostPage> {
-  TextEditingController? titleController = TextEditingController();
-  TextEditingController? authorController = TextEditingController();
-  TextEditingController? descriptionController = TextEditingController();
+class _NewPost extends State<EditPostPage> {
+  TextEditingController? titleController;
+  TextEditingController? authorController;
+  TextEditingController? descriptionController;
   late List<Genre>? selectedGenreList = [];
   late List<Genre> genreList = [];
   final ImagePicker _picker = ImagePicker();
   String _photoName = '';
   File? _imageTaken;
-  File? _selectedImage;
 
   @override
   void initState() {
     getGenres();
+    titleController =
+        TextEditingController(text: widget.book.title ?? 'Desconocido');
+    authorController =
+        TextEditingController(text: widget.book.author ?? 'Desconocido');
+    descriptionController =
+        TextEditingController(text: widget.book.description ?? 'Desconocido');
     super.initState();
   }
 
@@ -46,30 +53,18 @@ class _NewPost extends State<NewPostPage> {
     });
   }
 
-  Future<void> _createPost() async {
-    final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
-    final location = await PostService().postImage(_selectedImage!.path);
-    await PostService().createPost(
+  Future<void> _editPost() async {
+    final location = await PostService().postImage(_imageTaken!.path);
+    BookUser editPost = BookUser(
+        widget.book.id,
         titleController!.text,
         authorController!.text,
         descriptionController!.text,
-        iuser.user!.id!,
-        selectedGenreList!,
-        'Libro',
-        location);
-  }
-
-  Future<void> _selectImageFromGallery() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(
-      source: ImageSource.gallery,
-    );
-
-    if (pickedImage != null) {
-      setState(() {
-        _selectedImage = File(pickedImage.path);
-      });
-    }
+        selectedGenreList,
+        widget.book.type,
+        widget.book.images,
+        widget.book.user);
+    await PostService().editPost(editPost, location);
   }
 
   @override
@@ -80,13 +75,13 @@ class _NewPost extends State<NewPostPage> {
         centerTitle: true,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_rounded),
-            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => Navigator.pop(context),
             color: Colors.black,
           ),
         ),
         title: const Text(
-          'Nueva Publicación',
+          'Editar Publicación',
           style: TextStyle(
               fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -220,12 +215,23 @@ class _NewPost extends State<NewPostPage> {
       alignment: Alignment.center,
       child: GestureDetector(
         onTap: () async {
-          _selectImageFromGallery();
+          _picker
+              .pickImage(
+                  source: ImageSource != null
+                      ? ImageSource.camera
+                      : ImageSource.gallery)
+              .then(
+            (imgFile) {
+              _imageTaken = File(imgFile!.path);
+              _photoName = Utility.base64String(_imageTaken!.readAsBytesSync());
+              setState(() {});
+            },
+          );
         },
         child: SizedBox(
           width: 250,
           height: 150,
-          child: _selectedImage != null
+          child: _photoName != null
               ? Container(
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
@@ -234,22 +240,13 @@ class _NewPost extends State<NewPostPage> {
                   ),
                   // ignore: unnecessary_new
                   child: _photoName.isNotEmpty
-                      ? Image.file(
-                          _selectedImage!,
+                      ? Image.memory(
+                          base64Decode(_photoName),
                           fit: BoxFit.cover,
-                          width: 120,
-                          height: 120,
                         )
-                      : Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20)),
-                            border: Border.all(color: Colors.purple),
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            size: 50,
-                          ),
+                      : Image.network(
+                          widget.book.images!.first,
+                          fit: BoxFit.cover,
                         ),
                 )
               : Container(
@@ -312,7 +309,7 @@ class _NewPost extends State<NewPostPage> {
           color: Colors.black,
         ),
       ),
-      child: const Text('Publicar'),
+      child: const Text('Editar'),
     );
   }
 
@@ -344,7 +341,7 @@ class _NewPost extends State<NewPostPage> {
                 await Future.delayed(
                   const Duration(seconds: 2),
                 );
-                _createPost();
+                _editPost();
                 // ignore: use_build_context_synchronously
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const MainLayout()));
@@ -390,7 +387,7 @@ class _NewPost extends State<NewPostPage> {
             children: <Widget>[
               Image.asset(width: 100, height: 100, 'assets/img/success.png'),
               const Text(
-                '¡¡Se ha publicado el libro con exito!!',
+                'Publicación editada',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
             ],

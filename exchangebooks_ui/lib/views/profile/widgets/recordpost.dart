@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 
 import '../../../model/book.dart';
 import '../../../services/user_service.dart';
+import '../../posts/user_postview.dart';
 
 class RecordPosts extends StatefulWidget {
   const RecordPosts({super.key, required this.userId});
@@ -38,7 +39,16 @@ class _RecordPosts extends State<RecordPosts> {
         itemCount: posts.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserPostPage(
+                    idBook: posts.elementAt(index).id!,
+                  ),
+                ),
+              );
+            },
             child: SizedBox(
               //Componente agregado ya que sin el SizedBox el texto mueve a los demas componentes
               width: 150,

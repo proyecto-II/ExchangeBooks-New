@@ -42,105 +42,105 @@ class _Profile extends State<ProfilePage> {
         "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(248, 255, 255, 255),
-          centerTitle: true,
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu_rounded),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              color: Colors.black,
-            ),
-          ),
-          title: const Text(
-            'Perfil',
-            style: TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(248, 255, 255, 255),
+        centerTitle: true,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu_rounded),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            color: Colors.black,
           ),
         ),
-        drawer: const Drawers(),
-        body: Consumer<GoogleSignInProvider>(
-          builder: (context, value, child) {
-            return FutureBuilder<List<Genre>>(
-                future: getGenres(user.email!),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else {
-                    // Se muestra si los datos se cargaron correctamente
-                    return SafeArea(
-                      child: SingleChildScrollView(
-                        child: Column(
+        title: const Text(
+          'Perfil',
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+      ),
+      drawer: const Drawers(),
+      body: Consumer<GoogleSignInProvider>(
+        builder: (context, value, child) {
+          return FutureBuilder<List<Genre>>(
+            future: getGenres(user.email!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else {
+                // Se muestra si los datos se cargaron correctamente
+                return SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const Gap(20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Gap(20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, "/edit_profile");
-                                  },
-                                  icon: const Icon(Icons.edit),
-                                ),
-                                const Gap(10),
-                              ],
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/edit_profile");
+                              },
+                              icon: const Icon(Icons.edit),
                             ),
-                            Align(
-                              child: CircleAvatar(
-                                radius: 50,
-                                backgroundImage: NetworkImage(image),
-                              ),
-                            ),
-                            Text(
-                              '${iuser.user != null ? iuser.user!.name : ""} ${iuser.user != null ? iuser.user!.lastname : ""}',
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const Gap(25),
-                            const Text(
-                              'Mis Preferencias',
-                              style: TextStyle(
-                                color: Color.fromRGBO(20, 30, 71, 1),
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const Gap(15),
-                            _preferences(context),
                             const Gap(10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                const Text(
-                                  'Publicaciones Realizadas',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const Gap(15),
-                                TextButton(
-                                    onPressed: () {},
-                                    child: const Text('Ver todo >'))
-                              ],
-                            ),
-                            //Aqui deberian ir las preferencias del usuario
-                            RecordPosts(userId: iuser.user!.id!),
                           ],
                         ),
-                      ),
-                    );
-                  }
-                });
-          },
-        ));
+                        Align(
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(image),
+                          ),
+                        ),
+                        Text(
+                          '${iuser.user != null ? iuser.user!.name : ""} ${iuser.user != null ? iuser.user!.lastname : ""}',
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        const Gap(25),
+                        const Text(
+                          'Mis Preferencias',
+                          style: TextStyle(
+                            color: Color.fromRGBO(20, 30, 71, 1),
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Gap(15),
+                        _preferences(context),
+                        const Gap(10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text(
+                              'Publicaciones Realizadas',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.bold),
+                            ),
+                            const Gap(15),
+                            TextButton(
+                                onPressed: () {},
+                                child: const Text('Ver todo >'))
+                          ],
+                        ),
+                        //Aqui deberian ir las preferencias del usuario
+                        RecordPosts(userId: iuser.user!.id!),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+        },
+      ),
+    );
   }
 
   Widget _preferences(BuildContext context) {
