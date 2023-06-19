@@ -19,8 +19,10 @@ class ChatService {
 
   Future<void> sendMessage(Message message) async {
     socket.emit(
-      'send_message',
-      {message.toJson()},
+      'send-message',
+      {
+        'message': message.toJson(),
+      },
     );
   }
 

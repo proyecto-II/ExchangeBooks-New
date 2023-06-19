@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import Message from "../models/Message.js";
 
 export function initSocket(server) {
   const io = new Server(server, {
@@ -18,6 +19,9 @@ export function initSocket(server) {
 
     // enviar mensaje con el chatId
     socket.on("send-message", (data) => {
+      const message = data.message;
+      console.log(message);
+      
       io.to(data.chatId).emit("receive-message", data);
     });
 

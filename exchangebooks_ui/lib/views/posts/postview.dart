@@ -118,7 +118,7 @@ class _PostView extends State<PostPage> {
             floatingActionButton: snapshot.data!.user!.id != iuser.user!.id
                 ? FloatingActionButton.extended(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(
+                      Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>
                               MessagesPage(user: snapshot.data!.user!),
