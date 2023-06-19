@@ -17,8 +17,13 @@ export function initSocket(server) {
     });
 
     // enviar mensaje con el chatId
-    socket.on("send-message", (chatId, message) => {
-      io.to(chatId).emit("receive-message", message);
+    socket.on("send-message", (data) => {
+      io.to(data.chatId).emit("receive-message", data);
+    });
+
+    // cuando se desconecta un usuario
+    socket.on("disconnect", () => {
+      console.log(`[⚠DISCONNECT] User disconnected`);
     });
   });
 }
