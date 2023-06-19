@@ -23,7 +23,8 @@ class SearchProvider extends ChangeNotifier {
 
   Future<void> getAllBooks() async {
     List<BookUser> books = await bookService.getAllBooks();
-
+    print("search books");
+    print(books.length);
     setSearchBooks(books);
     notifyListeners();
   }
