@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'package:exchangebooks_ui/manager/SocketManager.dart';
 import 'package:exchangebooks_ui/model/chat.dart';
+import 'package:exchangebooks_ui/model/chat_has_messages.dart';
+import 'package:exchangebooks_ui/model/message.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/chat.service.dart';
+import 'package:exchangebooks_ui/views/messages/messages_page.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +30,7 @@ class _ChatsPageState extends State<ChatsPage> {
   bool isLoading = true;
   final chatService = ChatService();
   List<Chat> chats = [];
+  SocketManager socketManager = SocketManager();
 
   @override
   void initState() {
@@ -61,12 +66,33 @@ class _ChatsPageState extends State<ChatsPage> {
       final List<Chat> newChats =
           jsonData.map((data) => Chat.fromJson(data)).toList();
       updateChats(newChats);
-
-      print(chats.length);
     } catch (error) {
       log('Error ocurrido al obtener los chats del usuario: $error');
     } finally {
       updateIsLoading(false);
+    }
+  }
+
+  Future<void> fetchChat(Chat chatInfo) async {
+    try {
+      // join to chat
+      socketManager.socket.emit("join-chat", chatInfo.id);
+
+      Response response = await chatService.getChatMessages(chatInfo.id!);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.body);
+
+        final ChatMessages chatMessages = ChatMessages.fromJson(jsonData);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    MessagesPage(info: chatInfo, chat: chatMessages)));
+      }
+    } catch (error) {
+      log("Error ocurrido al obtener los mensajes del chat: $error");
     }
   }
 
@@ -113,7 +139,9 @@ class _ChatsPageState extends State<ChatsPage> {
                           return Column(
                             children: [
                               GestureDetector(
-                                  onTap: () {},
+                                  onTap: () async {
+                                    fetchChat(chat);
+                                  },
                                   child: ListTile(
                                     leading: CircleAvatar(
                                       backgroundImage: NetworkImage(

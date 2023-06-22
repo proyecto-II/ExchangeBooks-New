@@ -4,6 +4,10 @@ import MessageService from "../services/message.service.js";
 const chatService = new ChatService();
 const messageService = new MessageService();
 
+/**
+ * Metodo que obtiene la informacion de un chat y sus mensajes
+ * @return lista de mensajes guardados en la base de datos
+ */
 export async function getChat(req, res) {
   try {
     const { chatId } = req.params;

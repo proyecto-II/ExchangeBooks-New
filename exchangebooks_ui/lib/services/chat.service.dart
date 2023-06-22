@@ -37,4 +37,15 @@ class ChatService {
 
     return response;
   }
+
+  Future<http.Response> getChatMessages(String chatId) async {
+    final response = await http.get(
+      Uri.parse('$apiUrl/api/chat/$chatId'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    return response;
+  }
 }

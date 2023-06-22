@@ -1,7 +1,7 @@
 import 'package:exchangebooks_ui/provider/genre_provider.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/provider/search_provider.dart';
-import 'package:exchangebooks_ui/views/chat/chats.dart';
+import 'package:exchangebooks_ui/views/chat/chats_page.dart';
 import 'package:exchangebooks_ui/views/home/home_page.dart';
 import 'package:exchangebooks_ui/views/profile/profile_page.dart';
 import 'package:exchangebooks_ui/views/search/search_page.dart';
