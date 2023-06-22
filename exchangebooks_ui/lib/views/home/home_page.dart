@@ -1,4 +1,5 @@
-import 'package:exchangebooks_ui/services/chat.service.dart';
+import 'package:exchangebooks_ui/manager/SocketManager.dart';
+//import 'package:exchangebooks_ui/services/chat.service.dart';
 import 'package:exchangebooks_ui/views/home/widgets/bookswidget.dart';
 import 'package:exchangebooks_ui/views/home/widgets/recomendationwidget.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
@@ -13,12 +14,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _Home extends State<HomePage> {
-  final chatService = ChatService();
+  //final chatService = ChatService();
+  SocketManager socketManager = SocketManager();
 
   @override
   void initState() {
     super.initState();
-    chatService.initConnection();
+    //chatService.initConnection();
+    socketManager.initSocket();
   }
 
   @override

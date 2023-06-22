@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
           '/genre_page': (context) => const GenrePage(),
           '/edit_profile': (context) => const EditProfile(),
           '/profile_page': (context) => const ProfilePage(),
-          '/new_post': (context) => const NewPostPage(),
+          '/new_post': (context) => const NewPostPage()
         },
         initialRoute: '/landing_page',
       ),

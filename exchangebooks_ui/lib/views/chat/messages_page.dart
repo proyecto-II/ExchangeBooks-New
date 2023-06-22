@@ -52,18 +52,18 @@ class _MessagesView extends State<MessagesPage> {
   ];
 
   void sendMessage() {
-    final user = Provider.of<GoogleSignInProvider>(context, listen: false);
-    if (_messageController.text.isNotEmpty) {
-      Message message = Message(
-          message: _messageController.text,
-          senderId: user.user!.id,
-          receiverId: widget.user.id,
-          timestamp: DateTime.now());
-      messageList.add(message);
-      ChatService().sendMessage(message);
-      setState(() {});
-      _messageController.clear();
-    }
+    // final user = Provider.of<GoogleSignInProvider>(context, listen: false);
+    // if (_messageController.text.isNotEmpty) {
+    //   Message message = Message(
+    //       message: _messageController.text,
+    //       senderId: user.user!.id,
+    //       receiverId: widget.user.id,
+    //       timestamp: DateTime.now());
+    //   messageList.add(message);
+    //   ChatService().sendMessage(message);
+    //   setState(() {});
+    //   _messageController.clear();
+    // }
   }
 
   @override

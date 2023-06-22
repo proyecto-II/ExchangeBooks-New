@@ -1,27 +1,40 @@
-
-import 'dart:developer';
-import 'package:exchangebooks_ui/model/message.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// ignore: library_prefixes
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:http/http.dart' as http;
 
 class ChatService {
-  final IO.Socket socket = IO.io(
-      dotenv.env['API_URL_CHAT'],
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .disableAutoConnect()
-          .build());
+  final apiUrl = dotenv.env['API_URL'];
 
-  Future<void> initConnection() async {
-    socket.connect();
-    socket.onConnect((_) => {log("Socket connection established")});
-  }
+  // Future<HttpResponse> getUserChats(String userId) async {
+  //   List<Chat> chats = [];
 
-  Future<void> sendMessage(Message message) async {
-    socket.emit(
-      'new_message',
-      {message.toJson()},
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse('$apiUrl/api/chat/user/$userId'),
+  //       headers: {
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //       },
+  //     );
+  //     final jsonData = json.decode(response.body) as List<dynamic>;
+
+  //     for (var item in jsonData) {
+  //       Chat chat = Chat.fromJson(item);
+  //       chats.add(chat);
+  //     }
+  //     return chats;
+  //   } catch (error) {
+  //     log('Error ocurrido al obtener los chats del usuario: $error');
+  //     return chats;
+  //   }
+  // }
+
+  Future<http.Response> getUserChats(String userId) async {
+    final response = await http.get(
+      Uri.parse('$apiUrl/api/chat/user/$userId'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
     );
+
+    return response;
   }
 }
