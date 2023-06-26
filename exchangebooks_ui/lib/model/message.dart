@@ -1,26 +1,19 @@
-import 'chat.dart';
-
 class Message {
   String? id;
   String? sender;
   String? content;
-  Chat? chat;
-  DateTime? createdAt;
+  String? createdAt;
+  String? chat;
 
-  Message({
-    this.id,
-    this.sender,
-    this.content,
-    this.chat,
-    this.createdAt,
-  });
+  Message({this.id, this.sender, this.content, this.createdAt, this.chat});
 
   Message.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     sender = json['sender'];
     content = json['content'];
-    chat = json['chat'] != null ? Chat.fromJson(json['chat']) : null;
-    createdAt = DateTime.parse(json['createdAt']);
+    //createdAt = DateTime.parse(json['createdAt']);
+    createdAt = json['createdAt'];
+    chat = json['chat'];
   }
 
   Map<String, dynamic> toJson() {
@@ -28,10 +21,8 @@ class Message {
     data['_id'] = id;
     data['sender'] = sender;
     data['content'] = content;
-    if (chat != null) {
-      data['chat'] = chat!.toJson();
-    }
-    data['createdAt'] = createdAt!.toIso8601String();
+    data['createdAt'] = createdAt;
+    data['chat'] = chat;
     return data;
   }
 }

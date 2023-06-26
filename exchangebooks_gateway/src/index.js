@@ -19,6 +19,7 @@ const UPLOAD_SERVICE_URL = process.env.UPLOAD_SERVICE_URL || API_HOST;
 const BOOK_SERVICE_URL = process.env.BOOK_SERVICE_URL || API_HOST;
 const RECOMENDATION_SERVICE_URL =
   process.env.RECOMENDATION_SERVICE_URL || API_HOST;
+const CHAT_SERVICE_URL = process.env.CHAT_SERVICE_URL || API_HOST;
 
 const services = [
   { name: "Notification", url: `${API_URL}/notification` },
@@ -27,6 +28,7 @@ const services = [
   { name: "Upload", url: `${API_URL}/upload` },
   { name: "Book", url: `${API_URL}/book` },
   { name: "Recomentadation", url: `${API_URL}/recomendation` },
+  { name: "Chat", url: `${API_URL}/chat` },
 ];
 
 // middlewares
@@ -49,6 +51,7 @@ app.use(
   `${API_NAME}/recomendation`,
   proxy(`${RECOMENDATION_SERVICE_URL}:3006`)
 );
+app.use(`${API_NAME}/chat`, proxy(`${CHAT_SERVICE_URL}:3008`));
 
 app.get("/services", async (req, res) => {
   const results = await checkService.check(services);

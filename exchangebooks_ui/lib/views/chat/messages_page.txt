@@ -24,8 +24,9 @@ class _MessagesView extends State<MessagesPage> {
     Message(
       id: '1',
       sender: '6466eb87505e236447066413',
-      content: 'Hola, ¿cómo estás?',
-      createdAt: DateTime.now(),
+      receiverId: '6477eb87505e236447066272',
+      message: 'Hola, ¿cómo estás?',
+      timestamp: DateTime.now(),
     ),
     Message(
       id: '2',
@@ -58,17 +59,18 @@ class _MessagesView extends State<MessagesPage> {
   }
 
   void sendMessage() {
-    final user = Provider.of<GoogleSignInProvider>(context, listen: false);
-    if (_messageController.text.isNotEmpty) {
-      Message message = Message(
-          content: _messageController.text,
-          sender: user.user!.id,
-          createdAt: DateTime.now());
-      messageList.add(message);
-      ChatService().sendMessage(message);
-      setState(() {});
-      _messageController.clear();
-    }
+    // final user = Provider.of<GoogleSignInProvider>(context, listen: false);
+    // if (_messageController.text.isNotEmpty) {
+    //   Message message = Message(
+    //       message: _messageController.text,
+    //       senderId: user.user!.id,
+    //       receiverId: widget.user.id,
+    //       timestamp: DateTime.now());
+    //   messageList.add(message);
+    //   ChatService().sendMessage(message);
+    //   setState(() {});
+    //   _messageController.clear();
+    // }
   }
 
   @override
