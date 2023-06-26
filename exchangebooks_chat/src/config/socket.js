@@ -1,11 +1,7 @@
 import { Server } from "socket.io";
-<<<<<<< HEAD
-import Message from "../models/Message.js";
-=======
 import MessageService from "../services/message.service.js";
 
 const messageService = new MessageService();
->>>>>>> ft_nicolas_pereira
 
 export function initSocket(server) {
   const io = new Server(server, {
@@ -31,13 +27,6 @@ export function initSocket(server) {
     });
 
     // enviar mensaje con el chatId
-<<<<<<< HEAD
-    socket.on("send-message", (data) => {
-      const message = data.message;
-      console.log(message);
-      
-      io.to(data.chatId).emit("receive-message", data);
-=======
     socket.on("send-message", async (data) => {
       const { message } = data;
       console.log(
@@ -56,7 +45,6 @@ export function initSocket(server) {
         chat: message.chat,
       });
       socket.to(message.chat).emit("receive-message", messageSaved);
->>>>>>> ft_nicolas_pereira
     });
 
     // cuando se desconecta un usuario
