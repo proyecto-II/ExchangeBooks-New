@@ -30,8 +30,10 @@ export async function getChat(req, res) {
 
 export async function createChat(req, res) {
   try {
+    const { sender, members } = req.body;
     // create chat
-    const chat = await chatService.createChat(req.body);
+    const data = { members };
+    const chat = await chatService.createChat(sender, data);
 
     return res.status(200).send(chat);
   } catch (e) {

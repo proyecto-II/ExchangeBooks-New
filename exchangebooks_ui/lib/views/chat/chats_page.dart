@@ -111,13 +111,6 @@ class _ChatsPageState extends State<ChatsPage> {
             fontSize: 22,
           ),
         ),
-        leading: IconButton(
-          color: Colors.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(LineAwesomeIcons.angle_left),
-        ),
       ),
       body: isLoading
           ? Center(

@@ -10,9 +10,17 @@ class ChatService {
     return await Chat.find();
   }
 
-  async createChat(chat) {
-    const newChat = new Chat(chat);
-    return await newChat.save();
+  async createChat(sender, data) {
+    const newChat = new Chat(data);
+    const chatSaved = await newChat.save();
+    // default message
+    const defaultMessage = new Message({
+      sender,
+      content: "Bienvenido al chat, escribe para el intercambio👌",
+      chat: chatSaved._id,
+    });
+    await defaultMessage.save();
+    return chatSaved;
   }
 
   async deleteChat(chatId) {
@@ -24,11 +32,15 @@ class ChatService {
   }
 
   async getLastMessageFromChat(chatId) {
-    return await Message.findOne({ chat: chatId }).exec();
+    return await Message.findOne({ chat: chatId })
+      .sort({ createdAt: -1 })
+      .exec();
   }
 
   async getUserChats(userId) {
-    const data = await Chat.find({ members: { $in: userId } }).exec();
+    const data = await Chat.find({ members: { $in: userId } })
+      .sort({ createdAt: -1 })
+      .exec();
 
     const chats = data.map(async (chat) => {
       const lastMessage = await this.getLastMessageFromChat(

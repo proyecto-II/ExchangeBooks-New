@@ -53,8 +53,14 @@ class _MessagesPageState extends State<MessagesPage> {
           chat: widget.info.id);
       socketManager.socket
           .emit("send-message", {'message': newMessage.toJson()});
+      updateMessages(newMessage);
       _messageController.clear();
     }
+  }
+
+  void goBack() {
+    socketManager.socket.emit("leave-chat", {'chatId': widget.info.id});
+    Navigator.pop(context);
   }
 
   @override
@@ -65,9 +71,7 @@ class _MessagesPageState extends State<MessagesPage> {
         elevation: 0,
         leading: IconButton(
           color: Colors.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: goBack,
           icon: const Icon(LineAwesomeIcons.angle_left),
         ),
         title: Row(
@@ -142,6 +146,7 @@ class _MessagesPageState extends State<MessagesPage> {
   Widget _message(Message message) {
     final userProvider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
+    print(userProvider.user!.id);
     return Container(
       alignment: message.sender == userProvider.user!.id!
           ? Alignment.bottomRight
@@ -153,7 +158,9 @@ class _MessagesPageState extends State<MessagesPage> {
           children: [
             MessageBox(
               message: message.content!,
-              color: Colors.orange[200]!,
+              color: message.sender == userProvider.user!.id!
+                  ? Colors.blue[300]!
+                  : Colors.orange[200]!,
             )
           ],
         ),
