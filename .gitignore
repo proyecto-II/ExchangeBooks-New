@@ -51,4 +51,4 @@ coverage/
 tests.*
 .scannerwork/
 sonar-project.*
-
+*.sonar
