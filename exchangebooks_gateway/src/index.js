@@ -2,10 +2,11 @@ import express from "express";
 import morgan from "morgan";
 import proxy from "express-http-proxy";
 import CheckService from "./services/check.service.js";
+import "dotenv/config.js";
 
 const app = express();
 const SERVER_PORT = 3000;
-const API_HOST = "http://localhost";
+const API_HOST = process.env.API_HOST || "http://localhost";
 const API_NAME = "/api";
 const API_URL = `${API_HOST}:${SERVER_PORT}${API_NAME}`;
 const checkService = new CheckService();
