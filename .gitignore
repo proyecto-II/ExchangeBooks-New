@@ -46,3 +46,9 @@ app.*.map.json
 node_modules
 .env
 
+# test
+coverage/
+tests.*
+.scannerwork/
+sonar-project.*
+
