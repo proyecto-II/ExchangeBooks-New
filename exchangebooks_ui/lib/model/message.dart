@@ -1,33 +1,28 @@
 class Message {
   String? id;
-  String? senderId;
-  String? receiverId;
-  String? message;
-  DateTime? timestamp;
+  String? sender;
+  String? content;
+  String? createdAt;
+  String? chat;
 
-  Message({
-    this.id,
-    this.senderId,
-    this.receiverId,
-    this.message,
-    this.timestamp,
-  });
+  Message({this.id, this.sender, this.content, this.createdAt, this.chat});
 
   Message.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
-    senderId = json['senderId'];
-    receiverId = json['receiverId'];
-    message = json['message'];
-    timestamp = DateTime.parse(json['timestamp']);
+    sender = json['sender'];
+    content = json['content'];
+    //createdAt = DateTime.parse(json['createdAt']);
+    createdAt = json['createdAt'];
+    chat = json['chat'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = id;
-    data['senderId'] = senderId;
-    data['receiverId'] = receiverId;
-    data['message'] = message;
-    data['timestamp'] = timestamp!.toIso8601String();
+    data['sender'] = sender;
+    data['content'] = content;
+    data['createdAt'] = createdAt;
+    data['chat'] = chat;
     return data;
   }
 }
