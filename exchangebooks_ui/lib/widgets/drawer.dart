@@ -28,7 +28,7 @@ class Drawers extends StatelessWidget {
               style: const TextStyle(color: Colors.black),
             ),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(image),
+              backgroundImage: NetworkImage(iuser.user!.photoUrl ?? image),
             ),
           ),
           ListTile(

@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "sonar": "gulp sonar"
   },
   "keywords": [],
   "author": "",
@@ -14,9 +15,12 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "openai": "^3.2.1"
+    "gulp": "^4.0.2",
+    "openai": "^3.2.1",
+    "sonarqube-scanner": "^3.0.1"
   },
   "devDependencies": {
+    "eslint": "^8.43.0",
     "nodemon": "^2.0.22"
   }
 }
