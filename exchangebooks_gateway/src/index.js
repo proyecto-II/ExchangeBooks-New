@@ -23,16 +23,16 @@ const RECOMENDATION_SERVICE_URL =
 const CHAT_SERVICE_URL = process.env.CHAT_SERVICE_URL || `${API_HOST}:3008`;
 
 const services = [
-  { name: "Notification", url: `${NOTIFICATION_SERVICE_URL}/notification` },
-  { name: "Genre", url: `${GENRE_SERVICE_URL}/genre` },
-  { name: "Auth", url: `${AUTH_SERVICE_URL}/auth` },
-  { name: "Upload", url: `${UPLOAD_SERVICE_URL}/upload` },
-  { name: "Book", url: `${BOOK_SERVICE_URL}/book` },
+  { name: "Notification", url: `${NOTIFICATION_SERVICE_URL}` },
+  { name: "Genre", url: `${GENRE_SERVICE_URL}` },
+  { name: "Auth", url: `${AUTH_SERVICE_URL}` },
+  { name: "Upload", url: `${UPLOAD_SERVICE_URL}` },
+  { name: "Book", url: `${BOOK_SERVICE_URL}` },
   {
     name: "Recomentadation",
-    url: `${RECOMENDATION_SERVICE_URL}/recomendation`,
+    url: `${RECOMENDATION_SERVICE_URL}`,
   },
-  { name: "Chat", url: `${CHAT_SERVICE_URL}/chat` },
+  { name: "Chat", url: `${CHAT_SERVICE_URL}` },
 ];
 
 // middlewares
