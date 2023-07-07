@@ -116,7 +116,7 @@ export async function edit(req, res) {
  */
 export async function deleteBook(req, res) {
   try {
-    const books = await bookService.delete(req.params.id);
+    await bookService.delete(req.params.id);
     return res.status(200).send("Libro eliminado con exito");
   } catch (err) {
     return res.status(500).json({

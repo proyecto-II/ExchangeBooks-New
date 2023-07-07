@@ -1,7 +1,6 @@
 import Genre from "../models/Genre.js";
 
 class GenreService {
-  constructor() {}
 
   async create(genre) {
     const newGenre = new Genre(genre);

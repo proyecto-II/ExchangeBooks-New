@@ -6,7 +6,6 @@ import 'package:exchangebooks_ui/views/search/widgets/search_list.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:provider/provider.dart';
 
 import '../../model/genre.dart';
 import '../../widgets/drawer.dart';

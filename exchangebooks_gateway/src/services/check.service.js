@@ -1,7 +1,6 @@
 import axios from "axios";
 
 class CheckService {
-  constructor() {}
 
   async check(services) {
     const promises = services.map((service) =>

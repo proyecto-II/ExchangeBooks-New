@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:exchangebooks_ui/layouts/main_layout.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
-import 'package:exchangebooks_ui/utils/photo_convert.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -29,8 +27,7 @@ class _NewPost extends State<NewPostPage> {
   late List<Genre>? selectedGenreList = [];
   late List<Genre> genreList = [];
   final ImagePicker _picker = ImagePicker();
-  String _photoName = '';
-  File? _imageTaken;
+  final String _photoName = '';
   File? _selectedImage;
 
   @override

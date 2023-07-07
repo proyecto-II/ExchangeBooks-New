@@ -32,13 +32,6 @@ export function initSocket(server) {
       console.log(
         `[SEND MESSAGE] User sent message to chat [${message.chat}] by user [${message.sender}]`
       );
-      // const savedMessage = {
-      //   _id: "123",
-      //   content: message.content,
-      //   sender: message.sender,
-      //   chat: message.chat,
-      //   createdAt: new Date(),
-      // };
       const messageSaved = await messageService.createMessage({
         content: message.content,
         sender: message.sender,

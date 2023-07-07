@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:exchangebooks_ui/manager/SocketManager.dart';
+import 'package:exchangebooks_ui/manager/socket_manager.dart';
 import 'package:exchangebooks_ui/model/chat.dart';
 import 'package:exchangebooks_ui/model/chat_has_messages.dart';
 import 'package:exchangebooks_ui/model/message.dart';

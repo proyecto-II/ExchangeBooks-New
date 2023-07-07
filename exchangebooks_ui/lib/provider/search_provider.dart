@@ -15,8 +15,9 @@ class SearchProvider extends ChangeNotifier {
   }
 
   Future<void> filterBooks(List<String> ids) async {
-    List<BookUser> books =
-        _books!.where((book) => book.genres!.contains(ids[0])).toList();
+    List<BookUser> books = _books!
+        .where((book) => book.genres!.any((genre) => ids.contains(genre.id)))
+        .toList();
     setSearchBooks(books);
     notifyListeners();
   }

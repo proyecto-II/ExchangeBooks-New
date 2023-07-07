@@ -3,7 +3,6 @@ import Book from "../models/Book.js";
 import axios from "axios";
 
 class BookService {
-  constructor() {}
 
   /**
   * Metodo que obtiene todos los libros de la base de datos, igualmente realiza una busqueda de los usuarios para dar una información más detallada de las publicaciones
@@ -28,6 +27,7 @@ class BookService {
           return { ...others, genres: data, user: userData.user };
         }
       } catch (err) {
+        console.log("Error en obtener los generos"+err);
         return book;
       }
     });
@@ -42,8 +42,16 @@ class BookService {
   * @return el libro en especifico
   */
   async getById(id) {
-    const book = await Book.findById(id);
     try {
+      const book = await new Promise((resolve, reject) => {
+        Book.findById(id, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
       const { userId, genres, ...others } = book._doc;
       const { data, status } = await axios.get(
         `${AUTH_SERVICE_URL}/user/${book.userId}`
@@ -82,8 +90,9 @@ class BookService {
   * @return el libro guardado en la base de datos ya editado
   */
   async edit(id, book) {
-    return await Book.findByIdAndUpdate(id, book, { new: true });
+    return Book.findByIdAndUpdate(id, book, { new: true });
   }
+  
 
   /**
   * Metodo que permite eliminar un libro
@@ -91,14 +100,14 @@ class BookService {
   * @return un mensaje de eliminación exitosa
   */
   async delete(id) {
-    return await Book.findByIdAndDelete(id);
+    return Book.findByIdAndDelete(id);
   }
 
 
   /**
-  * Metodo que busca todos los libros de un usuario
+  * Metodo que busca los libros de un usuario
   * @param userId Es el id del usuario
-  * @return la lista de todos los libros que el usuario ha publicado
+  * @return la lista de los libros que el usuario ha publicado
   */
   async getBooksByUser(userId) {
     const books = await Book.find({ userId: userId }).exec();
