@@ -104,13 +104,13 @@ class BookService {
     const fetchCategories = books.map(async (book) => {
       try {
         const { genres, ...others } = book._doc;
-        const response = await axios.post("http://localhost:3002/list", {
+        const response = await axios.post(`${GENRE_SERVICE_URL}/list`, {
           genres,
         });
 
         return { ...others, genres: response.data };
       } catch (err) {
-        return null;
+        return book;
       }
     });
     const result = await Promise.all(fetchCategories);
