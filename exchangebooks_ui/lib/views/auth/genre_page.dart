@@ -96,6 +96,7 @@ class _Genres extends State<GenrePage> {
           onApplyButtonClick: (list) {
             selectedGenreList = list;
             putGenres();
+            _successAlert(context);
             Navigator.pushNamed(context, '/landing_page');
           },
           choiceChipLabel: (item) {
@@ -109,6 +110,42 @@ class _Genres extends State<GenrePage> {
           },
         ),
       ),
+    );
+  }
+
+  void _successAlert(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Image.asset(width: 100, height: 100, 'assets/img/logo_app.png'),
+              const Text(
+                '¡¡Bienvenido a ExchangeBook!!',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      },
     );
   }
 }

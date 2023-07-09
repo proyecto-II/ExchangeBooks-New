@@ -1,6 +1,6 @@
-projectKey=exchangebooks_recomendation
+projectKey=exchangebook_recomendation
 serverUrl=http://localhost:9000
 serverVersion=10.1.0.73491
-dashboardUrl=http://localhost:9000/dashboard?id=exchangebooks_recomendation
-ceTaskId=AYkJ4QspzzBXpAnFo5zG
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYkJ4QspzzBXpAnFo5zG
+dashboardUrl=http://localhost:9000/dashboard?id=exchangebook_recomendation
+ceTaskId=AYkxNUIsvE0cgUqzXwIP
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYkxNUIsvE0cgUqzXwIP

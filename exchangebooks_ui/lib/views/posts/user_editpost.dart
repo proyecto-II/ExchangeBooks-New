@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:exchangebooks_ui/model/book.dart';
 import 'package:exchangebooks_ui/model/book_has_user.dart';
-import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/utils/photo_convert.dart';
 import 'package:filter_list/filter_list.dart';
@@ -25,9 +23,9 @@ class EditPostPage extends StatefulWidget {
 }
 
 class _NewPost extends State<EditPostPage> {
-  TextEditingController? titleController;
-  TextEditingController? authorController;
-  TextEditingController? descriptionController;
+  late TextEditingController? titleController;
+  late TextEditingController? authorController;
+  late TextEditingController? descriptionController;
   late List<Genre>? selectedGenreList = [];
   late List<Genre> genreList = [];
   final ImagePicker _picker = ImagePicker();
@@ -54,7 +52,12 @@ class _NewPost extends State<EditPostPage> {
   }
 
   Future<void> _editPost() async {
-    final location = await PostService().postImage(_imageTaken!.path);
+    final location;
+    if (_imageTaken != null) {
+      location = await PostService().postImage(_imageTaken!.path);
+    } else {
+      location = widget.book.images!.first;
+    }
     BookUser editPost = BookUser(
         widget.book.id,
         titleController!.text,

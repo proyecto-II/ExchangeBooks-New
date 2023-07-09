@@ -30,26 +30,33 @@ class _MessagesView extends State<MessagesPage> {
     ),
     Message(
       id: '2',
-      senderId: '6477eb87505e236447066272',
-      receiverId: '6466eb87505e236447066413',
-      message: '¡Hola! Estoy bien, gracias.',
-      timestamp: DateTime.now(),
+      sender: '6477eb87505e236447066272',
+      content: '¡Hola! Estoy bien, gracias.',
+      createdAt: DateTime.now(),
     ),
     Message(
       id: '3',
-      senderId: '6466eb87505e236447066413',
-      receiverId: '6477eb87505e236447066272',
-      message: '¿Qué has estado haciendo?',
-      timestamp: DateTime.now(),
+      sender: '6466eb87505e236447066413',
+      content: '¿Qué has estado haciendo?',
+      createdAt: DateTime.now(),
     ),
     Message(
       id: '4',
-      senderId: '6477eb87505e236447066272',
-      receiverId: '6466eb87505e236447066413',
-      message: 'Muchas cosas',
-      timestamp: DateTime.now(),
+      sender: '6477eb87505e236447066272',
+      content: 'Muchas cosas',
+      createdAt: DateTime.now(),
     ),
   ];
+
+  @override
+  void initState() {
+    joinChat();
+    super.initState();
+  }
+
+  void joinChat() {
+    ChatService().joinChat('ahsbfhbasbdas');
+  }
 
   void sendMessage() {
     // final user = Provider.of<GoogleSignInProvider>(context, listen: false);

@@ -2,7 +2,6 @@ import { formatDate } from "../helpers/time.helper.js";
 import Message from "../models/Message.js";
 
 class MessageService {
-  constructor() {}
 
   /**
    * Metodo que obtiene todos los mensajes de la base de datos

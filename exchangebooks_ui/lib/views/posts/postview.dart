@@ -1,18 +1,24 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:exchangebooks_ui/model/book_has_user.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:http/http.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
-
+import '../../manager/socket_manager.dart';
+import '../../model/chat.dart';
+import '../../model/chat_has_messages.dart';
 import '../../provider/google_sign_in.dart';
-//import '../chat/messages_page.txt';
+import '../../services/chat.service.dart';
+import '../messages/messages_page.dart';
 
 class PostPage extends StatefulWidget {
-  const PostPage({Key? key, required this.idBook}) : super(key: key);
-  final String idBook;
+  const PostPage({Key? key, required this.bookUser}) : super(key: key);
+  final BookUser bookUser;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -21,15 +27,39 @@ class PostPage extends StatefulWidget {
 
 class _PostView extends State<PostPage> {
   late BookUser book;
+  SocketManager socketManager = SocketManager();
+  final chatService = ChatService();
 
   @override
   void initState() {
+    book = widget.bookUser;
     super.initState();
   }
 
   Future<BookUser?> getBook(String idBook) async {
     book = (await PostService().getPostById(idBook))!;
     return book;
+  }
+
+  Future<void> fetchChat(String currentId) async {
+    try {
+      List<String> members = [currentId, book.user!.id!];
+      Chat chatInfo = Chat(members: members, nameChat: members.first);
+      // join to chat
+      socketManager.socket.emit("join-chat", chatInfo.id);
+
+      // Map<String, dynamic> jsonData = json.decode(response.body);
+
+      final ChatMessages chatMessages = ChatMessages();
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MessagesPage(info: chatInfo, chat: chatMessages)));
+    } catch (error) {
+      log("Error ocurrido al obtener los mensajes del chat: $error");
+    }
   }
 
   @override
@@ -40,103 +70,91 @@ class _PostView extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     final iuser = Provider.of<GoogleSignInProvider>(context);
-    return FutureBuilder(
-      future: getBook(widget.idBook),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: const Color.fromARGB(248, 255, 255, 255),
-              centerTitle: true,
-              leading: Builder(
-                builder: (context) => IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_sharp),
-                  onPressed: () => Navigator.pop(context),
-                  color: Colors.black,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(248, 255, 255, 255),
+        centerTitle: true,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_sharp),
+            onPressed: () => Navigator.pop(context),
+            color: Colors.black,
+          ),
+        ),
+        title: const Text(
+          'Exchangebook',
+          style: TextStyle(
+              fontSize: 27, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+      ),
+      drawer: const Drawers(),
+      body: InteractiveViewer(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _post(),
+                const Gap(20),
+                const Text(
+                  'Descripción',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.start,
                 ),
-              ),
-              title: const Text(
-                'Exchangebook',
-                style: TextStyle(
-                    fontSize: 27,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-            ),
-            drawer: const Drawers(),
-            body: InteractiveViewer(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                const Gap(10),
+                SizedBox(
+                  height: 270,
+                  child: SingleChildScrollView(
+                    child: Text(
+                      book.description!,
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                ),
+                const Gap(10),
+                Container(
+                  decoration: BoxDecoration(color: Colors.grey[200]),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _post(),
-                      const Gap(20),
                       const Text(
-                        'Descripción',
+                        ' Otros libros',
                         style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.start,
+                            fontWeight: FontWeight.bold, fontSize: 20),
                       ),
-                      const Gap(10),
-                      SizedBox(
-                        height: 270,
-                        child: SingleChildScrollView(
-                          child: Text(
-                            book.description!,
-                            textAlign: TextAlign.justify,
-                          ),
-                        ),
-                      ),
-                      const Gap(10),
-                      Container(
-                        decoration: BoxDecoration(color: Colors.grey[200]),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              ' Otros libros',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Ver todo >'))
-                          ],
-                        ),
-                      ),
-                      const Gap(10),
-                      _postList(),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Ver todo >'))
                     ],
                   ),
                 ),
-              ),
+                const Gap(10),
+                _postList(),
+              ],
             ),
-            floatingActionButton: snapshot.data!.user!.id != iuser.user!.id
-                ? FloatingActionButton.extended(
-                    onPressed: () {
-                      // Navigator.of(context).pushReplacement(
-                      //   MaterialPageRoute(
-                      //     builder: (context) =>
-                      //         MessagesPage(user: snapshot.data!.user!),
-                      //   ),
-                      // );
-                    },
-                    label: const Text('Intercambiar'),
-                    icon: const Icon(Icons.message),
-                    backgroundColor: Colors.orange[800],
-                    splashColor: Colors.purple,
-                  )
-                : null,
-          );
-        } else if (snapshot.hasError) {
-          return Text("Error: ${snapshot.error}");
-        }
-        return const Center(child: CircularProgressIndicator.adaptive());
-      },
+          ),
+        ),
+      ),
+      floatingActionButton: book.user!.id != iuser.user!.id
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                // Navigator.of(context).pushReplacement(
+                //   MaterialPageRoute(
+                //     builder: (context) =>
+                //         MessagesPage(user: snapshot.data!.user!),
+                //   ),
+                // );
+                fetchChat(iuser.user!.id!);
+              },
+              label: const Text('Intercambiar'),
+              icon: const Icon(Icons.message),
+              backgroundColor: Colors.orange[800],
+              splashColor: Colors.purple,
+            )
+          : null,
     );
   }
 

@@ -1,8 +1,7 @@
 import UserGenre from "../models/UserGenre.js";
 
 class UserGenreService {
-  constructor() {}
-
+  
   async create(userId, genres) {
     const userGenres = new UserGenre({
       userId,

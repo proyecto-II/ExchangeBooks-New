@@ -1,18 +1,16 @@
-import 'package:exchangebooks_ui/manager/SocketManager.dart';
+import 'package:exchangebooks_ui/manager/socket_manager.dart';
 import 'package:exchangebooks_ui/model/chat.dart';
 import 'package:exchangebooks_ui/model/message.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
-import 'package:exchangebooks_ui/views/chat/widgets/messageBox.dart';
+import 'package:exchangebooks_ui/views/chat/widgets/message_box.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:exchangebooks_ui/model/chat_has_messages.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class MessagesPage extends StatefulWidget {
   final Chat info;
   final ChatMessages chat;
-
   const MessagesPage({super.key, required this.info, required this.chat});
 
   @override
@@ -20,15 +18,15 @@ class MessagesPage extends StatefulWidget {
 }
 
 class _MessagesPageState extends State<MessagesPage> {
-  TextEditingController _messageController = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   SocketManager socketManager = SocketManager();
   List<Message> _messages = [];
 
   @override
   void initState() {
     super.initState();
-    _messages = List.from(widget.chat.messages!);
+    //_messages = List.from(widget.chat.messages!);
 
     socketManager.socket.on("receive-message", (data) {
       final mensaje = Message.fromJson(data);

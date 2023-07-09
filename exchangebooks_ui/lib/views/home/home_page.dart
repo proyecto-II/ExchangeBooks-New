@@ -1,4 +1,4 @@
-import 'package:exchangebooks_ui/manager/SocketManager.dart';
+import 'package:exchangebooks_ui/manager/socket_manager.dart';
 //import 'package:exchangebooks_ui/services/chat.service.dart';
 import 'package:exchangebooks_ui/views/home/widgets/bookswidget.dart';
 import 'package:exchangebooks_ui/views/home/widgets/recomendationwidget.dart';

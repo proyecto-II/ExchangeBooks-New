@@ -37,6 +37,8 @@ class _EditState extends State<EditProfile> {
   List<Genre>? selectedGenreList = [];
   List<Genre> genreList = [];
   final userService = UserService();
+  final String defaultPicture =
+      "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -68,11 +70,16 @@ class _EditState extends State<EditProfile> {
   Future<void> updateUser() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     final genresProvider = Provider.of<GenreProvider>(context, listen: false);
-    print(_selectedImage!.path);
-    final location = await userService.updateAvatar(_selectedImage!.path);
-    await userService.updateUser(iuser.user!.id!, nameController!.text,
-        usernameController!.text, lastnameController!.text, location);
 
+    if (_selectedImage != null) {
+      final location = await userService.updateAvatar(_selectedImage!.path);
+      await userService.updateUser(iuser.user!.id!, nameController!.text,
+          usernameController!.text, lastnameController!.text, location);
+    } else {
+      final location = await userService.updateAvatar(defaultPicture);
+      await userService.updateUser(iuser.user!.id!, nameController!.text,
+          usernameController!.text, lastnameController!.text, location);
+    }
     // remover este actualizar generos para actualizar en el modal de generos
     // await UserService()
     //     .updateGenresUser(iuser.user!.email!, selectedGenreList!);
