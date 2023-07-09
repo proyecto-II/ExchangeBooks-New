@@ -150,11 +150,13 @@ class _NewPost extends State<NewPostPage> {
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
-            child: Text('Suba fotografias del libro',
-                style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18)),
+            child: Text(
+              'Suba fotografias del libro',
+              style: TextStyle(
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
           ),
           //Aqui deberia ir la elección de imagenes
           _camera(),
@@ -221,7 +223,7 @@ class _NewPost extends State<NewPostPage> {
         },
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: _selectedImage != null ? 350 : 150,
+          height: _selectedImage != null ? 120 : 120,
           child: _selectedImage != null
               ? Container(
                   decoration: const BoxDecoration(
@@ -229,12 +231,14 @@ class _NewPost extends State<NewPostPage> {
                       Radius.circular(20),
                     ),
                   ),
+                  width: 100,
+                  height: 100,
                   // ignore: unnecessary_new
                   child: Image.file(
                     _selectedImage!,
                     fit: BoxFit.cover,
-                    width: 120,
-                    height: 200,
+                    width: 100,
+                    height: 100,
                   ))
               : Container(
                   decoration: BoxDecoration(
