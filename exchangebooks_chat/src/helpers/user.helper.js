@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AUTH_SERVICE_URL } from "../config/constants";
+import { AUTH_SERVICE_URL } from "../config/constants.js";
 
 /**
  * Metodo que obtiene la informacion del usuario por su id

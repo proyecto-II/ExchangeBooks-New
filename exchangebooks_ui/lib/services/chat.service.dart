@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,6 +47,16 @@ class ChatService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+
+    return response;
+  }
+
+  Future<http.Response> createChat(String sender, List<String> members) async {
+    final response = await http.post(Uri.parse('$apiUrl/api/chat/create'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({'sender': sender, 'members': members}));
 
     return response;
   }
