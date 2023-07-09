@@ -223,8 +223,8 @@ class _NewPost extends State<NewPostPage> {
           _selectImageFromGallery();
         },
         child: SizedBox(
-          width: 250,
-          height: 150,
+          width: MediaQuery.of(context).size.width,
+          height: _selectedImage != null ? 350 : 150,
           child: _selectedImage != null
               ? Container(
                   decoration: const BoxDecoration(
@@ -233,25 +233,12 @@ class _NewPost extends State<NewPostPage> {
                     ),
                   ),
                   // ignore: unnecessary_new
-                  child: _photoName.isNotEmpty
-                      ? Image.file(
-                          _selectedImage!,
-                          fit: BoxFit.cover,
-                          width: 120,
-                          height: 120,
-                        )
-                      : Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20)),
-                            border: Border.all(color: Colors.purple),
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            size: 50,
-                          ),
-                        ),
-                )
+                  child: Image.file(
+                    _selectedImage!,
+                    fit: BoxFit.cover,
+                    width: 120,
+                    height: 200,
+                  ))
               : Container(
                   decoration: BoxDecoration(
                     color: Colors.blue,
@@ -300,19 +287,18 @@ class _NewPost extends State<NewPostPage> {
   }
 
   Widget _buttonPost() {
-    return ElevatedButton(
-      onPressed: () async {
-        _showAlert(context);
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueAccent[1000],
-        minimumSize: const Size(200, 50),
-        side: const BorderSide(
-          width: 0.5,
-          color: Colors.black,
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () async {
+          _showAlert(context);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blueAccent[1000],
+          minimumSize: const Size(200, 50),
         ),
+        child: const Text('Publicar'),
       ),
-      child: const Text('Publicar'),
     );
   }
 
