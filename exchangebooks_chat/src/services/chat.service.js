@@ -1,6 +1,6 @@
 import { formatDate } from "../helpers/time.helper.js";
 import { getUserInfo } from "../helpers/user.helper.js";
-import Chat from "../models/chat.js";
+import Chat from "../models/Chat.js";
 import Message from "../models/Message.js";
 
 class ChatService {
@@ -15,7 +15,7 @@ class ChatService {
     // default message
     const defaultMessage = new Message({
       sender,
-      content: "Bienvenido al chat, escribe para el intercambio👌",
+      content: "Bienvenido al chat, escribeme para el intercambio👌",
       chat: chatSaved._id,
     });
     await defaultMessage.save();

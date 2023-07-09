@@ -1,20 +1,20 @@
-import { AUTH_SERVICE_URL } from "../config/constants.js";
+import { AUTH_SERVICE_URL, GENRE_SERVICE_URL } from "../config/constants.js";
 import Book from "../models/Book.js";
 import axios from "axios";
 
 class BookService {
   
   /**
-  * Metodo que obtiene todos los libros de la base de datos, igualmente realiza una busqueda de los usuarios para dar una información más detallada de las publicaciones
-  * @return lista de los libros guardados en la base de datos
-  */
+   * Metodo que obtiene todos los libros de la base de datos, igualmente realiza una busqueda de los usuarios para dar una información más detallada de las publicaciones
+   * @return lista de los libros guardados en la base de datos
+   */
   async getAll() {
     const books = await Book.find().exec();
     const fetchCategories = books.map(async (book) => {
       try {
         const { genres, userId, ...others } = book._doc;
         const { data, status: genreStatus } = await axios.post(
-          "http://localhost:3002/list",
+          `${GENRE_SERVICE_URL}/list`,
           {
             genres,
           }
@@ -37,10 +37,10 @@ class BookService {
   }
 
   /**
-  * Metodo que obtiene un libro en especifico segun su id
-  * @param id Es la id del libro
-  * @return el libro en especifico
-  */
+   * Metodo que obtiene un libro en especifico segun su id
+   * @param id Es la id del libro
+   * @return el libro en especifico
+   */
   async getById(id) {
     try {
       const book = await Book.findById(id);
@@ -48,7 +48,7 @@ class BookService {
       const { data, status } = await axios.get(
         `${AUTH_SERVICE_URL}/user/${book.userId}`
       );
-      const response = await axios.post("http://localhost:3002/list", {
+      const response = await axios.post(`${GENRE_SERVICE_URL}/list`, {
         genres,
       });
 
@@ -76,25 +76,24 @@ class BookService {
   }
 
   /**
-  * Metodo que permite editar un libro en especifico
-  * @param id Es el id del libro
-  * @param book Es el libro con sus atributos editados
-  * @return el libro guardado en la base de datos ya editado
-  */
+   * Metodo que permite editar un libro en especifico
+   * @param id Es el id del libro
+   * @param book Es el libro con sus atributos editados
+   * @return el libro guardado en la base de datos ya editado
+   */
   async edit(id, book) {
     return Book.findByIdAndUpdate(id, book, { new: true });
   }
   
 
   /**
-  * Metodo que permite eliminar un libro
-  * @param id Es el id del libro
-  * @return un mensaje de eliminación exitosa
-  */
+   * Metodo que permite eliminar un libro
+   * @param id Es el id del libro
+   * @return un mensaje de eliminación exitosa
+   */
   async delete(id) {
     return Book.findByIdAndDelete(id);
   }
-
 
   /**
   * Metodo que busca los libros de un usuario
@@ -106,13 +105,13 @@ class BookService {
     const fetchCategories = books.map(async (book) => {
       try {
         const { genres, ...others } = book._doc;
-        const response = await axios.post("http://localhost:3002/list", {
+        const response = await axios.post(`${GENRE_SERVICE_URL}/list`, {
           genres,
         });
 
         return { ...others, genres: response.data };
       } catch (err) {
-        return null;
+        return book;
       }
     });
     const result = await Promise.all(fetchCategories);
@@ -120,10 +119,10 @@ class BookService {
   }
 
   /**
-  * Metodo que busca los libros segun los parametros indicados por el usuario en el frontend
-  * @param query es el parametro que permite realizar la busqueda de los libros(puede ser el titulo o el autor)
-  * @return la lista de libros filtrada segun los parametros indicados
-  */
+   * Metodo que busca los libros segun los parametros indicados por el usuario en el frontend
+   * @param query es el parametro que permite realizar la busqueda de los libros(puede ser el titulo o el autor)
+   * @return la lista de libros filtrada segun los parametros indicados
+   */
   async search(query) {
     const books = await Book.find({
       $or: [
@@ -139,7 +138,7 @@ class BookService {
           `${AUTH_SERVICE_URL}/user/${userId}`
         );
 
-        const response = await axios.post("http://localhost:3002/list", {
+        const response = await axios.post(`${GENRE_SERVICE_URL}/list`, {
           genres,
         });
         if (status == 200) {
@@ -168,7 +167,7 @@ class BookService {
         );
 
         const { data: genresData, status: genreStatus } = await axios.post(
-          "http://localhost:3002/list",
+          `${GENRE_SERVICE_URL}/list`,
           {
             genres,
           }

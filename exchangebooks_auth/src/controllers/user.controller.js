@@ -1,15 +1,16 @@
 import UserService from "../services/user.service.js";
 import axios from "axios";
 import bcrypt from "bcrypt";
+import { EMAIL_SERVICE_URL } from "../config/constants.js";
 
 const userService = new UserService();
 
 /**
-  * Metodo que permite guardar un usuario en la base de datos Mongo, es aquel que permite registrar al usuario en la aplicación
-  * @param req Es la solicitud del usuario, la cual es recibida por el servidor
-  * @param res Respuesta que el servidor envia al usuario
-  * @return un Json que contiene el mensaje dependiendo si se guardo el usuario corrrectamente y el usuario en si.
-  */
+ * Metodo que permite guardar un usuario en la base de datos Mongo, es aquel que permite registrar al usuario en la aplicación
+ * @param req Es la solicitud del usuario, la cual es recibida por el servidor
+ * @param res Respuesta que el servidor envia al usuario
+ * @return un Json que contiene el mensaje dependiendo si se guardo el usuario corrrectamente y el usuario en si.
+ */
 export async function createUser(req, res) {
   try {
     const { password, ...others } = req.body;
@@ -22,7 +23,7 @@ export async function createUser(req, res) {
       username: req.body.email,
     });
 
-    const response = await axios.post("http://localhost:3001/email", {
+    const response = await axios.post(`${EMAIL_SERVICE_URL}/email`, {
       email: req.body.email,
       subject: "Bienvenido a Exchangebooks",
       text: "Te damos la bienvenida a Exchangebooks, puedes acceder a nuestra plataforma con tus credenciales",
@@ -48,11 +49,11 @@ export async function createUser(req, res) {
 }
 
 /**
-  * Metodo que permite verificar un usuario
-  * @param req Es la solicitud del usuario, la cual es recibida por el servidor
-  * @param res Respuesta que el servidor envia al usuario
-  * @return un mensaje y un estado dependiendo si el usuario es encontrado en la base de datos, y a la vez si esta registrado en el sistema
-  */
+ * Metodo que permite verificar un usuario
+ * @param req Es la solicitud del usuario, la cual es recibida por el servidor
+ * @param res Respuesta que el servidor envia al usuario
+ * @return un mensaje y un estado dependiendo si el usuario es encontrado en la base de datos, y a la vez si esta registrado en el sistema
+ */
 export async function verifyUser(req, res) {
   try {
     const user = await userService.verify(req.body.email);
@@ -68,11 +69,11 @@ export async function verifyUser(req, res) {
 }
 
 /**
-  * Metodo que obtiene un usuario segun su email
-  * @param req Es la solicitud del usuario, la cual es recibida por el servidor
-  * @param res Respuesta que el servidor envia al usuario
-  * @return una respuesta con el estado 200 y el usuario encontrado en la base de datos
-  */
+ * Metodo que obtiene un usuario segun su email
+ * @param req Es la solicitud del usuario, la cual es recibida por el servidor
+ * @param res Respuesta que el servidor envia al usuario
+ * @return una respuesta con el estado 200 y el usuario encontrado en la base de datos
+ */
 export async function getUser(req, res) {
   try {
     const user = await userService.get(req.params.email);
@@ -85,11 +86,11 @@ export async function getUser(req, res) {
 }
 
 /**
-  * Metodo que permite actualizar los datos del usuario
-  * @param req Es la solicitud del usuario, la cual es recibida por el servidor
-  * @param res Respuesta que el servidor envia al usuario
-  * @return una respuesta con el estado 200 y el usuario en formato Json para que el usuario pueda obtener los datos actualizados
-  */
+ * Metodo que permite actualizar los datos del usuario
+ * @param req Es la solicitud del usuario, la cual es recibida por el servidor
+ * @param res Respuesta que el servidor envia al usuario
+ * @return una respuesta con el estado 200 y el usuario en formato Json para que el usuario pueda obtener los datos actualizados
+ */
 export async function editUser(req, res) {
   try {
     const user = await userService.updateUser(req.params.id, req.body);
@@ -100,11 +101,11 @@ export async function editUser(req, res) {
 }
 
 /**
-  * Metodo que obtiene un usuario segun su id
-  * @param req Es la solicitud del usuario, la cual es recibida por el servidor
-  * @param res Respuesta que el servidor envia al usuario
-  * @return una respuesta con el estado 200 y el usuario obtenido desde la base de datos
-  */
+ * Metodo que obtiene un usuario segun su id
+ * @param req Es la solicitud del usuario, la cual es recibida por el servidor
+ * @param res Respuesta que el servidor envia al usuario
+ * @return una respuesta con el estado 200 y el usuario obtenido desde la base de datos
+ */
 export async function getUserById(req, res) {
   try {
     const user = await userService.getById(req.params.id);

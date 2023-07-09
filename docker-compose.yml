@@ -1,4 +1,5 @@
 version: "3.8"
+name: exchangebooks
 
 networks:
   mynetwork:
@@ -17,6 +18,7 @@ services:
       UPLOAD_SERVICE_URL: exchangebooks_upload
       BOOK_SERVICE_URL: exchangebooks_book
       RECOMENDATION_SERVICE_URL: exchangebooks_recomendation
+      CHAT_SERVICE_URL: exchangebooks_chat
     networks:
       - mynetwork
 
@@ -77,5 +79,15 @@ services:
       - "3006:3006"
     env_file:
       - ./exchangebooks_recomendation/.env
+    networks:
+      - mynetwork
+
+  exchangebooks_chat:
+    build: ./exchangebooks_chat
+    container_name: exchangebooks_chat
+    ports:
+      - "3008:3008"
+    env_file:
+      - ./exchangebooks_chat/.env
     networks:
       - mynetwork
