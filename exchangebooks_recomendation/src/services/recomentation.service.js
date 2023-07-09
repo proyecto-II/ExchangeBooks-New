@@ -1,7 +1,6 @@
 import { openai } from "../config/openai.js";
 
 class RecomentationService {
-  constructor() {}
 
   async getBooks(categories) {
     const complete = await openai.createCompletion({

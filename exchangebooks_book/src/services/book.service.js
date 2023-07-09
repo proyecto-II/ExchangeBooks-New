@@ -3,7 +3,7 @@ import Book from "../models/Book.js";
 import axios from "axios";
 
 class BookService {
-
+  
   /**
   * Metodo que obtiene todos los libros de la base de datos, igualmente realiza una busqueda de los usuarios para dar una información más detallada de las publicaciones
   * @return lista de los libros guardados en la base de datos
@@ -43,15 +43,7 @@ class BookService {
   */
   async getById(id) {
     try {
-      const book = await new Promise((resolve, reject) => {
-        Book.findById(id, (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-          }
-        });
-      });
+      const book = await Book.findById(id);
       const { userId, genres, ...others } = book._doc;
       const { data, status } = await axios.get(
         `${AUTH_SERVICE_URL}/user/${book.userId}`
@@ -75,7 +67,7 @@ class BookService {
 
   /**
   * Metodo que permite guardar un libro en la base de datos
-  * @param book Es el libro con todo sus atributos
+  * @param book Es el libro con sus atributos
   * @return el libro guardado en la base de datos
   */
   async create(book) {

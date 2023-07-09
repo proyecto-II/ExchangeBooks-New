@@ -26,7 +26,7 @@ class _MessagesPageState extends State<MessagesPage> {
   @override
   void initState() {
     super.initState();
-    _messages = List.from(widget.chat.messages!);
+    //_messages = List.from(widget.chat.messages!);
 
     socketManager.socket.on("receive-message", (data) {
       final mensaje = Message.fromJson(data);

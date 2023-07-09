@@ -25,4 +25,5 @@ export const uplodImage = multer({
       cb(null, `${folder}/${Date.now().toString()}.${extension}`);
     },
   }),
+  limits: 10000000 //Limite de 10Mb
 });

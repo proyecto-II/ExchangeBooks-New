@@ -2,5 +2,5 @@ projectKey=exchangebook_book
 serverUrl=http://localhost:9000
 serverVersion=10.1.0.73491
 dashboardUrl=http://localhost:9000/dashboard?id=exchangebook_book
-ceTaskId=AYkunTngvHVXBeIL1xZQ
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYkunTngvHVXBeIL1xZQ
+ceTaskId=AYkxMxApvE0cgUqzXwIN
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYkxMxApvE0cgUqzXwIN

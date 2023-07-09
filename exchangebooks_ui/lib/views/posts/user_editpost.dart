@@ -52,7 +52,12 @@ class _NewPost extends State<EditPostPage> {
   }
 
   Future<void> _editPost() async {
-    final location = await PostService().postImage(_imageTaken!.path);
+    final location;
+    if (_imageTaken != null) {
+      location = await PostService().postImage(_imageTaken!.path);
+    } else {
+      location = widget.book.images!.first;
+    }
     BookUser editPost = BookUser(
         widget.book.id,
         titleController!.text,

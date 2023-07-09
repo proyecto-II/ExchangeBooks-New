@@ -116,19 +116,17 @@ class _Profile extends State<ProfilePage> {
                         _preferences(context),
                         const Gap(10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            const Gap(10),
                             const Text(
                               'Publicaciones Realizadas',
                               style: TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.bold),
-                            ),
-                            const Gap(15),
-                            TextButton(
-                                onPressed: () {},
-                                child: const Text('Ver todo >'))
+                            )
                           ],
                         ),
+                        const Gap(10),
                         //Aqui deberian ir las preferencias del usuario
                         RecordPosts(userId: iuser.user!.id!),
                       ],
