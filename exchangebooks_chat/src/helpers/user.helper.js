@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AUTH_SERVICE_URL } from "../config/constants";
 
 /**
  * Metodo que obtiene la informacion del usuario por su id
@@ -7,7 +8,7 @@ import axios from "axios";
 export async function getUserInfo(userId) {
   try {
     const { status, data } = await axios.get(
-      `http://localhost:3003/user/${userId}`
+      `${AUTH_SERVICE_URL}/user/${userId}`
     );
 
     if (status === 200) {

@@ -48,7 +48,7 @@ class BookService {
       const { data, status } = await axios.get(
         `${AUTH_SERVICE_URL}/user/${book.userId}`
       );
-      const response = await axios.post("http://localhost:3002/list", {
+      const response = await axios.post(`${GENRE_SERVICE_URL}/list`, {
         genres,
       });
 
@@ -137,7 +137,7 @@ class BookService {
           `${AUTH_SERVICE_URL}/user/${userId}`
         );
 
-        const response = await axios.post("http://localhost:3002/list", {
+        const response = await axios.post(`${GENRE_SERVICE_URL}/list`, {
           genres,
         });
         if (status == 200) {
@@ -166,7 +166,7 @@ class BookService {
         );
 
         const { data: genresData, status: genreStatus } = await axios.post(
-          "http://localhost:3002/list",
+          `${GENRE_SERVICE_URL}/list`,
           {
             genres,
           }
