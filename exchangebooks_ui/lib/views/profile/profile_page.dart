@@ -38,9 +38,10 @@ class _Profile extends State<ProfilePage> {
   Widget build(BuildContext context) {
     User user = FirebaseAuth.instance.currentUser!;
     final iuser = Provider.of<GoogleSignInProvider>(context);
-    final image = user.photoURL ??
+    final image = iuser.user!.photoUrl ??
         "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
 
+    print(image);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(248, 255, 255, 255),
@@ -116,19 +117,17 @@ class _Profile extends State<ProfilePage> {
                         _preferences(context),
                         const Gap(10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            const Gap(10),
                             const Text(
                               'Publicaciones Realizadas',
                               style: TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.bold),
-                            ),
-                            const Gap(15),
-                            TextButton(
-                                onPressed: () {},
-                                child: const Text('Ver todo >'))
+                            )
                           ],
                         ),
+                        const Gap(10),
                         //Aqui deberian ir las preferencias del usuario
                         RecordPosts(userId: iuser.user!.id!),
                       ],

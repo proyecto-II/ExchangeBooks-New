@@ -1,11 +1,10 @@
 import User from "../models/User.js";
 
 class UserService {
-  constructor() {}
 
   /**
   * Metodo que permite guardar al usuario en la base de datos
-  * @param user Es el usuario con todo sus atributos
+  * @param user Es el usuario con sus atributos
   * @return el usuario guardado en la base de datos
   */
   async create(user) {
@@ -20,9 +19,7 @@ class UserService {
   * @return el usuario guardado en la base de datos
   */
   async verify(email) {
-    const user = await User.findOne({ email });
-
-    return user;
+    return User.findOne({ email });
   }
 
   /**
@@ -31,20 +28,17 @@ class UserService {
   * @return el usuario guardado en la base de datos
   */
   async get(email) {
-    const user = await User.findOne({ email });
-
-    return user;
+    return User.findOne({ email });
   }
 
   /**
   * Metodo que permite actualizar los datos del usuario
   * @param id Es el id del usuario 
-  * @param user Es el usuario con todo sus atributos
+  * @param user Es el usuario con sus atributos
   * @return el usuario actualizado 
   */
   async updateUser(id, user) {
-    const updateUser = await User.findByIdAndUpdate(id, user, { new: true });
-    return updateUser;
+    return User.findByIdAndUpdate(id, user, { new: true });
   }
 
   /**
@@ -53,8 +47,7 @@ class UserService {
   * @return el usuario obtenido desde la base de datos
   */
   async getById(id) {
-    const user = await User.findById(id);
-    return user;
+    return User.findById(id);
   }
 }
 

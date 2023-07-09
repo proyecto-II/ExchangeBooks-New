@@ -4,7 +4,6 @@ import Chat from "../models/Chat.js";
 import Message from "../models/Message.js";
 
 class ChatService {
-  constructor() {}
 
   async getAllChats() {
     return await Chat.find();

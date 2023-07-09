@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:exchangebooks_ui/layouts/main_layout.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
-import 'package:exchangebooks_ui/utils/photo_convert.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -29,8 +27,7 @@ class _NewPost extends State<NewPostPage> {
   late List<Genre>? selectedGenreList = [];
   late List<Genre> genreList = [];
   final ImagePicker _picker = ImagePicker();
-  String _photoName = '';
-  File? _imageTaken;
+  final String _photoName = '';
   File? _selectedImage;
 
   @override
@@ -153,11 +150,13 @@ class _NewPost extends State<NewPostPage> {
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
-            child: Text('Suba fotografias del libro',
-                style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18)),
+            child: Text(
+              'Suba fotografias del libro',
+              style: TextStyle(
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
           ),
           //Aqui deberia ir la elección de imagenes
           _camera(),
@@ -224,7 +223,7 @@ class _NewPost extends State<NewPostPage> {
         },
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: _selectedImage != null ? 350 : 150,
+          height: _selectedImage != null ? 120 : 120,
           child: _selectedImage != null
               ? Container(
                   decoration: const BoxDecoration(
@@ -232,12 +231,14 @@ class _NewPost extends State<NewPostPage> {
                       Radius.circular(20),
                     ),
                   ),
+                  width: 100,
+                  height: 100,
                   // ignore: unnecessary_new
                   child: Image.file(
                     _selectedImage!,
                     fit: BoxFit.cover,
-                    width: 120,
-                    height: 200,
+                    width: 100,
+                    height: 100,
                   ))
               : Container(
                   decoration: BoxDecoration(

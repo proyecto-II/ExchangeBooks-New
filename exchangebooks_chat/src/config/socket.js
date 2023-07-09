@@ -13,7 +13,7 @@ export function initSocket(server) {
   io.on("connection", (socket) => {
     console.log(`[🙍‍♂️NEW CONNECTION] User connected`);
 
-    // los envetos se ejecutan cuando en el cliente se emiten con el nombre correspondiente
+    // los eventos se ejecutan cuando en el cliente se emiten con el nombre correspondiente
     // ingresar al chat con el identificador
     socket.on("join-chat", (chatId) => {
       socket.join(chatId);
@@ -32,13 +32,6 @@ export function initSocket(server) {
       console.log(
         `[SEND MESSAGE] User sent message to chat [${message.chat}] by user [${message.sender}]`
       );
-      // const savedMessage = {
-      //   _id: "123",
-      //   content: message.content,
-      //   sender: message.sender,
-      //   chat: message.chat,
-      //   createdAt: new Date(),
-      // };
       const messageSaved = await messageService.createMessage({
         content: message.content,
         sender: message.sender,

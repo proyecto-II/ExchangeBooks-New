@@ -137,16 +137,26 @@ class _Login extends State<LoginPage> {
               await authService.verifyUser(emailController.text.trim());
           print(isRegistered);
           if (isRegistered == false) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+
+            _showAlert(context);
             log("el usuario no esta regitrado");
             // mostrar error al usuario
           } else {
             // ignore: use_build_context_synchronously
             showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => const Center(
-                      child: CircularProgressIndicator(),
-                    ));
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
 
             final provider =
                 // ignore: use_build_context_synchronously
@@ -211,6 +221,31 @@ class _Login extends State<LoginPage> {
           }
         },
       ),
+    );
+  }
+
+  void _showAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Text(
+                  'El correo o la contraseña ingresados son incorrectos.\nIntentelo nuevamente.'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                child: const Text('OK')),
+          ],
+        ));
+      },
     );
   }
 }

@@ -11,12 +11,15 @@ class UserService {
   final awsUrl = dotenv.env['API_URL_AWS'];
   Future<String> updateAvatar(String image) async {
     try {
+      log(image);
       var request = http.MultipartRequest(
-          'POST', Uri.parse("$awsUrl/upload/file?folder=avatars"));
+          'POST', Uri.parse("$awsUrl/file?folder=avatars"));
       request.files.add(await http.MultipartFile.fromPath('files', image));
       final response = await request.send();
+      log(response.toString());
       if (response.statusCode == 200) {
         final result = await json.decode(await response.stream.bytesToString());
+        log(response.toString());
         return result["location"];
       }
       return "";
