@@ -79,8 +79,10 @@ export async function verifyChat(req, res) {
       anotherUserId
     );
 
+    if (!userChats) return res.status(200).json({ verify: false });
+
     return res.status(200).json({
-      verify: userChats ? true : false,
+      verify: true,
       chatId: userChats._id,
     });
   } catch (error) {
