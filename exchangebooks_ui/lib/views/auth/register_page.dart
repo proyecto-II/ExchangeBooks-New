@@ -31,6 +31,12 @@ class _Register extends State<RegisterPage> {
     _passwordVisible = false;
   }
 
+  bool validateEmail(String email) {
+    final pattern = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+    final regex = RegExp(pattern);
+    return regex.hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,6 +210,7 @@ class _Register extends State<RegisterPage> {
               passConfirmController.text.isEmpty) {
             _voidAlert(context);
           } else {
+            print(validateEmail(emailController.text));
             showDialog(
                 context: context,
                 barrierDismissible: false,
@@ -215,13 +222,9 @@ class _Register extends State<RegisterPage> {
 
             if (isRegistered) {
               print("esta registrado");
+              Navigator.pop(context);
+              _isRegisterAlert(context);
             } else {
-              await authService.createUser(
-                  nameController.text.trim(),
-                  lastnameController.text.trim(),
-                  emailController.text.trim(),
-                  passController.text.trim(),
-                  '');
               final provider =
                   Provider.of<GoogleSignInProvider>(context, listen: false);
               final user = await provider.emailPasswordRegister(
@@ -232,7 +235,16 @@ class _Register extends State<RegisterPage> {
               );
               if (user != null) {
                 // ignore: use_build_context_synchronously
+                await authService.createUser(
+                    nameController.text.trim(),
+                    lastnameController.text.trim(),
+                    emailController.text.trim(),
+                    passController.text.trim(),
+                    '');
                 Navigator.pushNamed(context, '/genre_page');
+              } else {
+                Navigator.pop(context);
+                _badAlert(context);
               }
             }
           }
@@ -300,6 +312,76 @@ class _Register extends State<RegisterPage> {
             children: <Widget>[
               const Text(
                 'Necesita rellenar todos los campos solicitados',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  void _badAlert(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                'Email ingresado no es valido',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  void _isRegisterAlert(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                'El usuario ya esta registrado',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
             ],
