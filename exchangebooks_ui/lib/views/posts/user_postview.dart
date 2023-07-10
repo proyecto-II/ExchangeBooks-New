@@ -7,6 +7,8 @@ import 'package:gap/gap.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../../layouts/main_layout.dart';
+
 class UserPostPage extends StatefulWidget {
   const UserPostPage({Key? key, required this.idBook}) : super(key: key);
   final String idBook;
@@ -18,6 +20,7 @@ class UserPostPage extends StatefulWidget {
 
 class _UserPostView extends State<UserPostPage> {
   late BookUser book;
+  String _isError = 'error';
 
   @override
   void initState() {
@@ -29,8 +32,12 @@ class _UserPostView extends State<UserPostPage> {
     return book;
   }
 
-  void deleteBook() async {
-    await PostService().deleteBook(book.id!);
+  Future<String> deleteBook() async {
+    String isError = await PostService().deleteBook(book.id!);
+    setState(() {
+      _isError = isError;
+    });
+    return isError;
   }
 
   @override
@@ -129,7 +136,16 @@ class _UserPostView extends State<UserPostPage> {
                 ),
                 const Gap(5),
                 FloatingActionButton.extended(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await deleteBook();
+                    if (_isError != 'error') {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const MainLayout()));
+                      _showAlert(context);
+                    } else {
+                      _showError(context);
+                    }
+                  },
                   label: const Text('Eliminar'),
                   icon: const Icon(LineAwesomeIcons.trash),
                   backgroundColor: Colors.red[800],
@@ -233,6 +249,88 @@ class _UserPostView extends State<UserPostPage> {
             ),
           ),
         );
+      },
+    );
+  }
+
+  void _showAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Text(
+                'Libro eliminado con exito',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+                await Future.delayed(
+                  const Duration(seconds: 2),
+                );
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('Continuar'),
+            ),
+            TextButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancelar'),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  void _showError(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Text('Hubo un error al intentar eliminar el libro'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                child: const Text('OK')),
+          ],
+        ));
       },
     );
   }
