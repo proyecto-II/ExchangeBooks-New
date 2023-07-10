@@ -75,10 +75,20 @@ class _EditState extends State<EditProfile> {
       final location = await userService.updateAvatar(_selectedImage!.path);
       await userService.updateUser(iuser.user!.id!, nameController!.text,
           usernameController!.text, lastnameController!.text, location);
+      if (selectedGenreList!.isNotEmpty) {
+        await UserService()
+            .updateGenresUser(iuser.user!.email!, selectedGenreList!);
+        genresProvider.setGenres(selectedGenreList!);
+      }
     } else {
       final location = await userService.updateAvatar(defaultPicture);
       await userService.updateUser(iuser.user!.id!, nameController!.text,
           usernameController!.text, lastnameController!.text, location);
+      if (selectedGenreList!.isNotEmpty) {
+        await UserService()
+            .updateGenresUser(iuser.user!.email!, selectedGenreList!);
+        genresProvider.setGenres(selectedGenreList!);
+      }
     }
     // remover este actualizar generos para actualizar en el modal de generos
     // await UserService()
@@ -171,7 +181,7 @@ class _EditState extends State<EditProfile> {
                   const Spacer(),
                   IconButton(
                       onPressed: () {
-                        openFilterDialog(genresProvider.genres!);
+                        openFilterDialog();
                       },
                       icon: const Icon(LineAwesomeIcons.plus))
                 ],
@@ -285,38 +295,71 @@ class _EditState extends State<EditProfile> {
   * @return {Widget} Widget
   */
   Widget _preferences(BuildContext context) {
-    final genresProvider = Provider.of<GenreProvider>(context, listen: false);
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: 35,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: genresProvider.genres!.length,
-        itemBuilder: (context, index) {
-          return Container(
-            width: 80,
-            margin: const EdgeInsets.symmetric(horizontal: 5),
-            decoration: BoxDecoration(
-                color: Colors.amber[800],
-                borderRadius: BorderRadius.circular(100)),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                genresProvider.genres!.elementAt(index).name.toString(),
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+    final genres = Provider.of<GenreProvider>(context, listen: false);
+    if (selectedGenreList!.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 35,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: genres.genres!.length,
+            itemBuilder: (context, index) {
+              return Container(
+                width: 80,
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    color: Colors.amber[800],
+                    borderRadius: BorderRadius.circular(10)),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    genres.genres!.elementAt(index).name.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 35,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: selectedGenreList!.length,
+            itemBuilder: (context, index) {
+              return Container(
+                width: 80,
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    color: Colors.amber[800],
+                    borderRadius: BorderRadius.circular(10)),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    selectedGenreList!.elementAt(index).name.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
   }
 
-  void openFilterDialog(List<Genre> genresPre) async {
+  void openFilterDialog() async {
     await FilterListDialog.display<Genre>(
       context,
       listData: genreList,
-      selectedListData: genresPre,
+      selectedListData: selectedGenreList,
       applyButtonText: 'Aplicar',
       allButtonText: 'Todo',
       resetButtonText: 'Revertir',
