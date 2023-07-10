@@ -42,8 +42,6 @@ class _PostView extends State<PostPage> {
 
   Future<void> fetchChat(String currentId) async {
     try {
-      final userProvider =
-          Provider.of<GoogleSignInProvider>(context, listen: false);
       List<String> members = [currentId, book.user!.id!];
       //Chat chatInfo = Chat(members: members, nameChat: members.first);
 
@@ -51,15 +49,16 @@ class _PostView extends State<PostPage> {
           await chatService.verifyChat(currentId, book.user!.id!);
 
       final jsonVerify = json.decode(verifyResponse.body);
-
+      print(jsonVerify);
       if (jsonVerify['verify'] == false) {
+        log("No tiene chat");
         final response = await chatService.createChat(currentId, members);
         final jsonData = json.decode(response.body);
 
         if (response.statusCode == 200) {
           // crea el chat
           final newChat = Chat.fromJson(jsonData);
-
+          print(newChat);
           // obtenemos la informacion del chat
           final chatInfoResponse =
               await chatService.getChatInfo(newChat.id!, currentId);
