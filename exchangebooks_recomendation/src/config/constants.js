@@ -45,3 +45,4 @@ export const LOCAL_DATA = [
     author: "Autor 6",
   },
 ];
+export const BOOK_SERVICE_URL = process.env.BOOK_SERVICE_URL || "";
