@@ -220,6 +220,7 @@ class _NewPost extends State<EditPostPage> {
         onTap: () async {
           _picker
               .pickImage(
+                  // ignore: unnecessary_null_comparison
                   source: ImageSource != null
                       ? ImageSource.camera
                       : ImageSource.gallery)
@@ -241,7 +242,6 @@ class _NewPost extends State<EditPostPage> {
                       Radius.circular(20),
                     ),
                   ),
-                  // ignore: unnecessary_new
                   child: _photoName.isNotEmpty
                       ? Image.memory(
                           base64Decode(_photoName),
