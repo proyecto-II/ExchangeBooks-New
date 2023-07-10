@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:exchangebooks_ui/model/book_has_user.dart';
+import 'package:exchangebooks_ui/model/message.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
@@ -43,20 +44,74 @@ class _PostView extends State<PostPage> {
 
   Future<void> fetchChat(String currentId) async {
     try {
+      final userProvider =
+          Provider.of<GoogleSignInProvider>(context, listen: false);
       List<String> members = [currentId, book.user!.id!];
-      Chat chatInfo = Chat(members: members, nameChat: members.first);
-      // join to chat
-      socketManager.socket.emit("join-chat", chatInfo.id);
+      //Chat chatInfo = Chat(members: members, nameChat: members.first);
 
-      // Map<String, dynamic> jsonData = json.decode(response.body);
+      final verifyResponse =
+          await chatService.verifyChat(currentId, book.user!.id!);
 
-      final ChatMessages chatMessages = ChatMessages();
+      final jsonVerify = json.decode(verifyResponse.body);
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  MessagesPage(info: chatInfo, chat: chatMessages)));
+      if (jsonVerify['verify'] == false) {
+        final response = await chatService.createChat(currentId, members);
+        final jsonData = json.decode(response.body);
+
+        if (response.statusCode == 200) {
+          // crea el chat
+          final newChat = Chat.fromJson(jsonData);
+
+          // obtenemos la informacion del chat
+          final chatInfoResponse =
+              await chatService.getChatInfo(newChat.id!, currentId);
+
+          // obtenemos los mensajes del chat
+          final responseMessages =
+              await chatService.getChatMessages(newChat.id!);
+
+          if (responseMessages.statusCode == 200 &&
+              chatInfoResponse.statusCode == 200) {
+            final jsonChatInfoData = json.decode(chatInfoResponse.body);
+            final jsonMessagesData = json.decode(responseMessages.body);
+            final chatInfo = Chat.fromJson(jsonChatInfoData);
+            final chatMessages = ChatMessages.fromJson(jsonMessagesData);
+            // join to chat
+            socketManager.socket.emit("join-chat", newChat.id);
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        MessagesPage(info: chatInfo, chat: chatMessages)));
+          }
+        }
+      } else {
+        final chatId = jsonVerify['chatId'];
+        // obtenemos la informacion del chat
+        final chatInfoResponse =
+            await chatService.getChatInfo(chatId, currentId);
+
+        // obtenemos los mensajes del chat
+        final responseMessages = await chatService.getChatMessages(chatId);
+
+        if (responseMessages.statusCode == 200 &&
+            chatInfoResponse.statusCode == 200) {
+          final jsonChatInfoData = json.decode(chatInfoResponse.body);
+          final jsonMessagesData = json.decode(responseMessages.body);
+          final chatInfo = Chat.fromJson(jsonChatInfoData);
+          final chatMessages = ChatMessages.fromJson(jsonMessagesData);
+          print(chatMessages.messages![0].content);
+          // join to chat
+          socketManager.socket.emit("join-chat", chatId);
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      MessagesPage(info: chatInfo, chat: chatMessages)));
+        }
+      }
     } catch (error) {
       log("Error ocurrido al obtener los mensajes del chat: $error");
     }

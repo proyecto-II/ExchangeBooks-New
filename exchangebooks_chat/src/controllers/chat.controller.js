@@ -55,3 +55,37 @@ export async function getUserChats(req, res) {
     });
   }
 }
+
+export async function getChatInfo(req, res) {
+  try {
+    const { chatId } = req.params;
+    const { userId } = req.body;
+    // get chat
+    const chatInfo = await chatService.getChatInfoById(chatId, userId);
+
+    return res.status(200).send(chatInfo);
+  } catch (e) {
+    return res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+}
+
+export async function verifyChat(req, res) {
+  try {
+    const { userId, anotherUserId } = req.body;
+    const userChats = await chatService.verifyIfUserHaveChatWithAnotherUser(
+      userId,
+      anotherUserId
+    );
+
+    return res.status(200).json({
+      verify: userChats ? true : false,
+      chatId: userChats._id,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error,
+    });
+  }
+}

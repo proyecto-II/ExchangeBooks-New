@@ -60,4 +60,24 @@ class ChatService {
 
     return response;
   }
+
+  Future<http.Response> getChatInfo(String chatId, String userId) async {
+    final response = await http.post(Uri.parse('$apiUrl/api/chat/info/$chatId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({"userId": userId}));
+
+    return response;
+  }
+
+  Future<http.Response> verifyChat(String userId, String anotherUserId) async {
+    final response = await http.post(Uri.parse('$apiUrl/api/chat/verify'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({'userId': userId, 'anotherUserId': anotherUserId}));
+
+    return response;
+  }
 }

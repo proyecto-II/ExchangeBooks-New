@@ -4,7 +4,6 @@ import Chat from "../models/Chat.js";
 import Message from "../models/Message.js";
 
 class ChatService {
-
   async getAllChats() {
     return await Chat.find();
   }
@@ -75,6 +74,34 @@ class ChatService {
     const result = await Promise.all(chats);
 
     return result;
+  }
+
+  async getChatInfoById(chatId, userId) {
+    const data = await Chat.findById(chatId);
+
+    const lastMessage = await this.getLastMessageFromChat(chatId);
+    const lastMessageDate = formatDate(lastMessage.createdAt);
+
+    // buscamos dentro de los miembros al otro usuario (diferente al que esta logeado)
+    const userMemberId = data.members.filter(
+      (member) => member.toString() !== userId
+    );
+
+    // buscamos la informacion del usuario que no esta autenticado
+    const result = await getUserInfo(userMemberId);
+
+    return {
+      ...data._doc,
+      lastMessage: lastMessage.content,
+      lastMessageDate,
+      nameChat: `${result.user.name} ${result.user.lastname}`,
+    };
+  }
+
+  async verifyIfUserHaveChatWithAnotherUser(userId, anotherUserId) {
+    return await Chat.findOne({
+      members: { $all: [userId, anotherUserId] },
+    });
   }
 }
 
