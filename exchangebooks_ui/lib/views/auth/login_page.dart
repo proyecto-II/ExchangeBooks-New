@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:exchangebooks_ui/main.dart';
 import 'package:exchangebooks_ui/provider/google_sign_in.dart';
 import 'package:exchangebooks_ui/services/auth_service.dart';

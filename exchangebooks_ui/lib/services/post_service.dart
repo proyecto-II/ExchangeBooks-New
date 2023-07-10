@@ -161,7 +161,7 @@ class PostService {
     }
   }
 
-  Future<void> deleteBook(String id) async {
+  Future<String> deleteBook(String id) async {
     try {
       final response = await http.delete(
         Uri.parse('$apiUrl/api/book/delete/$id'),
@@ -171,9 +171,10 @@ class PostService {
       );
       final jsonData = json.decode(response.body);
       String result = jsonData.toString();
-      log(result);
+      return 'exito';
     } catch (error) {
       log('Error ocurrido eliminando el libro $error');
+      return 'error';
     }
   }
 }
