@@ -3,6 +3,8 @@ import 'package:exchangebooks_ui/services/book_service.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../posts/postview.dart';
+
 class BooksList extends StatefulWidget {
   const BooksList({Key? key}) : super(key: key);
   @override
@@ -56,7 +58,16 @@ class _BooksList extends State<BooksList> {
               itemBuilder: (context, index) {
                 BookUser book = books[index];
                 return GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PostPage(
+                          bookUser: books.elementAt(index),
+                        ),
+                      ),
+                    );
+                  },
                   child: SizedBox(
                     width: 150,
                     child: FittedBox(
@@ -82,7 +93,7 @@ class _BooksList extends State<BooksList> {
                             textAlign: TextAlign.right,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18),
-                          )
+                          ),
                         ],
                       ),
                     ),
