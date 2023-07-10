@@ -4,6 +4,7 @@ import 'package:exchangebooks_ui/views/home/widgets/bookswidget.dart';
 import 'package:exchangebooks_ui/views/home/widgets/recomendationwidget.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -57,23 +58,21 @@ class _Home extends State<HomePage> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
+              Gap(5),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                 ),
+                height: 35,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    Gap(15),
                     const Text(
                       'Recomendados para ti',
                       style:
                           TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/new_post');
-                        },
-                        child: const Text('Ver todo >'))
                   ],
                 ),
               ),

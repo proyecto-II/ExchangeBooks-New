@@ -41,7 +41,7 @@ class _Recomendations extends State<Recomendations> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: 390,
+      height: 370,
       child: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
