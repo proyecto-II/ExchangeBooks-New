@@ -169,8 +169,6 @@ class PostService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      final jsonData = json.decode(response.body);
-      String result = jsonData.toString();
       return 'exito';
     } catch (error) {
       log('Error ocurrido eliminando el libro $error');

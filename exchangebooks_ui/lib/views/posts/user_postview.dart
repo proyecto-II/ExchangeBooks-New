@@ -34,9 +34,6 @@ class _UserPostView extends State<UserPostPage> {
 
   Future<String> deleteBook() async {
     String isError = await PostService().deleteBook(book.id!);
-    setState(() {
-      _isError = isError;
-    });
     return isError;
   }
 
@@ -137,8 +134,9 @@ class _UserPostView extends State<UserPostPage> {
                 const Gap(5),
                 FloatingActionButton.extended(
                   onPressed: () async {
-                    await deleteBook();
-                    if (_isError != 'error') {
+                    final isError = await deleteBook();
+                    print('Paso por aqui:' + isError);
+                    if (isError != 'error') {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => const MainLayout()));
                       _showAlert(context);
@@ -270,17 +268,7 @@ class _UserPostView extends State<UserPostPage> {
           ),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () async {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-                await Future.delayed(
-                  const Duration(seconds: 2),
-                );
+              onPressed: () {
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
@@ -290,20 +278,7 @@ class _UserPostView extends State<UserPostPage> {
                   borderRadius: BorderRadius.circular(32.0),
                 ),
               ),
-              child: const Text('Continuar'),
-            ),
-            TextButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32.0),
-                ),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancelar'),
+              child: const Text('Aceptar'),
             ),
           ],
         ));
