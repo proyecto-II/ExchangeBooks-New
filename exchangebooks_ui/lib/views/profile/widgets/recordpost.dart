@@ -19,13 +19,11 @@ class _RecordPosts extends State<RecordPosts> {
 
   @override
   void initState() {
-    getPosts(widget.userId);
     super.initState();
   }
 
   Future<List<Book>> getPosts(String userId) async {
     posts = await userService.getPostByUser(userId);
-    setState(() {});
     return posts;
   }
 
@@ -36,59 +34,73 @@ class _RecordPosts extends State<RecordPosts> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: 500,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UserPostPage(
-                    idBook: posts.elementAt(index).id!,
-                  ),
-                ),
-              );
-            },
-            child: SizedBox(
-              //Componente agregado ya que sin el SizedBox el texto mueve a los demas componentes
-              width: 150,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+    return FutureBuilder(
+      future: getPosts(widget.userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 500,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserPostPage(
+                          idBook: posts.elementAt(index).id!,
+                        ),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    //Componente agregado ya que sin el SizedBox el texto mueve a los demas componentes
+                    width: 150,
                     child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.network(
-                            posts.elementAt(index).images!.first.toString(),
-                            width: 150,
-                            height: 200,
-                            fit: BoxFit.cover,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network(
+                                  posts
+                                      .elementAt(index)
+                                      .images!
+                                      .first
+                                      .toString(),
+                                  width: 150,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              const Gap(25),
+                              Text(
+                                posts.elementAt(index).title!,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                            ],
                           ),
-                        ),
-                        const Gap(25),
-                        Text(
-                          posts.elementAt(index).title!,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                );
+              },
             ),
           );
-        },
-      ),
+        } else if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }

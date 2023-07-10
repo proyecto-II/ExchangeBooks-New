@@ -144,10 +144,8 @@ class _Login extends State<LoginPage> {
                 child: CircularProgressIndicator(),
               ),
             );
-
+            Navigator.pop(context);
             _showAlert(context);
-            log("el usuario no esta regitrado");
-            // mostrar error al usuario
           } else {
             // ignore: use_build_context_synchronously
             showDialog(
@@ -170,6 +168,9 @@ class _Login extends State<LoginPage> {
               // ignore: use_build_context_synchronously
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const LandingPage()));
+            } else {
+              Navigator.pop(context);
+              _showAlert(context);
             }
           }
         },

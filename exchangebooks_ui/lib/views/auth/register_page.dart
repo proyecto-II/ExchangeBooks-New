@@ -31,6 +31,12 @@ class _Register extends State<RegisterPage> {
     _passwordVisible = false;
   }
 
+  bool validateEmail(String email) {
+    final pattern = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+    final regex = RegExp(pattern);
+    return regex.hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,10 +69,11 @@ class _Register extends State<RegisterPage> {
                 children: [
                   const Text('¿Ya tienes una cuenta?'),
                   TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/login_page');
-                      },
-                      child: const Text("Inicia Sesión"))
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/login_page');
+                    },
+                    child: const Text("Inicia Sesión"),
+                  )
                 ],
               ),
             )
@@ -89,6 +96,12 @@ class _Register extends State<RegisterPage> {
             ),
             labelText: 'Ingresa tu nombre',
           ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Este campo es obligatorio';
+            }
+            return null;
+          },
         ),
       ),
       Container(
@@ -101,6 +114,12 @@ class _Register extends State<RegisterPage> {
             ),
             labelText: 'Ingresa tu apellido',
           ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Este campo es obligatorio';
+            }
+            return null;
+          },
         ),
       ),
       Container(
@@ -113,6 +132,12 @@ class _Register extends State<RegisterPage> {
             ),
             labelText: 'Ingresa tu correo electronico',
           ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Este campo es obligatorio';
+            }
+            return null;
+          },
         ),
       ),
       Container(
@@ -135,6 +160,12 @@ class _Register extends State<RegisterPage> {
             ),
             labelText: 'Ingresa tu contraseña',
           ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Este campo es obligatorio';
+            }
+            return null;
+          },
         ),
       ),
       Container(
@@ -149,6 +180,12 @@ class _Register extends State<RegisterPage> {
             ),
             labelText: 'Confirma tu contraseña',
           ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Este campo es obligatorio';
+            }
+            return null;
+          },
         ),
       ),
       _button(context),
@@ -166,35 +203,49 @@ class _Register extends State<RegisterPage> {
                 borderRadius: BorderRadius.circular(10))),
         child: const Text('Siguiente'),
         onPressed: () async {
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => const Center(
-                    child: CircularProgressIndicator(),
-                  ));
-          bool isRegistered =
-              await authService.verifyUser(emailController.text.trim());
-
-          if (isRegistered) {
-            print("esta registrado");
+          if (nameController.text.isEmpty ||
+              lastnameController.text.isEmpty ||
+              emailController.text.isEmpty ||
+              passController.text.isEmpty ||
+              passConfirmController.text.isEmpty) {
+            _voidAlert(context);
           } else {
-            await authService.createUser(
+            print(validateEmail(emailController.text));
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                      child: CircularProgressIndicator(),
+                    ));
+            bool isRegistered =
+                await authService.verifyUser(emailController.text.trim());
+
+            if (isRegistered) {
+              print("esta registrado");
+              Navigator.pop(context);
+              _isRegisterAlert(context);
+            } else {
+              final provider =
+                  Provider.of<GoogleSignInProvider>(context, listen: false);
+              final user = await provider.emailPasswordRegister(
                 nameController.text.trim(),
                 lastnameController.text.trim(),
                 emailController.text.trim(),
                 passController.text.trim(),
-                '');
-            final provider =
-                Provider.of<GoogleSignInProvider>(context, listen: false);
-            final user = await provider.emailPasswordRegister(
-              nameController.text.trim(),
-              lastnameController.text.trim(),
-              emailController.text.trim(),
-              passController.text.trim(),
-            );
-            if (user != null) {
-              // ignore: use_build_context_synchronously
-              Navigator.pushNamed(context, '/genre_page');
+              );
+              if (user != null) {
+                // ignore: use_build_context_synchronously
+                await authService.createUser(
+                    nameController.text.trim(),
+                    lastnameController.text.trim(),
+                    emailController.text.trim(),
+                    passController.text.trim(),
+                    '');
+                Navigator.pushNamed(context, '/genre_page');
+              } else {
+                Navigator.pop(context);
+                _badAlert(context);
+              }
             }
           }
         },
@@ -247,6 +298,111 @@ class _Register extends State<RegisterPage> {
           }
         },
       ),
+    );
+  }
+
+  void _voidAlert(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                'Necesita rellenar todos los campos solicitados',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  void _badAlert(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                'Email ingresado no es valido',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  void _isRegisterAlert(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                'El usuario ya esta registrado',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      },
     );
   }
 }

@@ -65,6 +65,11 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

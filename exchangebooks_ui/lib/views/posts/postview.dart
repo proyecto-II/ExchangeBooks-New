@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'dart:developer';
-
 import 'package:exchangebooks_ui/model/book_has_user.dart';
 import 'package:exchangebooks_ui/model/message.dart';
 import 'package:exchangebooks_ui/services/post_service.dart';
 import 'package:exchangebooks_ui/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:http/http.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import '../../manager/socket_manager.dart';
@@ -196,12 +193,6 @@ class _PostView extends State<PostPage> {
       floatingActionButton: book.user!.id != iuser.user!.id
           ? FloatingActionButton.extended(
               onPressed: () {
-                // Navigator.of(context).pushReplacement(
-                //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         MessagesPage(user: snapshot.data!.user!),
-                //   ),
-                // );
                 fetchChat(iuser.user!.id!);
               },
               label: const Text('Intercambiar'),

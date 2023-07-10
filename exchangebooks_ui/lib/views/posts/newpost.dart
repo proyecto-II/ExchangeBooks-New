@@ -27,8 +27,8 @@ class _NewPost extends State<NewPostPage> {
   late List<Genre>? selectedGenreList = [];
   late List<Genre> genreList = [];
   final ImagePicker _picker = ImagePicker();
-  final String _photoName = '';
   File? _selectedImage;
+  bool errorUpload = false;
 
   @override
   void initState() {
@@ -46,14 +46,18 @@ class _NewPost extends State<NewPostPage> {
   Future<void> _createPost() async {
     final iuser = Provider.of<GoogleSignInProvider>(context, listen: false);
     final location = await PostService().postImage(_selectedImage!.path);
-    await PostService().createPost(
-        titleController!.text,
-        authorController!.text,
-        descriptionController!.text,
-        iuser.user!.id!,
-        selectedGenreList!,
-        'Libro',
-        location);
+    if (location != 'Error al subir la imagen') {
+      await PostService().createPost(
+          titleController!.text,
+          authorController!.text,
+          descriptionController!.text,
+          iuser.user!.id!,
+          selectedGenreList!,
+          'Libro',
+          location);
+    } else {
+      errorUpload = true;
+    }
   }
 
   Future<void> _selectImageFromGallery() async {
@@ -134,7 +138,13 @@ class _NewPost extends State<NewPostPage> {
           SizedBox(
             width: MediaQuery.of(context).size.width,
             height: 150,
-            child: TextField(
+            child: TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Este campo es obligatorio';
+                }
+                return null;
+              },
               maxLines: 100,
               controller: descriptionController,
               decoration: InputDecoration(
@@ -292,7 +302,13 @@ class _NewPost extends State<NewPostPage> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () async {
-          _showAlert(context);
+          if (titleController!.text.isEmpty ||
+              descriptionController!.text.isEmpty ||
+              authorController!.text.isEmpty) {
+            _voidAlert(context);
+          } else {
+            _showAlert(context);
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent[1000],
@@ -332,11 +348,15 @@ class _NewPost extends State<NewPostPage> {
                   const Duration(seconds: 2),
                 );
                 _createPost();
-                // ignore: use_build_context_synchronously
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const MainLayout()));
-                // ignore: use_build_context_synchronously
-                _successAlert(context);
+                if (!errorUpload) {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const MainLayout()));
+                  // ignore: use_build_context_synchronously
+                  _successAlert(context);
+                } else {
+                  _errorAlert(context);
+                }
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
@@ -378,6 +398,77 @@ class _NewPost extends State<NewPostPage> {
               Image.asset(width: 100, height: 100, 'assets/img/success.png'),
               const Text(
                 '¡¡Se ha publicado el libro con exito!!',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  void _errorAlert(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Image.asset(width: 100, height: 100, 'assets/img/error.png'),
+              const Text(
+                'Hubo un error al intentar guardar la publicación',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
+  void _voidAlert(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return (AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                'Necesita rellenar todos los campos solicitados',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
             ],
